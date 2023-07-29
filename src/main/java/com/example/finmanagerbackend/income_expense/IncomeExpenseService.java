@@ -22,7 +22,15 @@ public class IncomeExpenseService {
     }
 
     public List<IncomeExpenseManager> getOperations() {
-        System.out.println("Request delivered. Processing...");
         return IIncomeExpenseRepository.findAll();
+    }
+
+    public void deleteIncomeExpense(Long operationId) {
+        System.out.println("Deleting");
+        boolean exists =IIncomeExpenseRepository.existsById(operationId);
+        if (!exists) {
+            throw new IllegalStateException("Operations with id " + operationId + " is not exists!");
+        }
+        IIncomeExpenseRepository.deleteById(operationId);
     }
 }

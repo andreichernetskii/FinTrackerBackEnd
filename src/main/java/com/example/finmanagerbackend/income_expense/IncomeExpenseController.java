@@ -22,9 +22,12 @@ public class IncomeExpenseController {
 
     @GetMapping("/operations")
     public List<IncomeExpenseManager> getOperations() {
-        System.out.println("Request got. Sending ...");
         List<IncomeExpenseManager> list = incomeExpenseService.getOperations();
-        list.forEach(element -> System.out.println(element));
         return list;
+    }
+
+    @DeleteMapping("/operations/{operationId}")
+    public void deleteIncomeExpense(@PathVariable("operationId") Long operationId) {
+        incomeExpenseService.deleteIncomeExpense(operationId);
     }
 }

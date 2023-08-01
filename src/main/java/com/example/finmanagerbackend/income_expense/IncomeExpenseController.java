@@ -21,6 +21,16 @@ public class IncomeExpenseController {
         incomeExpenseService.addIncomeExpense(incomeExpenseDTO);
     }
 
+    // todo: przrrobić, żeby nie przeszkadzali sobie
+    @PostMapping("/operations/{operationId}")
+    public void updateIncomeExpense(
+            @PathVariable("operationId") Long id,
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) BigDecimal amount,
+            @RequestParam(required = false) String category ) {
+        incomeExpenseService.updateIncomeExpense(id, date, amount, category);
+    }
+
     @GetMapping("/operations")
     public List<IncomeExpense> getOperations() {
         List<IncomeExpense> list = incomeExpenseService.getOperations();

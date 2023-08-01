@@ -13,7 +13,7 @@ public class IncomeExpenseService {
     }
 
     public void addIncomeExpense(IncomeExpenseDTO incomeExpenseDTO) {
-        IIncomeExpenseRepository.save(new IncomeExpenseManager(
+        IIncomeExpenseRepository.save(new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
                 (incomeExpenseDTO.getOperationType() == OperationType.INCOME) ? incomeExpenseDTO.getAmount() : incomeExpenseDTO.getAmount().negate(),
                 incomeExpenseDTO.getCategory(),
@@ -21,7 +21,7 @@ public class IncomeExpenseService {
         );
     }
 
-    public List<IncomeExpenseManager> getOperations() {
+    public List<IncomeExpense> getOperations() {
         return IIncomeExpenseRepository.findAll();
     }
 

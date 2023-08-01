@@ -1,6 +1,5 @@
 package com.example.finmanagerbackend.income_expense;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +20,8 @@ public class IncomeExpenseController {
     }
 
     @GetMapping("/operations")
-    public List<IncomeExpenseManager> getOperations() {
-        List<IncomeExpenseManager> list = incomeExpenseService.getOperations();
+    public List<IncomeExpense> getOperations() {
+        List<IncomeExpense> list = incomeExpenseService.getOperations();
         return list;
     }
 

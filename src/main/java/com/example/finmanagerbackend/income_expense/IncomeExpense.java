@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-public class IncomeExpenseManager {
+public class IncomeExpense {
     @Id
     @GeneratedValue
     private Long id;
@@ -15,10 +15,10 @@ public class IncomeExpenseManager {
     private String category;
     private String date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
 
-    public IncomeExpenseManager() {
+    public IncomeExpense() {
     }
 
-    public IncomeExpenseManager(OperationType operationType, BigDecimal amount, String category, String date) {
+    public IncomeExpense(OperationType operationType, BigDecimal amount, String category, String date) {
         this.operationType = operationType;
         this.amount = amount;
         this.category = category;

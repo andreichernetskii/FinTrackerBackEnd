@@ -3,6 +3,8 @@ package com.example.finmanagerbackend.income_expense;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class IncomeExpense {
@@ -13,12 +15,12 @@ public class IncomeExpense {
     private OperationType operationType;
     private BigDecimal amount;
     private String category;
-    private String date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
+    private LocalDate date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
 
     public IncomeExpense() {
     }
 
-    public IncomeExpense(OperationType operationType, BigDecimal amount, String category, String date) {
+    public IncomeExpense(OperationType operationType, BigDecimal amount, String category, LocalDate date) {
         this.operationType = operationType;
         this.amount = amount;
         this.category = category;
@@ -41,7 +43,7 @@ public class IncomeExpense {
         return category;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -54,5 +56,21 @@ public class IncomeExpense {
                 ", category='" + category + '\'' +
                 ", date='" + date + '\'' +
                 '}';
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = (operationType == OperationType.EXPENSE) ?  amount.negate() : amount;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
     }
 }

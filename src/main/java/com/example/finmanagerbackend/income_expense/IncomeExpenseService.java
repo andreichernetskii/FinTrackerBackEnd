@@ -2,7 +2,11 @@ package com.example.finmanagerbackend.income_expense;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class IncomeExpenseService {
@@ -15,9 +19,9 @@ public class IncomeExpenseService {
     public void addIncomeExpense(IncomeExpenseDTO incomeExpenseDTO) {
         IIncomeExpenseRepository.save(new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
-                (incomeExpenseDTO.getOperationType() == OperationType.INCOME) ? incomeExpenseDTO.getAmount() : incomeExpenseDTO.getAmount().negate(),
+                incomeExpenseDTO.getAmount(),
                 incomeExpenseDTO.getCategory(),
-                incomeExpenseDTO.getDate())
+                LocalDate.parse(incomeExpenseDTO.getDate()))
         );
     }
 
@@ -32,5 +36,9 @@ public class IncomeExpenseService {
             throw new IllegalStateException("Operations with id " + operationId + " is not exists!");
         }
         IIncomeExpenseRepository.deleteById(operationId);
+    }
+
+    public Map<String, BigDecimal> getAnnualBalance() {
+        return new HashMap<String, BigDecimal>();
     }
 }

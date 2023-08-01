@@ -4,6 +4,7 @@ package com.example.finmanagerbackend.income_expense;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class IncomeExpenseDTO {
     private OperationType operationType;

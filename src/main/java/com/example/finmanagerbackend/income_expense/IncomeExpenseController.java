@@ -22,13 +22,9 @@ public class IncomeExpenseController {
     }
 
     // todo: przrrobić, żeby nie przeszkadzali sobie
-    @PostMapping("/operations/{operationId}")
-    public void updateIncomeExpense(
-            @PathVariable("operationId") Long id,
-            @RequestParam(required = false) String date,
-            @RequestParam(required = false) BigDecimal amount,
-            @RequestParam(required = false) String category ) {
-        incomeExpenseService.updateIncomeExpense(id, date, amount, category);
+    @PutMapping("/operations/update-operation")
+    public void updateIncomeExpense(@RequestBody IncomeExpense incomeExpense) {
+        incomeExpenseService.updateIncomeExpense(incomeExpense);
     }
 
     @GetMapping("/operations")

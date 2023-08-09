@@ -21,7 +21,6 @@ public class IncomeExpenseController {
         incomeExpenseService.addIncomeExpense(incomeExpenseDTO);
     }
 
-    // todo: przrrobić, żeby nie przeszkadzali sobie
     @PutMapping("/operations/update-operation")
     public void updateIncomeExpense(@RequestBody IncomeExpense incomeExpense) {
         incomeExpenseService.updateIncomeExpense(incomeExpense);
@@ -38,8 +37,19 @@ public class IncomeExpenseController {
         incomeExpenseService.deleteIncomeExpense(operationId);
     }
 
-    @GetMapping("/operations/annual") // todo: refactor
-    public Map<String, BigDecimal> getAnnualBalance() {
-        return incomeExpenseService.getAnnualBalance();
+//    @GetMapping("/operations/annual") // todo: refactor
+//    public Map<String, BigDecimal> getAnnualBalance() {
+//        return incomeExpenseService.getAnnualBalance();
+//    }
+
+    @GetMapping("/operations/statistics")
+    public List<IncomeExpense> getOperationsOfPeriod(@RequestParam(name = "year", required = false) Integer year,
+                                                     @RequestParam(name = "month", required = false) Integer month) {
+        List<IncomeExpense> list;
+        if (year == null && month == null) list = incomeExpenseService.getOperations();
+        else if (year == null) list = incomeExpenseService.getOperationsMonth(month);
+        else if (month == null) list = incomeExpenseService.getOperationsYear(year);
+        else list = incomeExpenseService.getOperationsYearAndMonth(year, month);
+        return list;
     }
 }

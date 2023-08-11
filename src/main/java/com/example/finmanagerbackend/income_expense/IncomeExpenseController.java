@@ -1,8 +1,10 @@
 package com.example.finmanagerbackend.income_expense;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class IncomeExpenseController {
     }
 
     @DeleteMapping("/operations/{operationId}")
-    public void deleteIncomeExpense(@PathVariable("operationId") Long operationId) {
+    public void deleteIncomeExpense( @PathVariable("operationId") Long operationId ) {
         incomeExpenseService.deleteIncomeExpense(operationId);
     }
 
@@ -43,13 +45,11 @@ public class IncomeExpenseController {
 //    }
 
     @GetMapping("/operations/statistics")
-    public List<IncomeExpense> getOperationsOfPeriod(@RequestParam(name = "year", required = false) Integer year,
-                                                     @RequestParam(name = "month", required = false) Integer month) {
+    public List<IncomeExpense> getOperationsOfPeriod(@RequestParam( name = "year", required = false ) Integer year,
+                                                     @RequestParam( name = "month", required = false ) Integer month,
+                                                     @RequestParam( name = "operationType", required = false ) OperationType operationType) {
         List<IncomeExpense> list;
-        if (year == null && month == null) list = incomeExpenseService.getOperations();
-        else if (year == null) list = incomeExpenseService.getOperationsMonth(month);
-        else if (month == null) list = incomeExpenseService.getOperationsYear(year);
-        else list = incomeExpenseService.getOperationsYearAndMonth(year, month);
+        list = incomeExpenseService.getOperationsByCriteria(year, month, operationType);
         return list;
     }
 }

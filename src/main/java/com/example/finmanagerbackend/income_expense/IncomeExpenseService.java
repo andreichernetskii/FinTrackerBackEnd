@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.income_expense;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -60,6 +61,8 @@ public class IncomeExpenseService {
         iIncomeExpenseRepository.save(incomeExpense);
     }
 
-
-
+    public List<IncomeExpense> getOperationsByCriteria(Integer year, Integer month, OperationType operationType) {
+        List<IncomeExpense> list = iIncomeExpenseRepository.findOperationsByCriteria(year, month, operationType);
+        return list;
+    }
 }

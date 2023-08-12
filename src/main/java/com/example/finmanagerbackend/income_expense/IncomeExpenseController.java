@@ -1,42 +1,38 @@
 package com.example.finmanagerbackend.income_expense;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // Api Controller
 @RestController
-@RequestMapping(path = "api/v1/incomes-expenses")
+@RequestMapping( path = "api/v1/incomes-expenses" )
 public class IncomeExpenseController {
     private IncomeExpenseService incomeExpenseService;
 
-    public IncomeExpenseController(IncomeExpenseService incomeExpenseService) {
+    public IncomeExpenseController( IncomeExpenseService incomeExpenseService ) {
         this.incomeExpenseService = incomeExpenseService;
     }
 
     @PostMapping
-    public void addNewIncomeExpense(@RequestBody IncomeExpenseDTO incomeExpenseDTO) {
-        incomeExpenseService.addIncomeExpense(incomeExpenseDTO);
+    public void addNewIncomeExpense( @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
+        incomeExpenseService.addIncomeExpense( incomeExpenseDTO );
     }
 
-    @PutMapping("/operations/update-operation")
-    public void updateIncomeExpense(@RequestBody IncomeExpense incomeExpense) {
-        incomeExpenseService.updateIncomeExpense(incomeExpense);
+    @PutMapping( "/operations/update-operation" )
+    public void updateIncomeExpense( @RequestBody IncomeExpense incomeExpense ) {
+        incomeExpenseService.updateIncomeExpense( incomeExpense );
     }
 
-    @GetMapping("/operations")
+    @GetMapping( "/operations" )
     public List<IncomeExpense> getOperations() {
         List<IncomeExpense> list = incomeExpenseService.getOperations();
         return list;
     }
 
-    @DeleteMapping("/operations/{operationId}")
-    public void deleteIncomeExpense( @PathVariable("operationId") Long operationId ) {
-        incomeExpenseService.deleteIncomeExpense(operationId);
+    @DeleteMapping( "/operations/{operationId}" )
+    public void deleteIncomeExpense( @PathVariable( "operationId" ) Long operationId ) {
+        incomeExpenseService.deleteIncomeExpense( operationId );
     }
 
 //    @GetMapping("/operations/annual") // todo: refactor
@@ -44,12 +40,13 @@ public class IncomeExpenseController {
 //        return incomeExpenseService.getAnnualBalance();
 //    }
 
-    @GetMapping("/operations/statistics")
-    public List<IncomeExpense> getOperationsOfPeriod(@RequestParam( name = "year", required = false ) Integer year,
-                                                     @RequestParam( name = "month", required = false ) Integer month,
-                                                     @RequestParam( name = "operationType", required = false ) OperationType operationType) {
+    @GetMapping( "/operations/statistics" )
+    public List<IncomeExpense> getOperationsOfPeriod( @RequestParam( name = "year", required = false ) Integer year,
+                                                      @RequestParam( name = "month", required = false ) Integer month,
+                                                      @RequestParam( name = "operationType", required = false ) OperationType operationType,
+                                                      @RequestParam( name = "category", required = false ) String category ) {
         List<IncomeExpense> list;
-        list = incomeExpenseService.getOperationsByCriteria(year, month, operationType);
+        list = incomeExpenseService.getOperationsByCriteria( year, month, operationType, category );
         return list;
     }
 }

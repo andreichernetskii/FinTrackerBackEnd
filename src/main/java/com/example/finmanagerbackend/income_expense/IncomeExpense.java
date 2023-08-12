@@ -11,7 +11,7 @@ public class IncomeExpense {
     @Id
     @GeneratedValue
     private Long id;
-    @Enumerated(EnumType.STRING)
+    @Enumerated( EnumType.STRING )
     private OperationType operationType;
     private BigDecimal amount;
     private String category;
@@ -20,7 +20,7 @@ public class IncomeExpense {
     public IncomeExpense() {
     }
 
-    public IncomeExpense(OperationType operationType, BigDecimal amount, String category, LocalDate date) {
+    public IncomeExpense( OperationType operationType, BigDecimal amount, String category, LocalDate date ) {
         this.operationType = operationType;
         this.amount = amount;
         this.category = category;
@@ -58,19 +58,19 @@ public class IncomeExpense {
                 '}';
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = (operationType == OperationType.EXPENSE) ?  amount.negate() : amount;
+    public void setAmount( BigDecimal amount ) {
+        this.amount = ( operationType == OperationType.EXPENSE ) ? amount.negate() : amount;
     }
 
-    public void setCategory(String category) {
+    public void setCategory( String category ) {
         this.category = category;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate( LocalDate date ) {
         this.date = date;
     }
 
-    public void setOperationType(OperationType operationType) {
+    public void setOperationType( OperationType operationType ) {
         this.operationType = operationType;
     }
 }

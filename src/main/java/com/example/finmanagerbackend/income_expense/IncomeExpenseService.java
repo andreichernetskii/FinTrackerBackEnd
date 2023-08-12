@@ -1,6 +1,5 @@
 package com.example.finmanagerbackend.income_expense;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,16 +10,16 @@ import java.util.*;
 public class IncomeExpenseService {
     private final IIncomeExpenseRepository iIncomeExpenseRepository;
 
-    public IncomeExpenseService(IIncomeExpenseRepository iIncomeExpenseRepository) {
+    public IncomeExpenseService( IIncomeExpenseRepository iIncomeExpenseRepository ) {
         this.iIncomeExpenseRepository = iIncomeExpenseRepository;
     }
 
-    public void addIncomeExpense(IncomeExpenseDTO incomeExpenseDTO) {
-        iIncomeExpenseRepository.save(new IncomeExpense(
+    public void addIncomeExpense( IncomeExpenseDTO incomeExpenseDTO ) {
+        iIncomeExpenseRepository.save( new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
                 incomeExpenseDTO.getAmount(),
                 incomeExpenseDTO.getCategory(),
-                LocalDate.parse(incomeExpenseDTO.getDate()))
+                LocalDate.parse( incomeExpenseDTO.getDate() ) )
         );
     }
 
@@ -28,24 +27,12 @@ public class IncomeExpenseService {
         return iIncomeExpenseRepository.findAll();
     }
 
-    public List<IncomeExpense> getOperationsYearAndMonth(int year, int month) {
-        return iIncomeExpenseRepository.findOperationByYearAndMonth(year, month);
-    }
-
-    public List<IncomeExpense> getOperationsMonth(int month) {
-        return iIncomeExpenseRepository.findOperationByMonth(month);
-    }
-
-    public List<IncomeExpense> getOperationsYear(int year) {
-        return iIncomeExpenseRepository.findOperationByYear(year);
-    }
-
-    public void deleteIncomeExpense(Long operationId) {
-        boolean exists = iIncomeExpenseRepository.existsById(operationId);
-        if (!exists) {
-            throw new IllegalStateException("Operations with id " + operationId + " is not exists!");
+    public void deleteIncomeExpense( Long operationId ) {
+        boolean exists = iIncomeExpenseRepository.existsById( operationId );
+        if ( !exists ) {
+            throw new IllegalStateException( "Operations with id " + operationId + " is not exists!" );
         }
-        iIncomeExpenseRepository.deleteById(operationId);
+        iIncomeExpenseRepository.deleteById( operationId );
     }
 
     // todo: dorobić
@@ -53,16 +40,16 @@ public class IncomeExpenseService {
         return new HashMap<String, BigDecimal>();
     }
 
-    public void updateIncomeExpense(IncomeExpense incomeExpense) {
-        Optional<IncomeExpense> incomeExpenseOptional = iIncomeExpenseRepository.findById(incomeExpense.getId());
-        if (!incomeExpenseOptional.isPresent()) {
-            throw new IllegalStateException("Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!");
+    public void updateIncomeExpense( IncomeExpense incomeExpense ) {
+        Optional<IncomeExpense> incomeExpenseOptional = iIncomeExpenseRepository.findById( incomeExpense.getId() );
+        if ( !incomeExpenseOptional.isPresent() ) {
+            throw new IllegalStateException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
         }
-        iIncomeExpenseRepository.save(incomeExpense);
+        iIncomeExpenseRepository.save( incomeExpense );
     }
 
-    public List<IncomeExpense> getOperationsByCriteria(Integer year, Integer month, OperationType operationType) {
-        List<IncomeExpense> list = iIncomeExpenseRepository.findOperationsByCriteria(year, month, operationType);
+    public List<IncomeExpense> getOperationsByCriteria( Integer year, Integer month, OperationType operationType, String category ) {
+        List<IncomeExpense> list = iIncomeExpenseRepository.findOperationsByCriteria( year, month, operationType, category );
         return list;
     }
 }

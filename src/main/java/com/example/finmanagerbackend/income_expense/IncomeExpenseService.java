@@ -2,7 +2,6 @@ package com.example.finmanagerbackend.income_expense;
 
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -36,8 +35,8 @@ public class IncomeExpenseService {
     }
 
     // todo: dorobić
-    public Map<String, BigDecimal> getAnnualBalance() {
-        return new HashMap<String, BigDecimal>();
+    public Double getAnnualBalance( Integer year, Integer month, OperationType operationType, String category ) {
+        return iIncomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }
 
     public void updateIncomeExpense( IncomeExpense incomeExpense ) {

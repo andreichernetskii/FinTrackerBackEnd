@@ -20,4 +20,14 @@ public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, L
                                                   @Param( "monthParam" ) Integer month,
                                                   @Param( "operationTypeParam" ) OperationType operationType,
                                                   @Param( "categoryParam" ) String category );
+
+    @Query( "SELECT SUM(operation.amount) FROM IncomeExpense operation " +
+            "WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) " +
+            "AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam )" +
+            "AND ( :operationTypeParam IS NULL OR operation.operationType = :operationTypeParam)" +
+            "AND ( :categoryParam IS NULL OR operation.category = :categoryParam )" )
+    Double calculateAnnualBalanceByCriteria( @Param( "yearParam" ) Integer year,
+                                              @Param( "monthParam" ) Integer month,
+                                              @Param( "operationTypeParam" ) OperationType operationType,
+                                              @Param( "categoryParam" ) String category );
 }

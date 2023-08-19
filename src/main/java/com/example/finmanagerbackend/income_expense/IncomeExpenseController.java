@@ -45,8 +45,16 @@ public class IncomeExpenseController {
                                                       @RequestParam( name = "month", required = false ) Integer month,
                                                       @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                                       @RequestParam( name = "category", required = false ) String category ) {
-        List<IncomeExpense> list;
-        list = incomeExpenseService.getOperationsByCriteria( year, month, operationType, category );
+        List<IncomeExpense> list = incomeExpenseService.getOperationsByCriteria( year, month, operationType, category );
         return list;
     }
+
+//    @GetMapping ( "/operations/annual" )
+//    public Double getAnnualBalance ( @RequestParam( name = "year", required = false ) Integer year,
+//                                      @RequestParam( name = "month", required = false ) Integer month,
+//                                      @RequestParam( name = "operationType", required = false ) OperationType operationType,
+//                                      @RequestParam( name = "category", required = false ) String category ) {
+//        Double totalAmount = incomeExpenseService.getAnnualBalance( year, month, operationType, category );
+//        return totalAmount;
+//    }
 }

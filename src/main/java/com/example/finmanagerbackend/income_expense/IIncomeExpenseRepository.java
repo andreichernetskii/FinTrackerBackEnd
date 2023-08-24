@@ -31,6 +31,10 @@ public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, L
                                               @Param( "operationTypeParam" ) OperationType operationType,
                                               @Param( "categoryParam" ) String category );
 
+    default Double calculateAnnualBalance( ) {
+        return calculateAnnualBalanceByCriteria( null, null, null, null );
+    }
+
     @Query( "SELECT category FROM IncomeExpense GROUP BY category ORDER BY category" )
     List<String> getCategories();
 }

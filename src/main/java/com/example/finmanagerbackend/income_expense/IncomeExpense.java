@@ -17,8 +17,9 @@ public class IncomeExpense {
     private String category;
     private LocalDate date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
 
-    public IncomeExpense() {
-    }
+    // constructors
+
+    public IncomeExpense() {    }
 
     public IncomeExpense( OperationType operationType, BigDecimal amount, String category, LocalDate date ) {
         this.operationType = operationType;
@@ -26,6 +27,8 @@ public class IncomeExpense {
         this.category = category;
         this.date = date;
     }
+
+    // getters
 
     public Long getId() {
         return id;
@@ -57,6 +60,8 @@ public class IncomeExpense {
                 ", date='" + date + '\'' +
                 '}';
     }
+
+    // setters
 
     public void setAmount( BigDecimal amount ) {
         BigDecimal tempAmount = amount.abs();

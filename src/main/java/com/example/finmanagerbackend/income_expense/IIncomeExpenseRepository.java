@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, Long>, JpaSpecificationExecutor<IncomeExpense> {
+public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
     @Query( "SELECT operation FROM IncomeExpense operation " +
             "WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) " +
             "AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam )" +

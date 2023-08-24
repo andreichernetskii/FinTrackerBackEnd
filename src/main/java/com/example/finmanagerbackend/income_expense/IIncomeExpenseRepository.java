@@ -30,4 +30,7 @@ public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, L
                                               @Param( "monthParam" ) Integer month,
                                               @Param( "operationTypeParam" ) OperationType operationType,
                                               @Param( "categoryParam" ) String category );
+
+    @Query( "SELECT category FROM IncomeExpense GROUP BY category ORDER BY category" )
+    List<String> getCategories();
 }

@@ -51,4 +51,9 @@ public class IncomeExpenseService {
         List<IncomeExpense> list = iIncomeExpenseRepository.findOperationsByCriteria( year, month, operationType, category );
         return list;
     }
+
+    public List<String> getCategories() {
+        List<String> categories = iIncomeExpenseRepository.getCategories();
+        return categories;
+    }
 }

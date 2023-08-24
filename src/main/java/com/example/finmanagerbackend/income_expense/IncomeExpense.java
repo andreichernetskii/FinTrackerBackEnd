@@ -59,7 +59,8 @@ public class IncomeExpense {
     }
 
     public void setAmount( BigDecimal amount ) {
-        this.amount = ( operationType == OperationType.EXPENSE ) ? amount.negate() : amount;
+        BigDecimal tempAmount = amount.abs();
+        this.amount = ( operationType == OperationType.EXPENSE ) ? tempAmount.negate() : tempAmount;
     }
 
     public void setCategory( String category ) {

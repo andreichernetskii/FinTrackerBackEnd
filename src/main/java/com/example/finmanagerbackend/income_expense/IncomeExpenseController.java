@@ -35,11 +35,6 @@ public class IncomeExpenseController {
         incomeExpenseService.deleteIncomeExpense( operationId );
     }
 
-//    @GetMapping("/operations/annual") // todo: refactor
-//    public Map<String, BigDecimal> getAnnualBalance() {
-//        return incomeExpenseService.getAnnualBalance();
-//    }
-
     @GetMapping( "/operations/statistics" )
     public List<IncomeExpense> getOperationsOfPeriod( @RequestParam( name = "year", required = false ) Integer year,
                                                       @RequestParam( name = "month", required = false ) Integer month,

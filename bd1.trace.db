@@ -1719,3 +1719,12 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
+2023-08-25 20:29:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000a    create table [*]limit (\000a        id bigint not null,\000a        amount_limit numeric(38,2),\000a        limit_type varchar(255) check (limit_type in ('YEAR','MONTH','WEEK','DAY')),\000a        primary key (id)\000a    )"; expected "identifier"; SQL statement:
+
+    create table limit (
+        id bigint not null,
+        amount_limit numeric(38,2),
+        limit_type varchar(255) check (limit_type in ('YEAR','MONTH','WEEK','DAY')),
+        primary key (id)
+    ) [42001-214]

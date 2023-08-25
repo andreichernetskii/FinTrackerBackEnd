@@ -10,12 +10,6 @@ public class LimitDTO {
 
     public LimitDTO() {    }
 
-    // budget
-    public LimitDTO( BigDecimal amountLimit ) {
-        this.amountLimit = amountLimit;
-    }
-
-    // limit of special period of time
     public LimitDTO( BigDecimal amountLimit, LimitType limitType ) {
         this.amountLimit = amountLimit;
         this.limitType = limitType;

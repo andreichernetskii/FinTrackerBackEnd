@@ -34,7 +34,6 @@ public class IncomeExpenseService {
         iIncomeExpenseRepository.deleteById( operationId );
     }
 
-    // todo: dorobić
     public Double getAnnualBalance( Integer year, Integer month, OperationType operationType, String category ) {
         return iIncomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }

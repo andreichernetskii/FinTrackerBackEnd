@@ -20,6 +20,7 @@ public class AlertService {
     }
 
     public List<AlertDTO> showAllAlerts() {
+        finAnalyser.updateLimits();
         List<AlertDTO> alerts = new ArrayList<>();
         Map<String, Boolean> limitsStats = finAnalyser.checkLimitsStats();
 //         default limitsStats stats:
@@ -33,6 +34,18 @@ public class AlertService {
 
         if ( limitsStats.get( "Negative account condition" ) ) {
             alerts.add( new AlertDTO( AlertType.NEGATIVE_BALANCE.label, false ) );
+        }
+
+        if ( limitsStats.get( "Budget exceeded" ) ) {
+            alerts.add( new AlertDTO( AlertType.BUDGET_LIMIT_EXCEEDING.label, false ) );
+        }
+
+        if ( limitsStats.get( "Year limit exceeded" ) ) {
+            alerts.add( new AlertDTO( AlertType.YEAR_LIMIT_EXCEEDING.label, false ) );
+        }
+
+        if ( limitsStats.get( "Month limit exceeded" ) ) {
+            alerts.add( new AlertDTO( AlertType.MONTH_LIMIT_EXCEEDING.label, false ) );
         }
 
         return alerts;

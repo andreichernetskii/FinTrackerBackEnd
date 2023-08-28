@@ -1,22 +1,20 @@
 package com.example.finmanagerbackend.limit;
 
-import org.hibernate.query.spi.Limit;
-
 import java.math.BigDecimal;
 
 public class LimitDTO {
-    private BigDecimal amountLimit;
+    private BigDecimal limitAmount;
     private LimitType limitType;
 
     public LimitDTO() {    }
 
-    public LimitDTO( BigDecimal amountLimit, LimitType limitType ) {
-        this.amountLimit = amountLimit;
+    public LimitDTO( BigDecimal limitAmount, LimitType limitType ) {
+        this.limitAmount = limitAmount;
         this.limitType = limitType;
     }
 
-    public BigDecimal getAmountLimit() {
-        return amountLimit;
+    public BigDecimal getLimitAmount() {
+        return limitAmount;
     }
 
     public LimitType getLimitType() {

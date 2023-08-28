@@ -1,7 +1,6 @@
 package com.example.finmanagerbackend.limit;
 
 import jakarta.persistence.*;
-import lombok.NonNull;
 
 import java.math.BigDecimal;
 
@@ -12,10 +11,10 @@ public class Limit {
     @Id
     @GeneratedValue
     private Long id;
-    @Column( nullable = false )
-    private BigDecimal amountLimit;
+//    @Column( nullable = false )
+    private BigDecimal limitAmount;
     @Enumerated( EnumType.STRING )
-    @Column( nullable = false )
+//    @Column( nullable = false )
     private LimitType limitType;
 
     // constructors
@@ -23,8 +22,8 @@ public class Limit {
     public Limit() {
     }
 
-    public Limit( BigDecimal amountLimit, LimitType limitType ) {
-        this.amountLimit = amountLimit;
+    public Limit( BigDecimal limitAmount, LimitType limitType ) {
+        this.limitAmount = limitAmount;
         this.limitType = limitType;
     }
 
@@ -34,8 +33,8 @@ public class Limit {
         return id;
     }
 
-    public BigDecimal getAmountLimit() {
-        return amountLimit;
+    public BigDecimal getLimitAmount() {
+        return limitAmount;
     }
 
     public LimitType getLimitType() {
@@ -44,8 +43,8 @@ public class Limit {
 
     // setters
 
-    public void setAmountLimit( BigDecimal amountLimit ) {
-        this.amountLimit = amountLimit;
+    public void setLimitAmount( BigDecimal amountLimit ) {
+        this.limitAmount = amountLimit;
     }
 
     public void setLimitType( LimitType limitType ) {

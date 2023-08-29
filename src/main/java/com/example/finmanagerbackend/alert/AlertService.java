@@ -33,6 +33,14 @@ public class AlertService {
             alerts.add( new AlertDTO( AlertType.MONTH_LIMIT_EXCEEDING.label, false) );
         }
 
+        if ( finAnalyser.isWeekLimitExceeded() ) {
+            alerts.add( new AlertDTO( AlertType.WEEK_LIMIT_EXCEEDING.label, false) );
+        }
+
+        if ( finAnalyser.isDayLimitExceeded() ) {
+            alerts.add( new AlertDTO( AlertType.DAY_LIMIT_EXCEEDING.label, false) );
+        }
+
         return alerts;
     }
 }

@@ -8,10 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class FinAnalyser {
@@ -69,33 +65,19 @@ public class FinAnalyser {
 
     // checking is limits are exceeded
 
-    public Map<String, Boolean> checkLimitsStats() {
-//        Map<String, Boolean> limitsStats = createControllingMap();
-        Map<String, Boolean> limitsStats = new HashMap<>();
-        limitsStats.put( "Negative account condition", isNegativeConditionOfAccount() );
-        limitsStats.put( "More than prev month", false );
-        limitsStats.put( "Budget exceeded", isBudgetExceeded() );
-        limitsStats.put( "Year limit exceeded", isYearLimitExceeded() );
-        limitsStats.put( "Month limit exceeded", isMonthLimitExceeded() );
-        limitsStats.put( "Week limit exceeded", false );
-        limitsStats.put( "Day limit exceeded", false );
-
-        return limitsStats;
-    }
-
-    private Boolean isMonthLimitExceeded() {
+    public Boolean isMonthLimitExceeded() {
         if ( monthLimit == null ) return false;
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateAnnualBalanceByCriteria(
-                null,
+                LocalDate.now().getYear(),
                 LocalDate.now().getMonthValue(),
                 null,
                 null );
         BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
-        int comparisonToZero = monthLimit.subtract( actualBalance ).compareTo( BigDecimal.ZERO );
+        int comparisonToZero = monthLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
         return comparisonToZero < 0;
     }
 
-    private Boolean isYearLimitExceeded() {
+    public Boolean isYearLimitExceeded() {
         if ( yearLimit == null ) return false;
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateAnnualBalanceByCriteria(
                 LocalDate.now().getYear(),
@@ -103,31 +85,18 @@ public class FinAnalyser {
                 null,
                 null );
         BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
-        int comparisonToZero = yearLimit.subtract( actualBalance ).compareTo( BigDecimal.ZERO );
+        int comparisonToZero = yearLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
         return comparisonToZero < 0;
     }
 
-    private Boolean isBudgetExceeded() {
+    public Boolean isBudgetExceeded() {
         if ( budget == null ) return false;
         BigDecimal actualBalance = BigDecimal.valueOf( incomeExpenseRepository.calculateAnnualBalance() );
         int comparisonToZero = budget.subtract( actualBalance ).compareTo( BigDecimal.ZERO );
         return comparisonToZero < 0;
     }
 
-//    private Map<String, Boolean> createControllingMap() {
-//        Map<String, Boolean> controllingMap = new HashMap<>();
-//        controllingMap.put( "Negative account condition", false );
-//        controllingMap.put( "More than prev month", false );
-//        controllingMap.put( "Budget exceeded", false );
-//        controllingMap.put( "Year limit exceeded", false );
-//        controllingMap.put( "Month limit exceeded", false );
-//        controllingMap.put( "Week limit exceeded", false );
-//        controllingMap.put( "Day limit exceeded", false );
-//
-//        return controllingMap;
-//    }
-
-    private boolean isNegativeConditionOfAccount() {
+    public boolean isNegativeConditionOfAccount() {
         Double actualBalance = incomeExpenseRepository.calculateAnnualBalance();
         if ( actualBalance < 0 ) return true;
         return false;

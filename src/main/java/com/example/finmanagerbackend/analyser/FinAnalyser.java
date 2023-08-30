@@ -3,10 +3,14 @@ package com.example.finmanagerbackend.analyser;
 import com.example.finmanagerbackend.income_expense.IIncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.ILimitRepository;
 import com.example.finmanagerbackend.limit.LimitType;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FinAnalyser {
@@ -59,11 +63,13 @@ public class FinAnalyser {
     // checking is limits are exceeded
 
     public Boolean isMonthLimitExceeded() {
+        // todo: wymyślić, jak to można zrobić w jedną funkcję
         if ( monthLimit == null ) return false;
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
                 LocalDate.now(),
                 null,
                 true,
+                null,
                 null,
                 null);
         if (actualBalanceAsDouble == null) return false;
@@ -77,6 +83,7 @@ public class FinAnalyser {
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
                 LocalDate.now(),
                 true,
+                null,
                 null,
                 null,
                 null);
@@ -101,11 +108,13 @@ public class FinAnalyser {
 
     public boolean isWeekLimitExceeded() {
         if ( weekLimit == null ) return false;
+        List<LocalDate> firstLastWeekDay = getStartAndEndOfWeekDates();
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
                 LocalDate.now(),
                 null,
                 null,
-                true,
+                firstLastWeekDay.get( 0 ),
+                firstLastWeekDay.get( 1 ),
                 null);
         if (actualBalanceAsDouble == null) return false;
         BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
@@ -115,9 +124,9 @@ public class FinAnalyser {
 
     public boolean isDayLimitExceeded() {
         if ( dayLimit == null ) return false;
-        LocalDate date = LocalDate.now();
         Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
-                date,
+                LocalDate.now(),
+                null,
                 null,
                 null,
                 null,
@@ -126,5 +135,17 @@ public class FinAnalyser {
         BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
         int comparisonToZero = dayLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
         return comparisonToZero < 0;
+    }
+
+    private List<LocalDate> getStartAndEndOfWeekDates() {
+        List<LocalDate> dates = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue());
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        dates.add( startOfWeek );
+        dates.add( endOfWeek );
+
+        return dates;
     }
 }

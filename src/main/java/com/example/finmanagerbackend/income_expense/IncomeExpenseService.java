@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.income_expense;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -14,9 +15,12 @@ public class IncomeExpenseService {
     }
 
     public void addIncomeExpense( IncomeExpenseDTO incomeExpenseDTO ) {
+        BigDecimal amount = ( incomeExpenseDTO.getOperationType() == OperationType.EXPENSE )
+                ? incomeExpenseDTO.getAmount().negate()
+                : incomeExpenseDTO.getAmount();
         iIncomeExpenseRepository.save( new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
-                incomeExpenseDTO.getAmount(),
+                amount,
                 incomeExpenseDTO.getCategory(),
                 LocalDate.parse( incomeExpenseDTO.getDate() ) )
         );

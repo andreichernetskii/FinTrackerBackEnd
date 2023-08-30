@@ -42,12 +42,13 @@ public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, L
             "WHERE operation.operationType = 'EXPENSE'" +
             "AND ( :yearParam IS NULL OR YEAR( operation.date ) = YEAR( :localDateParam ) )" +
             "AND ( :monthParam IS NULL OR MONTH( operation.date ) = MONTH( :localDateParam ) )" +
-            "AND ( :weekParam IS NULL OR " +
-                "( YEAR( operation.date ) = YEAR( :localDateParam ) AND WEEK( operation.date ) = WEEK( :localDateParam ) ) )" +
+            "AND ( :firstWeekDayParam IS NULL OR operation.date >= :firstWeekDayParam) " +
+            "AND ( :lastWeekDayParam IS NULL OR operation.date <= :lastWeekDayParam)" +
             "AND ( :dayParam IS NULL OR operation.date = :localDateParam )" )
     Double calculateExpensesFromActualDate( @Param( "localDateParam" ) LocalDate localDate,
                                             @Param( "yearParam" ) Boolean year,
                                             @Param( "monthParam" ) Boolean month,
-                                            @Param( "weekParam" ) Boolean week,
+                                            @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
+                                            @Param( "lastWeekDayParam" ) LocalDate lastWeekDay,
                                             @Param( "dayParam" ) Boolean day );
 }

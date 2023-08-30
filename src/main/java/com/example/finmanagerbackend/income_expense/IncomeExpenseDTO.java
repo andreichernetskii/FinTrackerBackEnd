@@ -10,7 +10,7 @@ public class IncomeExpenseDTO {
     private OperationType operationType;
     private BigDecimal amount;
     private String category;
-    private String date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
+    private String date;
 
     // getter'y są wymagane przez bibliotekę Jackson:
 

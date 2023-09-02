@@ -13,6 +13,7 @@ public class LimitController {
         this.limitService = limitService;
     }
 
+    // todo: przerobić na lepsze praktyki tworzenia ścieżek według konwencji RestAPI
     @PostMapping( "/new" )
     public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
         limitService.addNewLimit( limitDTO );

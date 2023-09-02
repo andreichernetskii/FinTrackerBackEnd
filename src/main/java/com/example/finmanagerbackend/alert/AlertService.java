@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.alert;
 
 import com.example.finmanagerbackend.analyser.FinAnalyser;
 import com.example.finmanagerbackend.income_expense.IIncomeExpenseRepository;
+import com.example.finmanagerbackend.limit.ILimitRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,15 +10,16 @@ import java.util.List;
 
 @Service
 public class AlertService {
-    private final IIncomeExpenseRepository iIncomeExpenseRepository;
-    private final FinAnalyser finAnalyser;
+    private final IIncomeExpenseRepository incomeExpenseRepository;
+    private final ILimitRepository limitRepository;
 
-    public AlertService( IIncomeExpenseRepository iIncomeExpenseRepository, FinAnalyser finAnalyser ) {
-        this.iIncomeExpenseRepository = iIncomeExpenseRepository;
-        this.finAnalyser = finAnalyser;
+    public AlertService( IIncomeExpenseRepository incomeExpenseRepository, ILimitRepository limitRepository ) {
+        this.incomeExpenseRepository = incomeExpenseRepository;
+        this.limitRepository = limitRepository;
     }
 
     public List<AlertDTO> showAllAlerts() {
+        FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
         finAnalyser.updateLimits();
         List<AlertDTO> alerts = new ArrayList<>();
 

@@ -11,10 +11,10 @@ public class Limit {
     @Id
     @GeneratedValue
     private Long id;
-//    @Column( nullable = false )
+    @Column( nullable = false )
     private BigDecimal limitAmount;
     @Enumerated( EnumType.STRING )
-//    @Column( nullable = false )
+    @Column( nullable = false )
     private LimitType limitType;
 
     // constructors

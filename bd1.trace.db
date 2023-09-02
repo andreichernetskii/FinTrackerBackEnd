@@ -3181,3 +3181,14 @@ AND DATE <= 2023-08-31 [90110-214]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
+2023-09-01 15:41:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000a    create table [*]user (\000a        e_mail varchar(255) not null,\000a        password varchar(255) not null,\000a        primary key (e_mail)\000a    )"; expected "identifier"; SQL statement:
+
+    create table user (
+        e_mail varchar(255) not null,
+        password varchar(255) not null,
+        primary key (e_mail)
+    ) [42001-214]
+2023-09-01 15:55:10 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "drop table [*]user"; expected "identifier"; SQL statement:
+drop table user [42001-214]

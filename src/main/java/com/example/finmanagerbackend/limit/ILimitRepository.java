@@ -14,10 +14,18 @@ public interface ILimitRepository extends JpaRepository<Limit, Long> {
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );
 
 
-    @Query( "SELECT CASE WHEN COUNT (limitType) > 0 THEN true ELSE false " +
-            "END FROM Limit WHERE limitType = :limitType" )
-    Boolean isLineWithLimitTypeExists( @Param( "limitType" ) LimitType limitType );
+    @Query( """
+          SELECT 
+          CASE WHEN COUNT( limitType ) > 0 
+          THEN true ELSE false
+          END 
+          FROM Limit 
+          WHERE limitType = :limitType""" )
+    Boolean existsBy( @Param( "limitType" ) LimitType limitType );
 
+    //todo: dowiedzieć się, czy to można zrobić w stylu
+    // void deleteByLimitType( LimitType limitType ); bez @
+    // albo od razu update bez usuwania
     @Modifying
     @Query( "DELETE FROM Limit lt WHERE lt.limitType = :limitType" )
     void deleteByLimitType( @Param( "limitType" ) LimitType limitType );

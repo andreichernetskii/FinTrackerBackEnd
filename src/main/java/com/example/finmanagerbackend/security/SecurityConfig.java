@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain configureChain( HttpSecurity httpSecurity, UserService userService ) throws Exception {
         return httpSecurity.csrf( customizer -> customizer.disable() )
                 .headers( customizer -> customizer.disable() )
-                .authorizeHttpRequests( customizer -> customizer.anyRequest().permitAll() )
+                .authorizeHttpRequests( customizer -> customizer.anyRequest().authenticated() )
                 .httpBasic( Customizer.withDefaults() )
                 .userDetailsService( userService )
                 .build();

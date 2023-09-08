@@ -35,7 +35,7 @@ public class LimitController {
 //        limitService.addOrUpdateLimit( limit );
 //    }
 
-    @GetMapping("/limit-types")
+    @GetMapping("/types")
     public List<String> getLimitTypes() {
         return limitService.getLimitTypes();
     }

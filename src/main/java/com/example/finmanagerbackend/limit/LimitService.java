@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +18,13 @@ public class LimitService {
         this.finAnalyser = finAnalyser;
     }
 
-    public void addNewLimit( LimitDTO limitDTO ) {
-        limitRepository.save( new Limit(
-                limitDTO.getLimitAmount(),
-                limitDTO.getLimitType()
-        ) );
-        finAnalyser.updateLimits();
-    }
+//    public void addNewLimit( LimitDTO limitDTO ) {
+//        limitRepository.save( new Limit(
+//                limitDTO.getLimitAmount(),
+//                limitDTO.getLimitType()
+//        ) );
+//        finAnalyser.updateLimits();
+//    }
 
     @Transactional
     public void deleteLimit( Long limitId ) {
@@ -39,25 +38,20 @@ public class LimitService {
         return limitRepository.findAll();
     }
 
-    public void updateLimit( Limit limit ) {
-        Optional<Limit> limitOptional = limitRepository.findById( limit.getId() );
-        if ( !limitOptional.isPresent() )
-            throw new IllegalStateException( "Limit z id " + limit.getId() + " nie istnieje w bazie!" );
-        limitRepository.save( limit );
-        finAnalyser.updateLimits();
-    }
+//    public void updateLimit( Limit limit ) {
+//        Optional<Limit> limitOptional = limitRepository.findById( limit.getId() );
+//        if ( !limitOptional.isPresent() )
+//            throw new IllegalStateException( "Limit z id " + limit.getId() + " nie istnieje w bazie!" );
+//        limitRepository.save( limit );
+//        finAnalyser.updateLimits();
+//    }
 
     @Transactional
     public void addOrUpdateLimit( LimitDTO limitDTO ) {
         Limit limit = createLimit( limitDTO );
 
-        if ( limitRepository.isLineWithLimitTypeExists( limit.getLimitType() ) ) {
-            limitRepository.deleteByLimitType( limit.getLimitType() );
-            limitRepository.save( limit );
-        } else {
-            limitRepository.save( limit );
-        }
-
+        limitRepository.deleteByLimitType( limit.getLimitType() );
+        limitRepository.save( limit );
         finAnalyser.updateLimits();
     }
 

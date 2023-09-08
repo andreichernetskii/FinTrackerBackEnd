@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.limit;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -14,23 +15,28 @@ public class LimitController {
     }
 
     // todo: przerobić na lepsze praktyki tworzenia ścieżek według konwencji RestAPI
-    @PostMapping( "/new" )
+    @PostMapping( "/" )
     public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
-        limitService.addNewLimit( limitDTO );
+        limitService.addOrUpdateLimit( limitDTO );
     }
 
-    @DeleteMapping( "/delete/{limitId}" )
+    @DeleteMapping( "/{limitId}" )
     public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
         limitService.deleteLimit( limitId );
     }
 
-    @GetMapping( "/all" )
+    @GetMapping( "/" )
     public List<Limit> getLimits() {
         return limitService.getLimits();
     }
 
-    @PutMapping( "/update" )
-    public void updateLimit( @RequestBody Limit limit ) {
-        limitService.updateLimit( limit );
+//    @PutMapping( "/update" )
+//    public void updateLimit( @RequestBody Limit limit ) {
+//        limitService.addOrUpdateLimit( limit );
+//    }
+
+    @GetMapping("/limit-types")
+    public List<String> getLimitTypes() {
+        return limitService.getLimitTypes();
     }
 }

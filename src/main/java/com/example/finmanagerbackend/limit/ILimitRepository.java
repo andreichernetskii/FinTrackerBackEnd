@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ILimitRepository extends JpaRepository<Limit, Long> {
-    @Query( "SELECT limitAmount FROM Limit " +
-            "WHERE limitType = :limitType" )
+    @Query( """
+            SELECT limitAmount FROM Limit 
+            WHERE limitType = :limitType
+            """ )
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );
 
 
@@ -20,13 +22,18 @@ public interface ILimitRepository extends JpaRepository<Limit, Long> {
           THEN true ELSE false
           END 
           FROM Limit 
-          WHERE limitType = :limitType""" )
+          WHERE limitType = :limitType
+          """ )
     Boolean existsBy( @Param( "limitType" ) LimitType limitType );
 
     //todo: dowiedzieć się, czy to można zrobić w stylu
     // void deleteByLimitType( LimitType limitType ); bez @
     // albo od razu update bez usuwania
     @Modifying
-    @Query( "DELETE FROM Limit lt WHERE lt.limitType = :limitType" )
+    @Query( """
+            DELETE 
+            FROM Limit lt 
+            WHERE lt.limitType = :limitType
+            """ )
     void deleteByLimitType( @Param( "limitType" ) LimitType limitType );
 }

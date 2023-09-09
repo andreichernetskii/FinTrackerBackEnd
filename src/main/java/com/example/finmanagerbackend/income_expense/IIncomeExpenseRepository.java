@@ -11,21 +11,27 @@ import java.util.List;
 
 @Repository
 public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
-    @Query( "SELECT operation FROM IncomeExpense operation " +
-            "WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) " +
-            "AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam )" +
-            "AND ( :operationTypeParam IS NULL OR operation.operationType = :operationTypeParam)" +
-            "AND ( :categoryParam IS NULL OR operation.category = :categoryParam )" )
+    @Query( """
+            SELECT operation 
+            FROM IncomeExpense operation 
+            WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) 
+            AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam ) 
+            AND ( :operationTypeParam IS NULL OR operation.operationType = :operationTypeParam) 
+            AND ( :categoryParam IS NULL OR operation.category = :categoryParam )
+            """ )
     List<IncomeExpense> findOperationsByCriteria( @Param( "yearParam" ) Integer year,
                                                   @Param( "monthParam" ) Integer month,
                                                   @Param( "operationTypeParam" ) OperationType operationType,
                                                   @Param( "categoryParam" ) String category );
 
-    @Query( "SELECT SUM( operation.amount ) FROM IncomeExpense operation " +
-            "WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) " +
-            "AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam )" +
-            "AND ( :operationTypeParam IS NULL OR operation.operationType = :operationTypeParam)" +
-            "AND ( :categoryParam IS NULL OR operation.category = :categoryParam )" )
+    @Query( """
+            SELECT SUM( operation.amount ) 
+            FROM IncomeExpense operation 
+            WHERE ( :yearParam IS NULL OR YEAR( operation.date ) = :yearParam ) 
+            AND ( :monthParam IS NULL OR MONTH( operation.date ) = :monthParam ) 
+            AND ( :operationTypeParam IS NULL OR operation.operationType = :operationTypeParam) 
+            AND ( :categoryParam IS NULL OR operation.category = :categoryParam )
+            """ )
     Double calculateAnnualBalanceByCriteria( @Param( "yearParam" ) Integer year,
                                              @Param( "monthParam" ) Integer month,
                                              @Param( "operationTypeParam" ) OperationType operationType,
@@ -35,16 +41,23 @@ public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, L
         return calculateAnnualBalanceByCriteria( null, null, null, null );
     }
 
-    @Query( "SELECT category FROM IncomeExpense GROUP BY category ORDER BY category" )
+    @Query( """
+            SELECT category 
+            FROM IncomeExpense 
+            GROUP BY category 
+            ORDER BY category
+            """ )
     List<String> getCategories();
 
-    @Query( "SELECT SUM(operation.amount) FROM IncomeExpense operation " +
-            "WHERE operation.operationType = 'EXPENSE'" +
-            "AND ( :yearParam IS NULL OR YEAR( operation.date ) = YEAR( :localDateParam ) )" +
-            "AND ( :monthParam IS NULL OR MONTH( operation.date ) = MONTH( :localDateParam ) )" +
-            "AND ( :firstWeekDayParam IS NULL OR operation.date >= :firstWeekDayParam) " +
-            "AND ( :lastWeekDayParam IS NULL OR operation.date <= :lastWeekDayParam)" +
-            "AND ( :dayParam IS NULL OR operation.date = :localDateParam )" )
+    @Query( """
+            SELECT SUM(operation.amount) FROM IncomeExpense operation 
+            WHERE operation.operationType = 'EXPENSE' 
+            AND ( :yearParam IS NULL OR YEAR( operation.date ) = YEAR( :localDateParam ) ) 
+            AND ( :monthParam IS NULL OR MONTH( operation.date ) = MONTH( :localDateParam ) ) 
+            AND ( :firstWeekDayParam IS NULL OR operation.date >= :firstWeekDayParam) 
+            AND ( :lastWeekDayParam IS NULL OR operation.date <= :lastWeekDayParam) 
+            AND ( :dayParam IS NULL OR operation.date = :localDateParam )
+            """ )
     Double calculateExpensesFromActualDate( @Param( "localDateParam" ) LocalDate localDate,
                                             @Param( "yearParam" ) Boolean year,
                                             @Param( "monthParam" ) Boolean month,

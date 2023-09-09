@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    // todo: przeanalizować
+    // todo: przeanalizowa
     @Bean
     public SecurityFilterChain configureChain( HttpSecurity httpSecurity, UserService userService ) throws Exception {
         return httpSecurity.csrf( customizer -> customizer.disable() )

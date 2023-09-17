@@ -8,7 +8,7 @@ import java.util.List;
 @RestController
 @RequestMapping( path = "api/v1/incomes-expenses" )
 public class IncomeExpenseController {
-    private IncomeExpenseService incomeExpenseService;
+    private final IncomeExpenseService incomeExpenseService;
 
     public IncomeExpenseController( IncomeExpenseService incomeExpenseService ) {
         this.incomeExpenseService = incomeExpenseService;

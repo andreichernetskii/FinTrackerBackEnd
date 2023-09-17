@@ -12,17 +12,17 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ExpenseGenerator {
-    private IIncomeExpenseRepository iIncomeExpenseRepository;
+    private final IncomeExpenseRepository incomeExpenseRepository;
     private static final Faker faker = new Faker();
 
-    public ExpenseGenerator( IIncomeExpenseRepository iIncomeExpenseRepository ) {
-        this.iIncomeExpenseRepository = iIncomeExpenseRepository;
+    public ExpenseGenerator( IncomeExpenseRepository incomeExpenseRepository ) {
+        this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
     @PostConstruct
     public void createRandomExpenses() {
-        if ( iIncomeExpenseRepository.count() == 0 ) {
-            iIncomeExpenseRepository.saveAll( generateExpenses( 34 ) );
+        if ( incomeExpenseRepository.count() == 0 ) {
+            incomeExpenseRepository.saveAll( generateExpenses( 34 ) );
         }
     }
 

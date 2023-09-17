@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/v1/alerts" )
 public class AlertController {
-    private AlertService alertService;
+    private final AlertService alertService;
 
     public AlertController( AlertService alertService ) {
         this.alertService = alertService;

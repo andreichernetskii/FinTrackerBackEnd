@@ -6,14 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LimitService {
-    private final ILimitRepository limitRepository;
-    private FinAnalyser finAnalyser;
+    private final LimitRepository limitRepository;
+    private final FinAnalyser finAnalyser;
 
-    public LimitService( ILimitRepository limitRepository, FinAnalyser finAnalyser ) {
+    public LimitService( LimitRepository limitRepository, FinAnalyser finAnalyser ) {
         this.limitRepository = limitRepository;
         this.finAnalyser = finAnalyser;
     }
@@ -55,12 +54,6 @@ public class LimitService {
         finAnalyser.updateLimits();
     }
 
-    private Limit createLimit( LimitDTO limitDTO ) {
-        return new Limit(
-                limitDTO.getLimitAmount(),
-                limitDTO.getLimitType()
-        );
-    }
 
 
     // not DB using functions
@@ -71,5 +64,12 @@ public class LimitService {
             list.add( limType.toString() );
         }
         return list;
+    }
+
+    private Limit createLimit( LimitDTO limitDTO ) {
+        return new Limit(
+                limitDTO.getLimitAmount(),
+                limitDTO.getLimitType()
+        );
     }
 }

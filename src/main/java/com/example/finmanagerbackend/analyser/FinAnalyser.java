@@ -1,9 +1,8 @@
 package com.example.finmanagerbackend.analyser;
 
-import com.example.finmanagerbackend.income_expense.IIncomeExpenseRepository;
-import com.example.finmanagerbackend.limit.ILimitRepository;
+import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.limit.LimitRepository;
 import com.example.finmanagerbackend.limit.LimitType;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,10 +18,10 @@ public class FinAnalyser {
     private BigDecimal monthLimit;
     private BigDecimal weekLimit;
     private BigDecimal dayLimit;
-    private IIncomeExpenseRepository incomeExpenseRepository;
-    private ILimitRepository limitRepository;
+    private IncomeExpenseRepository incomeExpenseRepository;
+    private LimitRepository limitRepository;
 
-    public FinAnalyser( IIncomeExpenseRepository incomeExpenseRepository, ILimitRepository limitRepository ) {
+    public FinAnalyser( IncomeExpenseRepository incomeExpenseRepository, LimitRepository limitRepository ) {
         this.incomeExpenseRepository = incomeExpenseRepository;
         this.limitRepository = limitRepository;
     }

@@ -8,13 +8,12 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/v1/limits" )
 public class LimitController {
-    LimitService limitService;
+    private final LimitService limitService;
 
     public LimitController( LimitService limitService ) {
         this.limitService = limitService;
     }
 
-    // todo: przerobić na lepsze praktyki tworzenia ścieżek według konwencji RestAPI
     @PostMapping( "/" )
     public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
         limitService.addOrUpdateLimit( limitDTO );

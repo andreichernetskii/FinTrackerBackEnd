@@ -5,24 +5,39 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
+// here we can customize spring security login, logout and other security configurations
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-    // todo: przeanalizowa
+    private String[] ENDPOINT_WHITELIST = {
+
+    };
+    // todo: przeanalizować
+
+    // configureChain - łańcuch filtrów do obrabiania zapytań bezpieczeństwa
+    // HttpSecurity - pozwala nastawić parametry bezpeczeństwa zapytań HTTP
+    // UserService - udostępnia informację o użytkownikach, będzie używany do autorizacji
     @Bean
     public SecurityFilterChain configureChain( HttpSecurity httpSecurity, UserService userService ) throws Exception {
         return httpSecurity.csrf( customizer -> customizer.disable() )
                 .headers( customizer -> customizer.disable() )
-                .authorizeHttpRequests( customizer -> customizer.anyRequest().authenticated() )
+                .authorizeHttpRequests( customizer ->
+                        customizer
+//                                .requestMatchers( "/api/v1/**" ).authenticated()
+                                .anyRequest()
+                                .authenticated() )
                 .httpBasic( Customizer.withDefaults() )
                 .userDetailsService( userService )
                 .build();
     }
 
+
+// service of keeping user data in memory
 //    @Bean
 //    public InMemoryUserDetailsManager configureUserManager(PasswordEncoder passEncoder) {
 //        UserDetails user1 = new User( "user1", passEncoder.encode( "123" ), new ArrayList<>() );
@@ -31,9 +46,9 @@ public class SecurityConfig {
 //        return manager;
 //    }
 
+    // password encryption type
     @Bean
     public PasswordEncoder configurePasswordEncoder() {
-        PasswordEncoder passEncoder = new BCryptPasswordEncoder();
-        return passEncoder;
+        return new BCryptPasswordEncoder();
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface IIncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
+public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
     @Query( """
             SELECT operation 
             FROM IncomeExpense operation 

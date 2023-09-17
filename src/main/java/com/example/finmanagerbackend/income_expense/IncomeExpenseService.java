@@ -8,17 +8,17 @@ import java.util.*;
 
 @Service
 public class IncomeExpenseService {
-    private final IIncomeExpenseRepository iIncomeExpenseRepository;
+    private final IncomeExpenseRepository incomeExpenseRepository;
 
-    public IncomeExpenseService( IIncomeExpenseRepository iIncomeExpenseRepository ) {
-        this.iIncomeExpenseRepository = iIncomeExpenseRepository;
+    public IncomeExpenseService( IncomeExpenseRepository incomeExpenseRepository ) {
+        this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
     public void addIncomeExpense( IncomeExpenseDTO incomeExpenseDTO ) {
         BigDecimal amount = ( incomeExpenseDTO.getOperationType() == OperationType.EXPENSE )
                 ? incomeExpenseDTO.getAmount().negate()
                 : incomeExpenseDTO.getAmount();
-        iIncomeExpenseRepository.save( new IncomeExpense(
+        incomeExpenseRepository.save( new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
                 amount,
                 incomeExpenseDTO.getCategory(),
@@ -27,36 +27,36 @@ public class IncomeExpenseService {
     }
 
     public List<IncomeExpense> getOperations() {
-        return iIncomeExpenseRepository.findAll();
+        return incomeExpenseRepository.findAll();
     }
 
     public void deleteIncomeExpense( Long operationId ) {
-        boolean exists = iIncomeExpenseRepository.existsById( operationId );
+        boolean exists = incomeExpenseRepository.existsById( operationId );
         if ( !exists ) {
             throw new IllegalStateException( "Operations with id " + operationId + " is not exists!" );
         }
-        iIncomeExpenseRepository.deleteById( operationId );
+        incomeExpenseRepository.deleteById( operationId );
     }
 
     public Double getAnnualBalance( Integer year, Integer month, OperationType operationType, String category ) {
-        return iIncomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
+        return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }
 
     public void updateIncomeExpense( IncomeExpense incomeExpense ) {
-        Optional<IncomeExpense> incomeExpenseOptional = iIncomeExpenseRepository.findById( incomeExpense.getId() );
+        Optional<IncomeExpense> incomeExpenseOptional = incomeExpenseRepository.findById( incomeExpense.getId() );
         if ( !incomeExpenseOptional.isPresent() ) {
             throw new IllegalStateException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
         }
-        iIncomeExpenseRepository.save( incomeExpense );
+        incomeExpenseRepository.save( incomeExpense );
     }
 
     public List<IncomeExpense> getOperationsByCriteria( Integer year, Integer month, OperationType operationType, String category ) {
-        List<IncomeExpense> list = iIncomeExpenseRepository.findOperationsByCriteria( year, month, operationType, category );
+        List<IncomeExpense> list = incomeExpenseRepository.findOperationsByCriteria( year, month, operationType, category );
         return list;
     }
 
     public List<String> getCategories() {
-        List<String> categories = iIncomeExpenseRepository.getCategories();
+        List<String> categories = incomeExpenseRepository.getCategories();
         return categories;
     }
 }

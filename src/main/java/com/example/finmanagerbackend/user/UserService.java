@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -30,9 +29,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
         User user = userRepository.findById( username )
                 .orElseThrow(() -> new UsernameNotFoundException( "User nie istnieje!" ));
-        UserDetails user1 = new org.springframework.security.core.userdetails.User(
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), new ArrayList<>() );
 
-        return user1;
+        return userDetails;
     }
 }

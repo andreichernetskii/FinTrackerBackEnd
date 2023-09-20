@@ -12,6 +12,16 @@ public class IncomeExpenseDTO {
     private String category;
     private String date;
 
+    public IncomeExpenseDTO() {
+    }
+
+    public IncomeExpenseDTO( OperationType operationType, BigDecimal amount, String category, String date ) {
+        this.operationType = operationType;
+        this.amount = amount;
+        this.category = category;
+        this.date = date;
+    }
+
     // getter'y są wymagane przez bibliotekę Jackson:
 
     public OperationType getOperationType() {

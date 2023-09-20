@@ -1,12 +1,9 @@
 package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.analyser.FinAnalyser;
-import com.example.finmanagerbackend.limit.Limit;
-import com.example.finmanagerbackend.limit.LimitRepository;
-import com.example.finmanagerbackend.limit.LimitService;
-import com.example.finmanagerbackend.limit.LimitType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -86,10 +83,24 @@ public class LimitServiceTest {
 
     @Test
     public void addOrUpdateLimit_SuccessfulUpdatingLimit() {
+        // first, original limit adding to mock
         Limit oldLimit = new Limit( new BigDecimal( 100 ), LimitType.DAY );
         when( limitRepository.save( any() ) ).thenReturn( oldLimit );
 
-        Limit newLimit = new Limit( new BigDecimal( 120 ), LimitType.DAY );
+        // preparing new limit for update operation
+        LimitDTO newLimit = new LimitDTO(new BigDecimal( 120 ), LimitType.DAY);
+        // and adding to mock for update
+        limitService.addOrUpdateLimit( newLimit );
 
+        // create object for capturing values
+        ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass( Limit.class );
+        // capturing saved object
+        verify( limitRepository ).save( limitCaptor.capture() );
+        // and creating a new limit with captured values
+        Limit capturedLimit = limitCaptor.getValue();
+
+        // asserting got and expected values
+        assertEquals( newLimit.getLimitAmount(), capturedLimit.getLimitAmount() );
+        assertEquals( newLimit.getLimitType(), capturedLimit.getLimitType() );
     }
 }

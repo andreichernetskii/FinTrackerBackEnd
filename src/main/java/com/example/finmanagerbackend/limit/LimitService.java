@@ -28,7 +28,8 @@ public class LimitService {
     @Transactional
     public void deleteLimit( Long limitId ) {
         boolean isLimitExists = limitRepository.existsById( limitId );
-        if ( !isLimitExists ) throw new IllegalStateException( "Limit with id " + limitId + " is not exists!" );
+        if ( !isLimitExists )
+            throw new IllegalStateException( "Limit with id " + limitId + " is not exists!" );
         limitRepository.deleteById( limitId );
         finAnalyser.updateLimits();
     }

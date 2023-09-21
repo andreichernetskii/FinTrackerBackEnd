@@ -30,7 +30,7 @@ public class SecurityConfig {
                         customizer
 //                                .requestMatchers( "/api/v1/**" ).authenticated()
                                 .anyRequest()
-                                .authenticated() )
+                                .permitAll() )
                 .httpBasic( Customizer.withDefaults() )
                 .userDetailsService( userService )
                 .build();

@@ -15,7 +15,7 @@ public class AlertController {
         this.alertService = alertService;
     }
 
-    @GetMapping()
+    @GetMapping( "/" )
     public List<AlertDTO> showAllAlerts() {
         return alertService.showAllAlerts();
     }

@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.alert;
 
+//todo: precezyjniej opisać komunikaty
 public enum AlertType {
     NEGATIVE_BALANCE( "Jesteś na minusie!" ),
     MORE_THEN_PREV_MONTH( "Wydałeś więcej, niż w poprzednim miesięcu" ),

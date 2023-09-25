@@ -1,7 +1,9 @@
 package com.example.finmanagerbackend.limit;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +18,12 @@ public class LimitController {
 
     @PostMapping( "/" )
     public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
-        limitService.addOrUpdateLimit( limitDTO );
+        limitService.addLimit( limitDTO );
+    }
+
+    @PutMapping( "/{limitId}" )
+    public void updateLimit( @PathVariable( "limitId" ) Long limitId, @RequestBody Limit limit ) {
+        limitService.updateLimit( limitId, limit );
     }
 
     @DeleteMapping( "/{limitId}" )
@@ -28,11 +35,6 @@ public class LimitController {
     public List<Limit> getLimits() {
         return limitService.getLimits();
     }
-
-//    @PutMapping( "/update" )
-//    public void updateLimit( @RequestBody Limit limit ) {
-//        limitService.addOrUpdateLimit( limit );
-//    }
 
     @GetMapping("/types")
     public List<String> getLimitTypes() {

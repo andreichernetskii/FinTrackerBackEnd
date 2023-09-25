@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// todo: posprzątać według konwencji RestApi (chodzi o ścieżkach)
 // Api Controller
 @RestController
 @RequestMapping( path = "api/v1/incomes-expenses" )

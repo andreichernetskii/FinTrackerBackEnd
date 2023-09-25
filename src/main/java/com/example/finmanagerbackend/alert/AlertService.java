@@ -5,8 +5,10 @@ import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.LimitRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AlertService {
@@ -18,28 +20,30 @@ public class AlertService {
         this.limitRepository = limitRepository;
     }
 
+    // todo: dodać alert przekrocenia budżetu
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
-        finAnalyser.updateLimits();
+        Map<String, BigDecimal> actualLimits = finAnalyser.getActualLimits();
+
         List<AlertDTO> alerts = new ArrayList<>();
 
         if ( finAnalyser.isNegativeConditionOfAccount() ) {
             alerts.add( new AlertDTO( AlertType.NEGATIVE_BALANCE.label, false ) );
         }
 
-        if ( finAnalyser.isYearLimitExceeded() ) {
+        if ( finAnalyser.isYearLimitExceeded( actualLimits.get( "year" ) ) ) {
             alerts.add( new AlertDTO( AlertType.YEAR_LIMIT_EXCEEDING.label, false) );
         }
 
-        if ( finAnalyser.isMonthLimitExceeded() ) {
+        if ( finAnalyser.isMonthLimitExceeded( actualLimits.get( "month" ) ) ) {
             alerts.add( new AlertDTO( AlertType.MONTH_LIMIT_EXCEEDING.label, false) );
         }
 
-        if ( finAnalyser.isWeekLimitExceeded() ) {
+        if ( finAnalyser.isWeekLimitExceeded( actualLimits.get( "week" ) ) ) {
             alerts.add( new AlertDTO( AlertType.WEEK_LIMIT_EXCEEDING.label, false) );
         }
 
-        if ( finAnalyser.isDayLimitExceeded() ) {
+        if ( finAnalyser.isDayLimitExceeded( actualLimits.get( "day" ) ) ) {
             alerts.add( new AlertDTO( AlertType.DAY_LIMIT_EXCEEDING.label, false) );
         }
 

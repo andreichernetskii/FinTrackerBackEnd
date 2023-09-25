@@ -15,7 +15,7 @@ public class IncomeExpense {
     private OperationType operationType;
     private BigDecimal amount;
     private String category;
-    private LocalDate date; // todo: konwersia do odpowiedniego formatu: Date albo LocalDate
+    private LocalDate date;
 
     // constructors
 

@@ -26,9 +26,6 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
           """ )
     Boolean existsBy( @Param( "limitType" ) LimitType limitType );
 
-    //todo: dowiedzieć się, czy to można zrobić w stylu
-    // void deleteByLimitType( LimitType limitType ); bez @
-    // albo od razu update bez usuwania
     @Modifying
     @Query( """
             DELETE 

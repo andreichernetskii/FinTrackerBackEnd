@@ -50,7 +50,8 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
     List<String> getCategories();
 
     @Query( """
-            SELECT SUM(operation.amount) FROM IncomeExpense operation 
+            SELECT SUM(operation.amount) 
+            FROM IncomeExpense operation 
             WHERE operation.operationType = 'EXPENSE' 
             AND ( :yearParam IS NULL OR YEAR( operation.date ) = YEAR( :localDateParam ) ) 
             AND ( :monthParam IS NULL OR MONTH( operation.date ) = MONTH( :localDateParam ) ) 
@@ -64,4 +65,13 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
                                             @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
                                             @Param( "lastWeekDayParam" ) LocalDate lastWeekDay,
                                             @Param( "dayParam" ) Boolean day );
+
+    @Query( """
+            SELECT SUM(operation.amount)
+            FROM IncomeExpense operation
+            WHERE operation.operationType = 'EXPENSE'
+            AND YEAR( operation.date ) = YEAR( :monthParam )
+            AND MONTH( operation.date ) = MONTH( :monthParam )
+            """ )
+    Double calculateMonthExpenses( @Param( "monthParam" ) LocalDate month );
 }

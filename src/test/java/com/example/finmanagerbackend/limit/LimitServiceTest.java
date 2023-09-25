@@ -27,20 +27,21 @@ public class LimitServiceTest {
 
     @Test
     public void deleteLimitTest_SuccessfulDeletion() {
+        Long id = 1L;
         // podłaczamy mock
-        when( limitRepository.existsById( anyLong() ) ).thenReturn( true );
+        when( limitRepository.existsById( id ) ).thenReturn( true );
 
         // robimy usunięcie
-        limitService.deleteLimit( 1L );
+        limitService.deleteLimit( id );
 
         // sprawdzamy, czy metody były używane
-        verify( limitRepository ).existsById( 1L );
-        verify( limitRepository ).deleteById( 1L );
+        verify( limitRepository ).existsById( id );
+        verify( limitRepository ).deleteById( id );
         verify( finAnalyser ).updateLimits();
 
         // że już nie ma limita z takim ID
-        when( limitRepository.existsById( 1L ) ).thenReturn( false );
-        assertFalse( limitRepository.existsById( 1L ) );
+        when( limitRepository.existsById( id ) ).thenReturn( false );
+        assertFalse( limitRepository.existsById( id ) );
     }
 
     @Test
@@ -82,7 +83,7 @@ public class LimitServiceTest {
     }
 
     @Test
-    public void addOrUpdateLimit_SuccessfulUpdatingLimit() {
+    public void addOrUpdateLimit_SuccessfulAddingLimit() {
         // first, original limit adding to mock
         Limit oldLimit = new Limit( new BigDecimal( 100 ), LimitType.DAY );
         when( limitRepository.save( any() ) ).thenReturn( oldLimit );

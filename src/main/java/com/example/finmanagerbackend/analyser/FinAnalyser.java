@@ -15,8 +15,6 @@ import java.util.Map;
 
 @Service
 public class FinAnalyser {
-    // todo: przerobić jak w zeszycie
-    // todo: może można jakoś tą klasę uprościć
     private IncomeExpenseRepository incomeExpenseRepository;
     private LimitRepository limitRepository;
 
@@ -65,40 +63,31 @@ public class FinAnalyser {
 
     public Boolean isBudgetExceeded( BigDecimal budget) {
         if ( budget == null ) return false;
-        BigDecimal actualBalance = BigDecimal.valueOf( incomeExpenseRepository.calculateAnnualBalance() );
-        int comparisonToZero = budget.subtract( actualBalance ).compareTo( BigDecimal.ZERO );
-        return comparisonToZero < 0;
+
+        BigDecimal actualBalance = BigDecimal.valueOf( incomeExpenseRepository.calculateAnnualBalance() ).abs();
+        return actualBalance.compareTo( budget ) >= 0;
     }
 
     public boolean isDayLimitExceeded( BigDecimal dayLimit) {
         if ( dayLimit == null ) return false;
-        Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
-                LocalDate.now(),
-                null,
-                null,
-                null,
-                null,
-                true );
+
+        Double actualBalanceAsDouble = incomeExpenseRepository.calculateDayExpenses( LocalDate.now() );
         if ( actualBalanceAsDouble == null ) return false;
-        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
-        int comparisonToZero = dayLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
-        return comparisonToZero < 0;
+
+        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble ).abs();
+        return actualBalance.compareTo( dayLimit ) >= 0;
     }
 
     public boolean isWeekLimitExceeded( BigDecimal weekLimit ) {
         if ( weekLimit == null ) return false;
         List<LocalDate> firstLastWeekDay = getStartAndEndOfWeekDates();
-        Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
-                LocalDate.now(),
-                null,
-                null,
-                firstLastWeekDay.get( 0 ),
-                firstLastWeekDay.get( 1 ),
-                null );
+
+        Double actualBalanceAsDouble = incomeExpenseRepository
+                .calculateWeekExpenses( firstLastWeekDay.get( 0 ), firstLastWeekDay.get( 1 ) );
         if ( actualBalanceAsDouble == null ) return false;
-        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
-        int comparisonToZero = weekLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
-        return comparisonToZero < 0;
+
+        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble ).abs();
+        return actualBalance.compareTo( weekLimit ) >= 0;
     }
 
     public Boolean isMonthLimitExceeded( BigDecimal monthLimit ) {
@@ -108,27 +97,23 @@ public class FinAnalyser {
         if ( actualBalanceAsDouble == null) return false;
 
         BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble ).abs();
-        return actualBalance.compareTo( monthLimit ) > 0 || actualBalance.compareTo( monthLimit ) == 0;
+        return actualBalance.compareTo( monthLimit ) >= 0;
     }
 
     public Boolean isYearLimitExceeded( BigDecimal yearLimit ) {
         if ( yearLimit == null ) return false;
-        Double actualBalanceAsDouble = incomeExpenseRepository.calculateExpensesFromActualDate(
-                LocalDate.now(),
-                true,
-                null,
-                null,
-                null,
-                null );
+
+        Double actualBalanceAsDouble = incomeExpenseRepository.calculateYearExpenses( LocalDate.now() );
         if ( actualBalanceAsDouble == null ) return false;
-        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble );
-        int comparisonToZero = yearLimit.subtract( actualBalance.abs() ).compareTo( BigDecimal.ZERO );
-        return comparisonToZero < 0;
+
+        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble ).abs();
+        return actualBalance.compareTo( yearLimit ) >= 0;
     }
 
     public boolean isNegativeConditionOfAccount() {
         Double actualBalance = incomeExpenseRepository.calculateAnnualBalance();
         if ( actualBalance < 0 ) return true;
+
         return false;
     }
 
@@ -136,12 +121,13 @@ public class FinAnalyser {
 
     private List<LocalDate> getStartAndEndOfWeekDates() {
         List<LocalDate> dates = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        LocalDate startOfWeek = today.minusDays( today.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue() );
-        LocalDate endOfWeek = startOfWeek.plusDays( 6 );
 
-        dates.add( startOfWeek );
-        dates.add( endOfWeek );
+        LocalDate today = LocalDate.now();
+        LocalDate monday = today.with( DayOfWeek.MONDAY ).minusDays( 1 );
+        LocalDate sunday = today.with( DayOfWeek.SUNDAY ).minusDays( 1 );
+
+        dates.add( monday );
+        dates.add( sunday );
 
         return dates;
     }

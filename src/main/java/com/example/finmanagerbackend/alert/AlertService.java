@@ -47,6 +47,10 @@ public class AlertService {
             alerts.add( new AlertDTO( AlertType.DAY_LIMIT_EXCEEDING.label, false) );
         }
 
+        if ( finAnalyser.isBudgetExceeded( actualLimits.get( "budget" ) ) ) {
+            alerts.add( new AlertDTO( AlertType.BUDGET_LIMIT_EXCEEDING.label, false ) );
+        }
+
         return alerts;
     }
 }

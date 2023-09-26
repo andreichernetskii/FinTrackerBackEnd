@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.income_expense;
 
 
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,28 +51,39 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
     List<String> getCategories();
 
     @Query( """
-            SELECT SUM(operation.amount) 
-            FROM IncomeExpense operation 
-            WHERE operation.operationType = 'EXPENSE' 
-            AND ( :yearParam IS NULL OR YEAR( operation.date ) = YEAR( :localDateParam ) ) 
-            AND ( :monthParam IS NULL OR MONTH( operation.date ) = MONTH( :localDateParam ) ) 
-            AND ( :firstWeekDayParam IS NULL OR operation.date >= :firstWeekDayParam) 
-            AND ( :lastWeekDayParam IS NULL OR operation.date <= :lastWeekDayParam) 
-            AND ( :dayParam IS NULL OR operation.date = :localDateParam )
-            """ )
-    Double calculateExpensesFromActualDate( @Param( "localDateParam" ) LocalDate localDate,
-                                            @Param( "yearParam" ) Boolean year,
-                                            @Param( "monthParam" ) Boolean month,
-                                            @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
-                                            @Param( "lastWeekDayParam" ) LocalDate lastWeekDay,
-                                            @Param( "dayParam" ) Boolean day );
-
-    @Query( """
-            SELECT SUM(operation.amount)
+            SELECT SUM( operation.amount )
             FROM IncomeExpense operation
             WHERE operation.operationType = 'EXPENSE'
             AND YEAR( operation.date ) = YEAR( :monthParam )
             AND MONTH( operation.date ) = MONTH( :monthParam )
             """ )
     Double calculateMonthExpenses( @Param( "monthParam" ) LocalDate month );
+
+    @Query( """
+            SELECT SUM( operation.amount )
+            FROM IncomeExpense  operation
+            WHERE operation.operationType = 'EXPENSE'
+            AND YEAR( operation.date ) = YEAR( :yearParam )
+            """)
+    Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
+
+    @Query( """
+            SELECT SUM( operation.amount )
+            FROM IncomeExpense operation
+            WHERE operation.operationType = 'EXPENSE'
+            AND YEAR( operation.date ) = YEAR( :dayParam )
+            AND MONTH( operation.date ) = MONTH( :dayParam )
+            AND DAY( operation.date ) = DAY( :dayParam )
+            """)
+    Double calculateDayExpenses( @Param( "dayParam" ) LocalDate day );
+
+    @Query( """
+            SELECT SUM( operation.amount )
+            FROM IncomeExpense operation
+            WHERE operation.operationType = 'EXPENSE'
+            AND ( :firstWeekDayParam IS NULL OR operation.date >= :firstWeekDayParam) 
+            AND ( :lastWeekDayParam IS NULL OR operation.date <= :lastWeekDayParam)
+            """)
+    Double calculateWeekExpenses( @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
+                                  @Param( "lastWeekDayParam" ) LocalDate lastWeekDay );
 }

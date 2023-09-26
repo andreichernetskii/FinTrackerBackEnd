@@ -11,11 +11,9 @@ import java.util.Optional;
 @Service
 public class LimitService {
     private final LimitRepository limitRepository;
-    private final FinAnalyser finAnalyser;
 
-    public LimitService( LimitRepository limitRepository, FinAnalyser finAnalyser ) {
+    public LimitService( LimitRepository limitRepository ) {
         this.limitRepository = limitRepository;
-        this.finAnalyser = finAnalyser;
     }
 
     @Transactional
@@ -24,7 +22,6 @@ public class LimitService {
         if ( !isLimitExists )
             throw new IllegalStateException( "Limit with id " + limitId + " is not exists!" );
         limitRepository.deleteById( limitId );
-//        finAnalyser.updateLimits();
     }
 
     public List<Limit> getLimits() {

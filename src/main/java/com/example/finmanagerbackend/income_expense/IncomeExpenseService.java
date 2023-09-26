@@ -18,6 +18,7 @@ public class IncomeExpenseService {
         BigDecimal amount = ( incomeExpenseDTO.getOperationType() == OperationType.EXPENSE )
                 ? incomeExpenseDTO.getAmount().negate()
                 : incomeExpenseDTO.getAmount();
+
         incomeExpenseRepository.save( new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
                 amount,

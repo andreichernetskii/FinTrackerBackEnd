@@ -20,7 +20,6 @@ public class AlertService {
         this.limitRepository = limitRepository;
     }
 
-    // todo: dodać alert przekrocenia budżetu
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
         Map<String, BigDecimal> actualLimits = finAnalyser.getActualLimits();

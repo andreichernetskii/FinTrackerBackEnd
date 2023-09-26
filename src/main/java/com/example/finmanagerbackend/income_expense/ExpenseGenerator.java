@@ -28,6 +28,7 @@ public class ExpenseGenerator {
 
     public List<IncomeExpense> generateExpenses( int count ) { // todo: wybalansować, żeby były incomy i expens'y
         List<IncomeExpense> expenses = new ArrayList<>();
+
         for ( int i = 0; i < count; i++ ) {
             IncomeExpense incomeExpense = new IncomeExpense();
             incomeExpense.setCategory( faker.commerce().department() );
@@ -38,6 +39,7 @@ public class ExpenseGenerator {
                     .toLocalDate() );
             expenses.add( incomeExpense );
         }
+
         return expenses;
     }
 }

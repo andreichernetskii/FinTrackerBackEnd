@@ -25,6 +25,7 @@ public class LimitServiceTest {
     @Mock // symulacja działania finAnalyzer'a
     private FinAnalyser finAnalyser;
 
+    // todo: przerobić testy zgodnie ze zmianami klasy LimitService
     @Test
     public void deleteLimitTest_SuccessfulDeletion() {
         Long id = 1L;
@@ -37,7 +38,6 @@ public class LimitServiceTest {
         // sprawdzamy, czy metody były używane
         verify( limitRepository ).existsById( id );
         verify( limitRepository ).deleteById( id );
-        verify( finAnalyser ).updateLimits();
 
         // że już nie ma limita z takim ID
         when( limitRepository.existsById( id ) ).thenReturn( false );
@@ -46,17 +46,18 @@ public class LimitServiceTest {
 
     @Test
     public void deleteLimitTest_LimitNotFound() {
+        Long id = 1L;
         // podłączamy mock, żeby on symulował brak istnienia limita
-        when( limitRepository.existsById( anyLong() ) ).thenReturn( false );
+        when( limitRepository.existsById( id ) ).thenReturn( false );
 
         // sprawdzamy, czy wysakuje wyjątek po próbie usunięcia nieistniejącego limita
-        assertThrows( IllegalStateException.class, () -> limitService.deleteLimit( 1L ) );
+        assertThrows( IllegalStateException.class, () -> limitService.deleteLimit( id ) );
 
         // czy była metoda zawołana
-        verify( limitRepository ).existsById( 1L );
+        verify( limitRepository ).existsById( id );
 
         // czy nie było więcej niepotrzebnych wyławań
-        verifyNoMoreInteractions( limitRepository, finAnalyser );
+        verifyNoMoreInteractions( limitRepository );
     }
 
     @Test
@@ -82,8 +83,9 @@ public class LimitServiceTest {
         assertEquals( expectedLimits, actualLimits );
     }
 
+
     @Test
-    public void addOrUpdateLimit_SuccessfulAddingLimit() {
+    public void addLimitTest_SuccessfulAddedLimit() {
         // first, original limit adding to mock
         Limit oldLimit = new Limit( new BigDecimal( 100 ), LimitType.DAY );
         when( limitRepository.save( any() ) ).thenReturn( oldLimit );
@@ -91,7 +93,7 @@ public class LimitServiceTest {
         // preparing new limit for update operation
         LimitDTO newLimit = new LimitDTO(new BigDecimal( 120 ), LimitType.DAY);
         // and adding to mock for update
-        limitService.addOrUpdateLimit( newLimit );
+        limitService.addLimit( newLimit );
 
         // create object for capturing values
         ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass( Limit.class );

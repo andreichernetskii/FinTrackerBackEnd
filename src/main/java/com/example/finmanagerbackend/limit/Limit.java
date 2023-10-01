@@ -15,7 +15,7 @@ public class Limit {
     private BigDecimal limitAmount;
     @Enumerated( EnumType.STRING )
     @Column( nullable = false )
-    private LimitType limitType;
+    private LimitType limitType; //todo skoro unikatowe to moze rowniez pelnic role id
 
     // constructors
 

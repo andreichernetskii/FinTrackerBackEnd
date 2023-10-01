@@ -26,6 +26,7 @@ public class LimitController {
         limitService.updateLimit( limitId, limit );
     }
 
+    //todo: przerobić, żeby server zwracał 404, jeśli limita nie znaleziono
     @DeleteMapping( "/{limitId}" )
     public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
         limitService.deleteLimit( limitId );

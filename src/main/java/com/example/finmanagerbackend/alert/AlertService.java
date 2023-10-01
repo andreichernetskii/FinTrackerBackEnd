@@ -22,34 +22,12 @@ public class AlertService {
 
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
-        Map<String, BigDecimal> actualLimits = finAnalyser.getActualLimits();
+        return finAnalyser.calcActualLimits(); //todo zamist key-String - LimitType
 
-        List<AlertDTO> alerts = new ArrayList<>();
 
-        if ( finAnalyser.isNegativeConditionOfAccount() ) {
-            alerts.add( new AlertDTO( AlertType.NEGATIVE_BALANCE.label, false ) );
-        }
 
-        if ( finAnalyser.isYearLimitExceeded( actualLimits.get( "year" ) ) ) {
-            alerts.add( new AlertDTO( AlertType.YEAR_LIMIT_EXCEEDING.label, false) );
-        }
+        //wstawiamy ten kod jako czesc metody getActualLimits ktora w takim razie bedzie musiala zwracac List<AlertDTO>
 
-        if ( finAnalyser.isMonthLimitExceeded( actualLimits.get( "month" ) ) ) {
-            alerts.add( new AlertDTO( AlertType.MONTH_LIMIT_EXCEEDING.label, false) );
-        }
 
-        if ( finAnalyser.isWeekLimitExceeded( actualLimits.get( "week" ) ) ) {
-            alerts.add( new AlertDTO( AlertType.WEEK_LIMIT_EXCEEDING.label, false) );
-        }
-
-        if ( finAnalyser.isDayLimitExceeded( actualLimits.get( "day" ) ) ) {
-            alerts.add( new AlertDTO( AlertType.DAY_LIMIT_EXCEEDING.label, false) );
-        }
-
-        if ( finAnalyser.isBudgetExceeded( actualLimits.get( "budget" ) ) ) {
-            alerts.add( new AlertDTO( AlertType.BUDGET_LIMIT_EXCEEDING.label, false ) );
-        }
-
-        return alerts;
     }
 }

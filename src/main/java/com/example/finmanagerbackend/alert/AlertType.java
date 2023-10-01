@@ -9,9 +9,13 @@ public enum AlertType {
     WEEK_LIMIT_EXCEEDING( "Przekrociłeś tygodniowy limit!" ),
     DAY_LIMIT_EXCEEDING( "Przekrociłeś dzienny limit!" );
 
-    public String label;
+    public String label; //todo private + getter
 
     private AlertType( String label ) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

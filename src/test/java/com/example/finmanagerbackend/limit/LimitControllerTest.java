@@ -43,6 +43,7 @@ public class LimitControllerTest {
                 .andExpect( MockMvcResultMatchers.status().isOk() );
     }
 
+    // todo: i potem zmienić na oczekiwanie ...perform...andExpect(notFound)
     @Test
     public void deleteLimitTest_ExceptionIdIsNotExists() throws Exception {
         Assertions.assertThrows( ServletException.class, () -> {

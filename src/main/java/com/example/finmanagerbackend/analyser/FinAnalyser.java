@@ -82,15 +82,15 @@ public class FinAnalyser {
     }
 
     private boolean isLimitExceeded( Limit limit ) {
-        return strategy.isLimitExceeded(limit);
+        return strategy.isLimitExceeded( limit );
     }
 
     private void setStrategy( LimitType limitType ) {
-      strategy =  switch ( limitType ) {
+        strategy = switch ( limitType ) {
             case YEAR -> new YearLimitCalcStrategy( incomeExpenseRepository );
-        case MONTH -> new MonthLimitCalcStrategy( incomeExpenseRepository );
-          case WEEK -> new WeekLimitCalcStrategy( incomeExpenseRepository );
-          case DAY -> new DayLimitCalcStrategy( incomeExpenseRepository );
+            case MONTH -> new MonthLimitCalcStrategy( incomeExpenseRepository );
+            case WEEK -> new WeekLimitCalcStrategy( incomeExpenseRepository );
+            case DAY -> new DayLimitCalcStrategy( incomeExpenseRepository );
             default -> throw new IllegalStateException();
         };
     }
@@ -126,7 +126,7 @@ public class FinAnalyser {
 //    }
 
     // checking is limits are exceeded
-        //todo: private
+    //todo: private
 //    public boolean isNegativeConditionOfAccount() {
 //        return incomeExpenseRepository.calculateAnnualBalance() <0;
 //    }

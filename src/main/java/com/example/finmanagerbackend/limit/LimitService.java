@@ -18,14 +18,20 @@ public class LimitService {
 
     @Transactional
     public void deleteLimit( LimitType limitId ) {
+        if ( limitId == LimitType.ZERO ) {
+            throw new IllegalStateException( "Cannot delete the default limit with type ZERO." );
+        }
+
         boolean isLimitExists = limitRepository.existsById( limitId );
-        if ( !isLimitExists )
+        if ( !isLimitExists ) {
             throw new IllegalStateException( "Limit with id " + limitId + " is not exists!" );
+        }
+
         limitRepository.deleteById( limitId );
     }
 
     public List<Limit> getLimits() {
-        return limitRepository.findAll();
+        return limitRepository.getAllLimitsWithoutZero();
     }
 
     public void addLimit( LimitDTO limitDTO ) {
@@ -38,6 +44,7 @@ public class LimitService {
         if ( !optimalLimit.isPresent() ) {
             throw new IllegalStateException( "Limit z id " + limitId + " nie istnieje w bazie!" );
         }
+
         limitRepository.save( limit );
     }
 
@@ -49,13 +56,14 @@ public class LimitService {
         for ( LimitType limType : LimitType.values() ) {
             list.add( limType.toString() );
         }
+
         return list;
     }
 
     private Limit createLimit( LimitDTO limitDTO ) {
         return new Limit(
-                limitDTO.getLimitAmount(),
-                limitDTO.getLimitType()
+                limitDTO.getLimitType(),
+                limitDTO.getLimitAmount()
         );
     }
 }

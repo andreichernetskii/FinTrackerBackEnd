@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.limit;
 
 public enum LimitType {
+    ZERO( "Twoje konto jest na minusie!" ),
     BUDGET( "Przekrociłeś budżet!" ),
     YEAR( "Przekrociłeś roczny limit!" ),
     MONTH( "Przekrociłeś miesięczny limit!" ),

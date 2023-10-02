@@ -4671,3 +4671,24 @@ select sum(i1_0.amount) from income_expense i1_0 where i1_0.operation_type=and(e
 2023-09-26 01:37:39 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select sum(i1_0.amount) from income_expense i1_0 where i1_0.operation_type=[*]and(extract(month from i1_0.date)=extract(month from ?))"; expected "ALL (, ANY (, SOME ("; SQL statement:
 select sum(i1_0.amount) from income_expense i1_0 where i1_0.operation_type=and(extract(month from i1_0.date)=extract(month from ?)) [42001-214]
+2023-10-02 23:57:12 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SHOW [*]CREATE TABLE Limits"; SQL statement:
+SHOW CREATE TABLE Limits [42000-214]
+2023-10-03 00:03:29 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CONSTRAINTS" not found; SQL statement:
+SELECT * 
+FROM INFORMATION_SCHEMA.CONSTRAINTS 
+WHERE CONSTRAINT_NAME = 'CONSTRAINT_8' [42102-214]
+2023-10-03 00:03:44 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIMITS" not found; SQL statement:
+SELECT * 
+FROM INFORMATION_SCHEMA.LIMITS 
+WHERE CONSTRAINT_NAME = 'CONSTRAINT_8' [42102-214]
+2023-10-03 00:04:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIMITS" not found; SQL statement:
+SELECT * 
+FROM INFORMATION_SCHEMA.LIMITS  
+WHERE CONSTRAINT_NAME = 'CONSTRAINT_8' [42102-214]
+2023-10-03 00:04:16 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]INFORMATION_SCHEMA.CHECK_CONSTRAINTS"; expected "INSERT"; SQL statement:
+INFORMATION_SCHEMA.CHECK_CONSTRAINTS [42001-214]

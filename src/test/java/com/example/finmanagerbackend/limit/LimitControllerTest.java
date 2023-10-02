@@ -29,8 +29,8 @@ public class LimitControllerTest {
     public void addNewLimitTest() throws Exception {
         // some data for test
         LimitDTO limitDTO = new LimitDTO(
-                new BigDecimal( 100 ),
-                LimitType.DAY
+                LimitType.DAY,
+                new BigDecimal( 100 )
         );
 
         // casting to json style

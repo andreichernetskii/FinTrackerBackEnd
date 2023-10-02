@@ -3,14 +3,14 @@ package com.example.finmanagerbackend.limit;
 import java.math.BigDecimal;
 
 public class LimitDTO {
-    private BigDecimal limitAmount;
     private LimitType limitType;
+    private BigDecimal limitAmount;
 
     public LimitDTO() {    }
 
-    public LimitDTO( BigDecimal limitAmount, LimitType limitType ) {
-        this.limitAmount = limitAmount;
+    public LimitDTO( LimitType limitType, BigDecimal limitAmount ) {
         this.limitType = limitType;
+        this.limitAmount = limitAmount;
     }
 
     public BigDecimal getLimitAmount() {

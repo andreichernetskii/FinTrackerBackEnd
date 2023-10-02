@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class Limit {
     @Id
     @Enumerated( EnumType.STRING )
-    private LimitType limitType; //todo skoro unikatowe to moze rowniez pelnic role id
+    private LimitType limitType;
     @Column( nullable = false )
     private BigDecimal limitAmount;
 
@@ -18,12 +18,12 @@ public class Limit {
     public Limit() {
     }
 
-    public Limit( BigDecimal limitAmount, LimitType limitType ) {
-        this.limitAmount = limitAmount;
+    public Limit( LimitType limitType, BigDecimal limitAmount ) {
         this.limitType = limitType;
+        this.limitAmount = limitAmount;
     }
 
-    // getters
+// getters
 
     public BigDecimal getLimitAmount() {
         return limitAmount;

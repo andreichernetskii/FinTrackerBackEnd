@@ -19,12 +19,6 @@ public class AlertService {
 
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
-        return finAnalyser.calcActualLimits(); //todo zamist key-String - LimitType
-
-
-
-        //wstawiamy ten kod jako czesc metody getActualLimits ktora w takim razie bedzie musiala zwracac List<AlertDTO>
-
-
+        return finAnalyser.calcActualLimits();
     }
 }

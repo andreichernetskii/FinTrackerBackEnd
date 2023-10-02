@@ -6,9 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface LimitRepository extends JpaRepository<Limit, LimitType> {
+    @Query( """
+            SELECT limits
+            FROM Limit limits
+            WHERE limits.limitType != 'ZERO'
+            """)
+    List<Limit> getAllLimitsWithoutZero();
+
     @Query( """
             SELECT limitAmount FROM Limit 
             WHERE limitType = :limitType

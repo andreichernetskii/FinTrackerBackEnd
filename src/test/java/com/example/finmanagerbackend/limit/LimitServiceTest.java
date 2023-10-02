@@ -64,8 +64,8 @@ public class LimitServiceTest {
     public void getLimitsTest_SuccessfulReturning() {
         // tworzymy fikcyjną listę limitów
         List<Limit> expectedLimits = new ArrayList<>();
-        expectedLimits.add( new Limit( new BigDecimal( 100 ), LimitType.DAY ) );
-        expectedLimits.add( new Limit( new BigDecimal( 23 ), LimitType.MONTH ) );
+        expectedLimits.add( new Limit( LimitType.DAY, new BigDecimal( 100 ) ) );
+        expectedLimits.add( new Limit( LimitType.MONTH, new BigDecimal( 23 ) ) );
 
         // mock dla zwracania oczekiwanej listy limitów
         when( limitRepository.findAll() ).thenReturn( expectedLimits );
@@ -87,11 +87,11 @@ public class LimitServiceTest {
     @Test
     public void addLimitTest_SuccessfulAddedLimit() {
         // first, original limit adding to mock
-        Limit oldLimit = new Limit( new BigDecimal( 100 ), LimitType.DAY );
+        Limit oldLimit = new Limit( LimitType.DAY, new BigDecimal( 100 ) );
         when( limitRepository.save( any() ) ).thenReturn( oldLimit );
 
         // preparing new limit for update operation
-        LimitDTO newLimit = new LimitDTO(new BigDecimal( 120 ), LimitType.DAY);
+        LimitDTO newLimit = new LimitDTO( LimitType.DAY, new BigDecimal( 120 ) );
         // and adding to mock for update
         limitService.addLimit( newLimit );
 

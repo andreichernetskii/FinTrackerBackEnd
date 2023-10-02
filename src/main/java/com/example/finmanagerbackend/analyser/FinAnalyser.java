@@ -40,6 +40,7 @@ public class FinAnalyser {
             case MONTH -> new MonthLimitCalcStrategy( incomeExpenseRepository );
             case WEEK -> new WeekLimitCalcStrategy( incomeExpenseRepository );
             case DAY -> new DayLimitCalcStrategy( incomeExpenseRepository );
+            case ZERO -> new NegativeStatusCalcStrategy( incomeExpenseRepository );
             default -> throw new IllegalStateException();
         };
     }
@@ -59,4 +60,5 @@ public class FinAnalyser {
 //    }
 
     // todo sprobowac dodac klasy strAT jako klasy wewnt
+    // todo: spróbować chain of responsibility
 }

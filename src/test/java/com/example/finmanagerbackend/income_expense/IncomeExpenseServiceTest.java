@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
@@ -47,20 +46,20 @@ public class IncomeExpenseServiceTest {
 
     @Test
     public void getOperationsTest_SuccessfulShownOperations() {
-        List<IncomeExpense> expectedOperations = new ArrayList<>();
-        expectedOperations.add(
+        List<IncomeExpense> expectedIncomeExpenses = new ArrayList<>();
+        expectedIncomeExpenses.add(
                 new IncomeExpense(
                     OperationType.EXPENSE ,
                     new BigDecimal( 100 ),
                     "Shoes",
                     LocalDate.now() ) );
-        when( incomeExpenseRepository.findAll() ).thenReturn( expectedOperations );
+        when( incomeExpenseRepository.findAll() ).thenReturn( expectedIncomeExpenses );
 
-        List<IncomeExpense> actualOperations = incomeExpenseService.getOperations();
+        List<IncomeExpense> actualIncomeExpenses = incomeExpenseService.getOperations();
 
         verify( incomeExpenseRepository ).findAll();
-        assertNotNull( actualOperations );
-        assertEquals( expectedOperations, actualOperations );
+        assertNotNull( actualIncomeExpenses );
+        assertEquals( expectedIncomeExpenses, actualIncomeExpenses );
     }
 
     @Test
@@ -92,7 +91,7 @@ public class IncomeExpenseServiceTest {
         OperationType operationType = OperationType.EXPENSE;
         String category = "Shoes";
         Double expectedBalance = 100.0;
-        when(incomeExpenseRepository.calculateAnnualBalanceByCriteria( 2023, 9, operationType, category ) )
+        when( incomeExpenseRepository.calculateAnnualBalanceByCriteria( 2023, 9, operationType, category ) )
                 .thenReturn( expectedBalance );
 
         Double result = incomeExpenseService.getAnnualBalance( 2023, 9, operationType, category );

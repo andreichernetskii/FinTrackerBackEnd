@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.alert;
 
+// todo: zcalić z LimitType
 public enum AlertType {
     NEGATIVE_BALANCE( "Jesteś w ogóle na minusie!" ),
     MORE_THEN_PREV_MONTH( "Wydałeś więcej, niż w poprzednim miesięcu" ),
@@ -9,7 +10,7 @@ public enum AlertType {
     WEEK_LIMIT_EXCEEDING( "Przekrociłeś tygodniowy limit!" ),
     DAY_LIMIT_EXCEEDING( "Przekrociłeś dzienny limit!" );
 
-    public String label; //todo private + getter
+    private String label;
 
     private AlertType( String label ) {
         this.label = label;

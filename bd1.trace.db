@@ -2516,10 +2516,10 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/java.lang.Thread.run(Thread.java:1589)
 2023-08-29 22:25:14 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INCOMEEXPENSE" not found; SQL statement:
-SELECT SUM(operation.amount) FROM IncomeExpense operation WHERE operation.operationType = 'EXPENSE' [42102-214]
+SELECT SUM(incomeExpense.amount) FROM IncomeExpense incomeExpense WHERE incomeExpense.operationType = 'EXPENSE' [42102-214]
 2023-08-29 22:25:24 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "OPERATION.OPERATIONTYPE" not found; SQL statement:
-SELECT SUM(operation.amount) FROM Income_Expense operation WHERE operation.operationType = 'EXPENSE' [42122-214]
+SELECT SUM(incomeExpense.amount) FROM Income_Expense incomeExpense WHERE incomeExpense.operationType = 'EXPENSE' [42122-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:502)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
 	at org.h2.message.DbException.get(DbException.java:223)

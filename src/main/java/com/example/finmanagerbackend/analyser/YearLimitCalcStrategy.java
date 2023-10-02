@@ -2,7 +2,6 @@ package com.example.finmanagerbackend.analyser;
 
 import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.Limit;
-import com.example.finmanagerbackend.limit.LimitType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

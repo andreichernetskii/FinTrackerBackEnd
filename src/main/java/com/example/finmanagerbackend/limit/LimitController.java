@@ -22,13 +22,13 @@ public class LimitController {
     }
 
     @PutMapping( "/{limitId}" )
-    public void updateLimit( @PathVariable( "limitId" ) Long limitId, @RequestBody Limit limit ) {
+    public void updateLimit( @PathVariable( "limitId" ) LimitType limitId, @RequestBody Limit limit ) {
         limitService.updateLimit( limitId, limit );
     }
 
     //todo: przerobić, żeby server zwracał 404, jeśli limita nie znaleziono
     @DeleteMapping( "/{limitId}" )
-    public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
+    public void deleteLimit( @PathVariable( "limitId" ) LimitType limitId ) {
         limitService.deleteLimit( limitId );
     }
 

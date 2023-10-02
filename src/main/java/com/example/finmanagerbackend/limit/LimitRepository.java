@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface LimitRepository extends JpaRepository<Limit, Long> {
+public interface LimitRepository extends JpaRepository<Limit, LimitType> {
     @Query( """
             SELECT limitAmount FROM Limit 
             WHERE limitType = :limitType

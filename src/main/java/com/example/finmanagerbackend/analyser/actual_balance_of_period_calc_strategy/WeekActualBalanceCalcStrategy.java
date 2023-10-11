@@ -1,32 +1,28 @@
-package com.example.finmanagerbackend.analyser;
+package com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy;
 
 import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.Limit;
 
-import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeekLimitCalcStrategy implements LimitCalcStrategy {
-    private IncomeExpenseRepository incomeExpenseRepository;
+public class WeekActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
+    private final IncomeExpenseRepository incomeExpenseRepository;
 
-    public WeekLimitCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
+    public WeekActualBalanceCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
     @Override
-    public boolean isLimitExceeded( Limit limit ) {
-        if ( limit.getLimitAmount() == null ) return false;
+    public Double calcActualBalanceOfPeriod( Limit limit ) {
         List<LocalDate> firstLastWeekDay = getStartAndEndOfWeekDates();
 
-        Double actualBalanceAsDouble = incomeExpenseRepository
-                .calculateWeekExpenses( firstLastWeekDay.get( 0 ), firstLastWeekDay.get( 1 ) );
-        if ( actualBalanceAsDouble == null ) return false;
-
-        BigDecimal actualBalance = BigDecimal.valueOf( actualBalanceAsDouble ).abs();
-        return actualBalance.compareTo( limit.getLimitAmount() ) >= 0;
+        return incomeExpenseRepository.calculateWeekExpenses(
+                firstLastWeekDay.get( 0 ),
+                firstLastWeekDay.get( 1 )
+        );
     }
 
     private List<LocalDate> getStartAndEndOfWeekDates() {

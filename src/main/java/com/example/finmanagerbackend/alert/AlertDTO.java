@@ -1,5 +1,7 @@
 package com.example.finmanagerbackend.alert;
 
+import com.example.finmanagerbackend.limit.Limit;
+
 public class AlertDTO {
     private String message;
     private boolean positive;
@@ -19,4 +21,6 @@ public class AlertDTO {
     public boolean isPositive() {
         return positive;
     }
+
+    public void setMessage( String str ) { this.message = str; }
 }

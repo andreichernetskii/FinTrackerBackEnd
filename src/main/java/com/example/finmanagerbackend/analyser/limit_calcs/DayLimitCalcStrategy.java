@@ -1,5 +1,6 @@
-package com.example.finmanagerbackend.analyser;
+package com.example.finmanagerbackend.analyser.limit_calcs;
 
+import com.example.finmanagerbackend.analyser.limit_calcs.LimitCalcStrategy;
 import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.Limit;
 

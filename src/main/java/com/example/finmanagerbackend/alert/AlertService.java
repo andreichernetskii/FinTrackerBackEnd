@@ -19,6 +19,6 @@ public class AlertService {
 
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
-        return finAnalyser.calcActualLimits();
+        return finAnalyser.createAlerts();
     }
 }

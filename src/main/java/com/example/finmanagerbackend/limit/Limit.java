@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
+// todo: rozwiąć, żeby pokazywał o ile i jaki limit był przekrocony
 @Entity
 @Table( name = "Limits" )
 public class Limit {

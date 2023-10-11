@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.analyser;
 
 import com.example.finmanagerbackend.alert.AlertDTO;
+import com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy.*;
 import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 import com.example.finmanagerbackend.limit.Limit;
 import com.example.finmanagerbackend.limit.LimitRepository;
@@ -14,21 +15,26 @@ import java.util.*;
 public class FinAnalyser {
     private IncomeExpenseRepository incomeExpenseRepository;
     private LimitRepository limitRepository;
-    private LimitCalcStrategy strategy;
+    private ActualBalanceCalcStrategy strategy;
 
     public FinAnalyser( IncomeExpenseRepository incomeExpenseRepository, LimitRepository limitRepository ) {
         this.incomeExpenseRepository = incomeExpenseRepository;
         this.limitRepository = limitRepository;
     }
 
-    public List<AlertDTO> calcActualLimits() {
+    public List<AlertDTO> createAlerts() {
         List<Limit> limitsList = limitRepository.findAll();
         List<AlertDTO> alerts = new ArrayList<>();
 
         for ( Limit limit : limitsList ) {
-            setStrategy( limit.getLimitType() );
-            if ( isLimitExceeded( limit ) )
-                alerts.add( new AlertDTO( limit.getLimitType().getAlert(), false ) );
+            if ( limit.getLimitAmount() == null ) continue;
+
+            // if limit was exceeded, his value of discrepancy will be added to a new alert message
+            BigDecimal discrepancy = calcDiscrepancy( limit );
+
+            if ( discrepancy.compareTo( BigDecimal.ZERO ) > 0 ) {
+                alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ), false ) );
+            }
         }
 
         return alerts;
@@ -36,29 +42,41 @@ public class FinAnalyser {
 
     private void setStrategy( LimitType limitType ) {
         strategy = switch ( limitType ) {
-            case YEAR -> new YearLimitCalcStrategy( incomeExpenseRepository );
-            case MONTH -> new MonthLimitCalcStrategy( incomeExpenseRepository );
-            case WEEK -> new WeekLimitCalcStrategy( incomeExpenseRepository );
-            case DAY -> new DayLimitCalcStrategy( incomeExpenseRepository );
-            case ZERO -> new NegativeStatusCalcStrategy( incomeExpenseRepository );
-            default -> throw new IllegalStateException();
+            case ZERO -> new NegativeActualStatusCalcStrategy( incomeExpenseRepository );
+            case YEAR -> new YearActualBalanceCalcStrategy( incomeExpenseRepository );
+            case MONTH -> new MonthActualBalanceCalcStrategy( incomeExpenseRepository );
+            case WEEK -> new WeekActualBalanceCalcStrategy( incomeExpenseRepository );
+            case DAY -> new DayActualBalanceCalcStrategy( incomeExpenseRepository );
+            default -> throw new IllegalStateException(); // todo: dlaczego tutaj Exception? zamienić
         };
     }
 
-    private boolean isLimitExceeded( Limit limit ) {
-        return strategy.isLimitExceeded( limit );
+    private BigDecimal calcDiscrepancy( Limit limit ) {
+        setStrategy( limit.getLimitType() );
+
+        Double actualBalanceOfLimitPeriod = calcActualLimitOfLimitPeriod( limit );
+
+        BigDecimal actualBalance = ( actualBalanceOfLimitPeriod != null )
+                ? BigDecimal.valueOf( actualBalanceOfLimitPeriod ).abs()
+                : new BigDecimal( 0 );
+
+        return actualBalance.subtract( limit.getLimitAmount() );
     }
 
-    private BigDecimal getLimit( LimitType limitType ) {
-        Double val = limitRepository.getLimitAmountByLimitType( limitType );
-        return ( val != null ) ? BigDecimal.valueOf( val ) : null;
+    private Double calcActualLimitOfLimitPeriod( Limit limit ) {
+        return strategy.calcActualBalanceOfPeriod( limit );
     }
+
+    public String generateAlertMessage( Limit limit, BigDecimal bigDecimal ) {
+        return new String(
+                        "!!! " +
+                        limit.getLimitType().getAlert() + " "
+                        + "Limit o wartości " + limit.getLimitAmount() + " "
+                        + "został przekrocony o " + bigDecimal.toPlainString()
+        );
+    }
+
 
     //todo: zrobić budżet
-//    public boolean isNegativeConditionOfAccount() {
-//        return incomeExpenseRepository.calculateAnnualBalance() <0;
-//    }
-
-    // todo sprobowac dodac klasy strAT jako klasy wewnt
     // todo: spróbować chain of responsibility
 }

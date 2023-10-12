@@ -5,7 +5,6 @@ import com.example.finmanagerbackend.limit.Limit;
 public class AlertDTO {
     private String message;
     private boolean positive;
-    //todo client moglby potrzebować informacji ile wynosil alert i jaka jest faktyczna kwota np. gdyby chcial zaprezentowac alerty jako
 
     public AlertDTO() {    }
 

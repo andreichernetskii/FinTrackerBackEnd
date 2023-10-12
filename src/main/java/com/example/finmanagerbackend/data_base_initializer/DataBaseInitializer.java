@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Component
 public class DataBaseInitializer implements ApplicationRunner {
@@ -23,7 +24,9 @@ public class DataBaseInitializer implements ApplicationRunner {
     private LimitDTO createZeroLimit() {
         return new LimitDTO(
                 LimitType.ZERO,
-                new BigDecimal( 0 )
+                new BigDecimal( 0 ),
+                null,
+                LocalDate.now() // todo: pamiętać, że tutaj już ustalona data. bo niewiadomo teraz, jaki będzie algorytm pinowania limita od current date
         );
     }
 

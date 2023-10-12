@@ -63,7 +63,9 @@ public class LimitService {
     private Limit createLimit( LimitDTO limitDTO ) {
         return new Limit(
                 limitDTO.getLimitType(),
-                limitDTO.getLimitAmount()
+                limitDTO.getLimitAmount(),
+                limitDTO.getCategory(),
+                limitDTO.getCreationDate()
         );
     }
 }

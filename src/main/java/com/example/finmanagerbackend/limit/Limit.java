@@ -3,6 +3,7 @@ package com.example.finmanagerbackend.limit;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 // todo: rozwiąć, żeby pokazywał o ile i jaki limit był przekrocony
 @Entity
@@ -13,15 +14,19 @@ public class Limit {
     private LimitType limitType;
     @Column( nullable = false )
     private BigDecimal limitAmount;
+    private String category;
+    private LocalDate creationDate;
 
     // constructors
 
     public Limit() {
     }
 
-    public Limit( LimitType limitType, BigDecimal limitAmount ) {
+    public Limit( LimitType limitType, BigDecimal limitAmount, String category, LocalDate creationDate ) {
         this.limitType = limitType;
         this.limitAmount = limitAmount;
+        this.category = category;
+        this.creationDate = creationDate;
     }
 
 // getters
@@ -34,6 +39,14 @@ public class Limit {
         return limitType;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
     // setters
 
     public void setLimitAmount( BigDecimal amountLimit ) {
@@ -42,5 +55,13 @@ public class Limit {
 
     public void setLimitType( LimitType limitType ) {
         this.limitType = limitType;
+    }
+
+    public void setCategory( String category ) {
+        this.category = category;
+    }
+
+    public void setCreationDate( LocalDate creationDate ) {
+        this.creationDate = creationDate;
     }
 }

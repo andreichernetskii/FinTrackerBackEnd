@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @SpringBootTest
@@ -30,7 +31,9 @@ public class LimitControllerTest {
         // some data for test
         LimitDTO limitDTO = new LimitDTO(
                 LimitType.DAY,
-                new BigDecimal( 100 )
+                new BigDecimal( 100 ),
+                null,
+                LocalDate.now()
         );
 
         // casting to json style

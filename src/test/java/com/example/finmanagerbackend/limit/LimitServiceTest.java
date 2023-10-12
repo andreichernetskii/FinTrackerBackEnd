@@ -28,7 +28,7 @@ public class LimitServiceTest {
     // todo: przerobić testy zgodnie ze zmianami klasy LimitService
     @Test
     public void deleteLimitTest_SuccessfulDeletion() {
-        LimitType id = LimitType.DAY;
+        Long id = 1L;
         // podłaczamy mock
         when( limitRepository.existsById( id ) ).thenReturn( true );
 
@@ -46,7 +46,7 @@ public class LimitServiceTest {
 
     @Test
     public void deleteLimitTest_LimitNotFound() {
-        LimitType id = LimitType.DAY;
+        Long id = 1L;
         // podłączamy mock, żeby on symulował brak istnienia limita
         when( limitRepository.existsById( id ) ).thenReturn( false );
 

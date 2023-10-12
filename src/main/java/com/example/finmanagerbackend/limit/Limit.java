@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Table( name = "Limits" )
 public class Limit {
     @Id
+    @GeneratedValue
+    Long id;
     @Enumerated( EnumType.STRING )
     private LimitType limitType;
     @Column( nullable = false )
@@ -30,6 +32,10 @@ public class Limit {
     }
 
 // getters
+
+    public Long getId() {
+        return id;
+    }
 
     public BigDecimal getLimitAmount() {
         return limitAmount;

@@ -1,15 +1,15 @@
 package com.example.finmanagerbackend.data_base_initializer;
 
-import com.example.finmanagerbackend.limit.LimitDTO;
-import com.example.finmanagerbackend.limit.LimitRepository;
-import com.example.finmanagerbackend.limit.LimitService;
-import com.example.finmanagerbackend.limit.LimitType;
+import com.example.finmanagerbackend.limit.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataBaseInitializer implements ApplicationRunner {
@@ -32,6 +32,20 @@ public class DataBaseInitializer implements ApplicationRunner {
 
     @Override
     public void run( ApplicationArguments args ) throws Exception {
-        if ( !limitRepository.existsById( LimitType.ZERO ) ) limitService.addLimit( createZeroLimit() );
+        LimitDTO limitDTO = createZeroLimit();
+        if ( !isZeroLimExists( limitDTO ) ) limitService.addLimit( limitDTO );
+    }
+
+    // todo: czy ma to sens robić przez Example?
+    private boolean isZeroLimExists(LimitDTO limitDTO) {
+        Example<Limit> limitExample = Example.of( new Limit(
+                limitDTO.getLimitType(),
+                limitDTO.getLimitAmount(),
+                limitDTO.getCategory(),
+                limitDTO.getCreationDate()
+        ) );
+
+        Optional<Limit> optionalLimit = limitRepository.findOne( limitExample );
+        return optionalLimit.isPresent();
     }
 }

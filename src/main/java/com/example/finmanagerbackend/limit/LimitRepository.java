@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public interface LimitRepository extends JpaRepository<Limit, LimitType> {
+public interface LimitRepository extends JpaRepository<Limit, Long> {
     @Query( """
             SELECT limits
             FROM Limit limits

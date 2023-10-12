@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class FinManagerBackEndApplicationTests {
 
+    // todo: check tests after limit idea changing
     @Test
     void contextLoads() {
     }

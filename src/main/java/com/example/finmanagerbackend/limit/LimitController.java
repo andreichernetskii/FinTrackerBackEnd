@@ -30,16 +30,6 @@ public class LimitController {
 
     @DeleteMapping( "/{limitId}" )
     public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
-//        try {
-//            limitService.deleteLimit( limitId );
-//           // return new ResponseEntity<>( HttpStatusCode.valueOf( 204 ) );
-//            //return new ResponseEntity<>( HttpStatus.NO_CONTENT );
-//           return ResponseEntity.noContent().build();
-//
-//        } catch ( LimitException exception ) {
-//           // return new ResponseEntity<>( HttpStatus.FORBIDDEN );
-//            return ResponseEntity.status( HttpStatus.FORBIDDEN ).build();
-//        }
         limitService.deleteLimit( limitId );
     }
 

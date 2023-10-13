@@ -33,6 +33,7 @@ public class FinAnalyser {
             BigDecimal discrepancy = calcDiscrepancy( limit );
 
             if ( discrepancy.compareTo( BigDecimal.ZERO ) > 0 ) {
+                // todo: ???
                 alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ), false ) );
             }
         }
@@ -67,16 +68,13 @@ public class FinAnalyser {
         return strategy.calcActualBalanceOfPeriod( limit );
     }
 
-    public String generateAlertMessage( Limit limit, BigDecimal bigDecimal ) {
-        return new String(
-                        "!!! " +
-                        limit.getLimitType().getAlert() + " "
-                        + "Limit o wartości " + limit.getLimitAmount() + " "
-                        + "został przekrocony o " + bigDecimal.toPlainString()
-        );
+    public String generateAlertMessage( Limit limit, BigDecimal discrepancy ) {
+        return "!!! " + limit.getLimitType().getAlert()
+                + " Limit o wartości " + limit.getLimitAmount()
+                + " został przekrocony o " + discrepancy.toPlainString();
     }
 
 
-    //todo: zrobić budżet
+    // todo: zrobić budżet
     // todo: spróbować chain of responsibility
 }

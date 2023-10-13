@@ -1,5 +1,7 @@
 package com.example.finmanagerbackend.limit;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +28,18 @@ public class LimitController {
         limitService.updateLimit( limitId, limit );
     }
 
-    //todo: przerobić, żeby server zwracał 404, jeśli limita nie znaleziono
     @DeleteMapping( "/{limitId}" )
     public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
+//        try {
+//            limitService.deleteLimit( limitId );
+//           // return new ResponseEntity<>( HttpStatusCode.valueOf( 204 ) );
+//            //return new ResponseEntity<>( HttpStatus.NO_CONTENT );
+//           return ResponseEntity.noContent().build();
+//
+//        } catch ( LimitException exception ) {
+//           // return new ResponseEntity<>( HttpStatus.FORBIDDEN );
+//            return ResponseEntity.status( HttpStatus.FORBIDDEN ).build();
+//        }
         limitService.deleteLimit( limitId );
     }
 

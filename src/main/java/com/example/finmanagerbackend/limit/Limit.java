@@ -13,6 +13,7 @@ public class Limit {
     @GeneratedValue
     Long id;
     @Enumerated( EnumType.STRING )
+    // todo dodać nullable false
     private LimitType limitType;
     @Column( nullable = false )
     private BigDecimal limitAmount;

@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.data_base_initializer;
+package com.example.finmanagerbackend.global;
 
 import com.example.finmanagerbackend.limit.*;
 import org.springframework.boot.ApplicationArguments;
@@ -38,14 +38,6 @@ public class DataBaseInitializer implements ApplicationRunner {
 
     // todo: czy ma to sens robić przez Example?
     private boolean isZeroLimExists(LimitDTO limitDTO) {
-        Example<Limit> limitExample = Example.of( new Limit(
-                limitDTO.getLimitType(),
-                limitDTO.getLimitAmount(),
-                limitDTO.getCategory(),
-                limitDTO.getCreationDate()
-        ) );
-
-        Optional<Limit> optionalLimit = limitRepository.findOne( limitExample );
-        return optionalLimit.isPresent();
+        return limitRepository.existsBy( limitDTO.getLimitType() );
     }
 }

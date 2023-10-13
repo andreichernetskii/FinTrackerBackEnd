@@ -20,15 +20,9 @@ public class LimitService {
     @Transactional
     public void deleteLimit( Long limitId ) {
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
-        if ( optionalLimit.isPresent() ) {
-            Limit limit = optionalLimit.get();
-            if ( limit.getLimitType() == LimitType.ZERO )
-                throw new IllegalStateException( "Cannot delete the default limit with type ZERO." );
-        }
-
-        boolean isLimitExists = limitRepository.existsById( limitId );
-        if ( !isLimitExists ) {
-            throw new IllegalStateException( "Limit with id " + limitId + " is not exists!" );
+        if ( !optionalLimit.isPresent() ) return;
+        if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
+            throw new LimitException( "Cannot delete the default limit." );
         }
 
         limitRepository.deleteById( limitId );
@@ -48,8 +42,10 @@ public class LimitService {
     }
 
     public void updateLimit( Long limitId, Limit limit ) {
+        // todo zabronić updatować limit ZERO
         Optional<Limit> optimalLimit = limitRepository.findById( limitId );
         if ( !optimalLimit.isPresent() ) {
+            // todo: za dużo IllegalStateException!!!
             throw new IllegalStateException( "Limit z id " + limitId + " nie istnieje w bazie!" );
         }
 
@@ -64,14 +60,7 @@ public class LimitService {
     // not DB using functions
 
     private boolean isLimitExists( Limit limitToCheck ) {
-        List<Limit> existsLimits = limitRepository.findAll();
-        for ( Limit limit : existsLimits ) {
-            if (limit.getLimitType() == limitToCheck.getLimitType() && Objects.equals( limit.getCategory(), limitToCheck.getCategory() ) ) {
-                return true;
-            }
-        }
-
-        return false;
+        return limitRepository.existsBy( limitToCheck.getLimitType() );
     }
 
     public List<String> getLimitTypes() {

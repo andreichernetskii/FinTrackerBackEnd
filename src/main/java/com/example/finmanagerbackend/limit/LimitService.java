@@ -1,12 +1,12 @@
 package com.example.finmanagerbackend.limit;
 
-import com.example.finmanagerbackend.analyser.FinAnalyser;
+import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
+import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -22,7 +22,7 @@ public class LimitService {
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
         if ( !optionalLimit.isPresent() ) return;
         if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
-            throw new LimitException( "Cannot delete the default limit." );
+            throw new ForbiddenException( "Cannot delete the default limit." );
         }
 
         limitRepository.deleteById( limitId );
@@ -46,7 +46,7 @@ public class LimitService {
         Optional<Limit> optimalLimit = limitRepository.findById( limitId );
         if ( !optimalLimit.isPresent() ) {
             // todo: za dużo IllegalStateException!!!
-            throw new IllegalStateException( "Limit z id " + limitId + " nie istnieje w bazie!" );
+            throw new NotFoundException( "Limit z id " + limitId + " nie istnieje w bazie!" );
         }
 
         if ( isLimitExists( optimalLimit.get() ) ) {

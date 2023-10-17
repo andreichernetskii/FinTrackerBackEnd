@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.analyser.limit_calcs;
+package com.example.finmanagerbackend.not_for_use.limit_calcs;
 
 import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
 

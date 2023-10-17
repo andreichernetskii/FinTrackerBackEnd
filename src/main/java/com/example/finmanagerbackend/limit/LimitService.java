@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
+import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,27 +36,28 @@ public class LimitService {
     public void addLimit( LimitDTO limitDTO ) {
         Limit limit = createLimit( limitDTO );
         if ( isLimitExists( limit ) ) {
-            throw new IllegalStateException( "Taki limit już istneije!" );
+            throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
         limitRepository.save( limit );
     }
 
     public void updateLimit( Long limitId, Limit limit ) {
-        // todo zabronić updatować limit ZERO
         Optional<Limit> optimalLimit = limitRepository.findById( limitId );
         if ( !optimalLimit.isPresent() ) {
-            // todo: za dużo IllegalStateException!!!
             throw new NotFoundException( "Limit z id " + limitId + " nie istnieje w bazie!" );
         }
 
+        if ( optimalLimit.get().getLimitType() == LimitType.ZERO ) {
+            throw new ForbiddenException( "Cannot delete the default limit." );
+        }
+
         if ( isLimitExists( optimalLimit.get() ) ) {
-            throw new IllegalStateException( "Taki limit już istneije!" );
+            throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
         limitRepository.save( limit );
     }
-
 
     // not DB using functions
 

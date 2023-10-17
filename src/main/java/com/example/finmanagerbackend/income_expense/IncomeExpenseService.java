@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.income_expense;
 
+import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,7 +35,7 @@ public class IncomeExpenseService {
     public void deleteIncomeExpense( Long operationId ) {
         boolean exists = incomeExpenseRepository.existsById( operationId );
         if ( !exists ) {
-            throw new IllegalStateException( "Operations with id " + operationId + " is not exists!" );
+            throw new NotFoundException( "Operations with id " + operationId + " is not exists!" );
         }
         incomeExpenseRepository.deleteById( operationId );
     }
@@ -46,7 +47,7 @@ public class IncomeExpenseService {
     public void updateIncomeExpense( IncomeExpense incomeExpense ) {
         Optional<IncomeExpense> incomeExpenseOptional = incomeExpenseRepository.findById( incomeExpense.getId() );
         if ( !incomeExpenseOptional.isPresent() ) {
-            throw new IllegalStateException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
+            throw new NotFoundException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
         }
         incomeExpenseRepository.save( incomeExpense );
     }

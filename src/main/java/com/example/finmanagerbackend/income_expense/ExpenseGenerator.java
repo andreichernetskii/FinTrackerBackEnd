@@ -26,7 +26,7 @@ public class ExpenseGenerator {
         }
     }
 
-    public List<IncomeExpense> generateExpenses( int count ) { // todo: wybalansować, żeby były incomy i expens'y
+    public List<IncomeExpense> generateExpenses( int count ) {
         List<IncomeExpense> expenses = new ArrayList<>();
 
         for ( int i = 0; i < count; i++ ) {

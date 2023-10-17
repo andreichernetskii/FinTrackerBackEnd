@@ -48,7 +48,7 @@ public class FinAnalyser {
             case MONTH -> new MonthActualBalanceCalcStrategy( incomeExpenseRepository );
             case WEEK -> new WeekActualBalanceCalcStrategy( incomeExpenseRepository );
             case DAY -> new DayActualBalanceCalcStrategy( incomeExpenseRepository );
-            default -> throw new IllegalStateException(); // todo: dlaczego tutaj Exception?
+            default -> throw new IllegalStateException();
         };
     }
 

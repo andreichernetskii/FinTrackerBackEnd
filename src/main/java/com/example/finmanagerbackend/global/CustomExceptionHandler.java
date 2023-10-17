@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class LimitExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     // for some forbidden actions with data
     @ExceptionHandler( ForbiddenException.class )
     protected ResponseEntity<?> handleForbiddenConflict( ForbiddenException exception ) {

@@ -77,4 +77,5 @@ public class FinAnalyser {
 
     // todo: zrobić budżet
     // todo: spróbować chain of responsibility
+    // todo: przerobić jeszcze z  punktu widzenia, że są już teraz jeszcze limity i po kategoriach
 }

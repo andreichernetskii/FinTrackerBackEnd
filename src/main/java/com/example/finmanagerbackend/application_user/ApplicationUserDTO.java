@@ -1,13 +1,13 @@
-package com.example.finmanagerbackend.user;
+package com.example.finmanagerbackend.application_user;
 
-public class UserDTO {
+public class ApplicationUserDTO {
     private String email;
     private String password;
 
-    public UserDTO() {
+    public ApplicationUserDTO() {
     }
 
-    public UserDTO( String email, String password ) {
+    public ApplicationUserDTO( String email, String password ) {
         this.email = email;
         this.password = password;
     }

@@ -14,6 +14,7 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
     @Query( """
             SELECT limits
             FROM Limit limits
+            WHERE limits.limitType != 'ZERO'
             """)
     List<Limit> getAllLimitsWithoutZero();
 

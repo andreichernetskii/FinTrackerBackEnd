@@ -1,19 +1,19 @@
-package com.example.finmanagerbackend.user;
+package com.example.finmanagerbackend.application_user;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table( name = "users" )
-public class User {
+public class ApplicationUser {
     @Id
     private String email;
     @Column( nullable = false )
     private String password;
 
-    public User() {
+    public ApplicationUser() {
     }
 
-    public User( String email, String password ) {
+    public ApplicationUser( String email, String password ) {
         this.email = email;
         this.password = password;
     }

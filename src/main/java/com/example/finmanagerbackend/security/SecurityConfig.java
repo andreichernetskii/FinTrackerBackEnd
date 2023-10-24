@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.security;
 
-import com.example.finmanagerbackend.user.UserService;
+import com.example.finmanagerbackend.application_user.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,19 +23,21 @@ public class SecurityConfig {
     // HttpSecurity - pozwala nastawić parametry bezpeczeństwa zapytań HTTP
     // UserService - udostępnia informację o użytkownikach, będzie używany do autorizacji
     @Bean
-    public SecurityFilterChain configureChain( HttpSecurity httpSecurity, UserService userService ) throws Exception {
-        return httpSecurity.csrf( customizer -> customizer.disable() )
-                .headers( customizer -> customizer.disable() )
-                .authorizeHttpRequests( customizer ->
-                        customizer
-//                                .requestMatchers( "/api/v1/**" ).authenticated()
-                                .anyRequest()
-                                .permitAll() )
-                .httpBasic( Customizer.withDefaults() )
-                .userDetailsService( userService )
-                .build();
+    public PasswordEncoder configurePasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SecurityFilterChain configureChain( HttpSecurity httpSecurity, ApplicationUserService applicationUserService ) throws Exception {
+        return httpSecurity
+                .csrf( customizer -> customizer.disable() )
+                .headers( customizer -> customizer.disable() )
+                .authorizeHttpRequests( customizer ->
+                        customizer.anyRequest().authenticated() )
+                .httpBasic( Customizer.withDefaults() )
+                .userDetailsService( applicationUserService )
+                .build();
+    }
 
 // service of keeping user data in memory
 //    @Bean
@@ -44,11 +46,7 @@ public class SecurityConfig {
 //        UserDetails user2 = new User( "user2", passEncoder.encode( "123" ), new ArrayList<>() );
 //        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager( user1, user2 );
 //        return manager;
-//    }
 
+//    }
     // password encryption type
-    @Bean
-    public PasswordEncoder configurePasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

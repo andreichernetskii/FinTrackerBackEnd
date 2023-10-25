@@ -1,52 +1,56 @@
 package com.example.finmanagerbackend.security;
 
+import com.example.finmanagerbackend.application_user.ApplicationUserRole;
 import com.example.finmanagerbackend.application_user.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static com.example.finmanagerbackend.application_user.ApplicationUserRole.APP_ADMIN;
 
 // here we can customize spring security login, logout and other security configurations
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private String[] ENDPOINT_WHITELIST = {
+    private final PasswordEncoder passwordEncoder;
 
-    };
-    // todo: przeanalizować
-
-    // configureChain - łańcuch filtrów do obrabiania zapytań bezpieczeństwa
-    // HttpSecurity - pozwala nastawić parametry bezpeczeństwa zapytań HTTP
-    // UserService - udostępnia informację o użytkownikach, będzie używany do autorizacji
-    @Bean
-    public PasswordEncoder configurePasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityConfig( PasswordEncoder passwordEncoder ) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public SecurityFilterChain configureChain( HttpSecurity httpSecurity, ApplicationUserService applicationUserService ) throws Exception {
         return httpSecurity
                 .csrf( customizer -> customizer.disable() )
-                .headers( customizer -> customizer.disable() )
+//                .sessionManagement( customizer ->
+//                        customizer.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
+//                .addFilter( new JwtUsernameAndPasswordAuthenticationFilter(  ) )
+//                .headers( customizer -> customizer.disable() )
                 .authorizeHttpRequests( customizer ->
                         customizer.anyRequest().authenticated() )
-                .httpBasic( Customizer.withDefaults() )
+//                .httpBasic( Customizer.withDefaults() )
                 .userDetailsService( applicationUserService )
                 .build();
     }
 
-// service of keeping user data in memory
-//    @Bean
-//    public InMemoryUserDetailsManager configureUserManager(PasswordEncoder passEncoder) {
-//        UserDetails user1 = new User( "user1", passEncoder.encode( "123" ), new ArrayList<>() );
-//        UserDetails user2 = new User( "user2", passEncoder.encode( "123" ), new ArrayList<>() );
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager( user1, user2 );
-//        return manager;
+    // admin user
+    @Bean
+    protected UserDetailsService userDetailsService() {
+        UserDetails admin = User.builder()
+                .username( "admin" )
+                .password( passwordEncoder.encode( "123" ) )
+//                .roles( APP_ADMIN.name() )
+                .authorities( APP_ADMIN.getGrantedAuthorities() )
+                .build();
 
-//    }
-    // password encryption type
+        return new InMemoryUserDetailsManager( admin );
+    }
 }

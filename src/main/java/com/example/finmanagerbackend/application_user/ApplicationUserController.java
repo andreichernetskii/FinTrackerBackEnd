@@ -18,6 +18,4 @@ public class ApplicationUserController {
     public void newUser( @RequestBody ApplicationUserDTO applicationUserDTO ) {
         applicationUserService.newUser( applicationUserDTO );
     }
-
-
 }

@@ -4,6 +4,7 @@ import com.example.finmanagerbackend.application_user.ApplicationUserRole;
 import com.example.finmanagerbackend.application_user.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,10 +34,10 @@ public class SecurityConfig {
 //                .sessionManagement( customizer ->
 //                        customizer.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
 //                .addFilter( new JwtUsernameAndPasswordAuthenticationFilter(  ) )
-//                .headers( customizer -> customizer.disable() )
+                .headers( customizer -> customizer.disable() )
+                .httpBasic( Customizer.withDefaults() )
                 .authorizeHttpRequests( customizer ->
-                        customizer.anyRequest().authenticated() )
-//                .httpBasic( Customizer.withDefaults() )
+                        customizer.anyRequest().permitAll() )
                 .userDetailsService( applicationUserService )
                 .build();
     }

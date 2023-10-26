@@ -32,7 +32,12 @@ public class ApplicationUserService implements UserDetailsService {
     public void newUser( ApplicationUserDTO applicationUserDTO ) {
         applicationUserRepository.save( new ApplicationUser(
                 applicationUserDTO.getEmail(),
-                passEncoder.encode( applicationUserDTO.getPassword()) )
+                passEncoder.encode( applicationUserDTO.getPassword()),
+                ApplicationUserRole.APP_USER.getGrantedAuthorities(),
+                true,
+                true,
+                true,
+                true )
         );
     }
 }

@@ -4,6 +4,7 @@ public class ApplicationUserDTO {
     private String email;
     private String password;
 
+
     public ApplicationUserDTO() {
     }
 

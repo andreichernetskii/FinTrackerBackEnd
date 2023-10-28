@@ -1,9 +1,8 @@
 package com.example.finmanagerbackend.application_user;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -14,8 +13,13 @@ public class ApplicationUserController {
         this.applicationUserService = applicationUserService;
     }
 
-    @PostMapping()
+    @PostMapping
     public void newUser( @RequestBody ApplicationUserDTO applicationUserDTO ) {
         applicationUserService.newUser( applicationUserDTO );
+    }
+
+    @GetMapping
+    public List<ApplicationUser> showUsers() {
+        return applicationUserService.showUsers();
     }
 }

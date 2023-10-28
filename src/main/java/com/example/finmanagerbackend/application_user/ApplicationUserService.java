@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ApplicationUserService implements UserDetailsService {
@@ -39,5 +40,9 @@ public class ApplicationUserService implements UserDetailsService {
                 true,
                 true )
         );
+    }
+
+    public List<ApplicationUser> showUsers() {
+        return applicationUserRepository.findAll();
     }
 }

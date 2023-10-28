@@ -1,14 +1,18 @@
 package com.example.finmanagerbackend.security;
 
 import com.example.finmanagerbackend.application_user.ApplicationUserService;
+import com.example.finmanagerbackend.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,16 +32,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain configureChain( HttpSecurity httpSecurity, ApplicationUserService applicationUserService ) throws Exception {
+    public SecurityFilterChain configureChain( HttpSecurity httpSecurity ) throws Exception {
         return httpSecurity
                 .csrf( customizer -> customizer.disable() )
-//                .sessionManagement( customizer ->
-//                        customizer.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-//                .addFilter( new JwtUsernameAndPasswordAuthenticationFilter(  ) )
-                .headers( customizer -> customizer.disable() )
+                .sessionManagement( customizer -> customizer.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
+                .addFilter(
+                        new JwtUsernameAndPasswordAuthenticationFilter(
+                                authenticationManager(
+                                        httpSecurity.getSharedObject( AuthenticationConfiguration.class ) ) ) )
                 .authorizeHttpRequests( customizer ->
                         customizer.anyRequest().authenticated() )
-                .httpBasic( Customizer.withDefaults() )
+//                .httpBasic( Customizer.withDefaults() )
 //                .userDetailsService( applicationUserService )
                 .authenticationProvider( authenticationProvider() )
                 .build();
@@ -51,6 +56,11 @@ public class SecurityConfig {
         provider.setUserDetailsService( applicationUserService );
 
         return provider;
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
 

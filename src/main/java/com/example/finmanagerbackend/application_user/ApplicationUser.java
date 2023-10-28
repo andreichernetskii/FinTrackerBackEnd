@@ -40,9 +40,9 @@ public class ApplicationUser implements UserDetails {
         this.isEnabled = isEnabled;
     }
 
-    public String getEmail() {
-        return email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
 
     public void setEMail( String email ) {
         this.email = email;

@@ -24,7 +24,7 @@ public class ApplicationUserService implements UserDetailsService {
         ApplicationUser applicationUser = applicationUserRepository.findById( username )
                 .orElseThrow(() -> new UsernameNotFoundException( "User nie istnieje!" ));
         UserDetails userDetails = new User(
-                applicationUser.getEmail(), applicationUser.getPassword(), new ArrayList<>() );
+                applicationUser.getUsername(), applicationUser.getPassword(), new ArrayList<>() );
 
         return userDetails;
     }

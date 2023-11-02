@@ -1,79 +1,66 @@
 package com.example.finmanagerbackend.security;
 
-import com.example.finmanagerbackend.application_user.ApplicationUserService;
-import com.example.finmanagerbackend.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.example.finmanagerbackend.application_user.UserDetailsServiceImpl;
+import com.example.finmanagerbackend.jwt.AuthTokenFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
-
-// here we can customize spring security login, logout and other security configurations
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
-    private final PasswordEncoder passwordEncoder;
-    private final ApplicationUserService applicationUserService;
-
-    public SecurityConfig( PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService ) {
-        this.passwordEncoder = passwordEncoder;
-        this.applicationUserService = applicationUserService;
-    }
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandle;
 
     @Bean
-    public SecurityFilterChain configureChain( HttpSecurity httpSecurity ) throws Exception {
-        return httpSecurity
-                .csrf( customizer -> customizer.disable() )
-                .sessionManagement( customizer -> customizer.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-                .addFilter(
-                        new JwtUsernameAndPasswordAuthenticationFilter(
-                                authenticationManager(
-                                        httpSecurity.getSharedObject( AuthenticationConfiguration.class ) ) ) )
-                .authorizeHttpRequests( customizer ->
-                        customizer.anyRequest().authenticated() )
-//                .httpBasic( Customizer.withDefaults() )
-//                .userDetailsService( applicationUserService )
-                .authenticationProvider( authenticationProvider() )
-                .build();
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        provider.setPasswordEncoder( passwordEncoder ); // allows to encode passwords
-        provider.setUserDetailsService( applicationUserService );
+        authProvider.setUserDetailsService( userDetailsService );
+        authProvider.setPasswordEncoder( passwordEncoder() );
 
-        return provider;
+        return authProvider;
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager( AuthenticationConfiguration authConfig ) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-    // admin user
-//    @Bean
-//    protected UserDetailsService userDetailsService() {
-//        UserDetails admin = User.builder()
-//                .username( "admin" )
-//                .password( passwordEncoder.encode( "123" ) )
-////                .roles( APP_ADMIN.name() )
-//                .authorities( APP_ADMIN.getGrantedAuthorities() )
-//                .build();
-//
-//        return new InMemoryUserDetailsManager( admin );
-//    }
+    @Bean
+    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
+        http
+                .csrf( csrf -> csrf.disable() )
+                .exceptionHandling( exception -> exception.authenticationEntryPoint( unauthorizedHandle ) )
+                .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
+                .authorizeHttpRequests( auth -> auth.anyRequest().authenticated() );
+
+        http.authenticationProvider( authenticationProvider() );
+        http.addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class );
+
+        return http.build();
+    }
 }

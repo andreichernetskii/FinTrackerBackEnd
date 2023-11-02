@@ -1,88 +1,58 @@
 package com.example.finmanagerbackend.application_user;
 
+import com.example.finmanagerbackend.role.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-public class ApplicationUser implements UserDetails {
+@Table( name = "app_users" )
+public class ApplicationUser {
     @Id
     private String email;
-    @Column( nullable = false )
     private String password;
-    @ElementCollection
-    private Set<GrantedAuthority> grantedAuthorities;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable( name = "user_roles",
+                joinColumns = @JoinColumn( name = "user_email" ),
+                inverseJoinColumns = @JoinColumn( name = "role_name" ) )
+    private Set<Role> roles = new HashSet<>();
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser( String email,
-                            String password,
-                            Set<GrantedAuthority> grantedAuthorities,
-                            boolean isAccountNonExpired,
-                            boolean isAccountNonLocked,
-                            boolean isCredentialsNonExpired,
-                            boolean isEnabled ) {
+    public ApplicationUser( String email, String password, Set<Role> roles ) {
         this.email = email;
         this.password = password;
-        this.grantedAuthorities = grantedAuthorities;
-        this.isAccountNonExpired = isAccountNonExpired;
-        this.isAccountNonLocked = isAccountNonLocked;
-        this.isCredentialsNonExpired = isCredentialsNonExpired;
-        this.isEnabled = isEnabled;
+        this.roles = roles;
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEMail( String email ) {
+    public void setEmail( String email ) {
         this.email = email;
-    }
-
-    public void setPassword( String password ) {
-        this.password = password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthorities;
     }
 
     public String getPassword() {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return email;
+    public void setPassword( String password ) {
+        this.password = password;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return isAccountNonExpired;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isEnabled;
+    public void setRoles( Set<Role> roles ) {
+        this.roles = roles;
     }
 }

@@ -13,7 +13,7 @@ public class ApplicationUserController {
         this.applicationUserService = applicationUserService;
     }
 
-    @PostMapping
+    @PostMapping( "/add_user" )
     public void newUser( @RequestBody ApplicationUserDTO applicationUserDTO ) {
         applicationUserService.newUser( applicationUserDTO );
     }

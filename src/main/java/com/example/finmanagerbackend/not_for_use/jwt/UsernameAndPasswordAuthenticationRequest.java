@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.jwt;
+package com.example.finmanagerbackend.not_for_use.jwt;
 
 public class UsernameAndPasswordAuthenticationRequest {
     private String username;

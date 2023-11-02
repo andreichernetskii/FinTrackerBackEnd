@@ -1,6 +1,6 @@
-package com.example.finmanagerbackend.application_user;
+package com.example.finmanagerbackend.not_for_use;
 
-public enum ApplicationUserPermission {
+public enum ApplicationUserPermissionNotUse {
     USER_READ( "user:read" ),
     USER_WRITE( "user:write" ),
     DATA_READ( "data:read" ),
@@ -8,7 +8,7 @@ public enum ApplicationUserPermission {
 
     private final String permission;
 
-    ApplicationUserPermission( String permission ) {
+    ApplicationUserPermissionNotUse( String permission ) {
         this.permission = permission;
     }
 

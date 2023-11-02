@@ -9,7 +9,6 @@ import java.util.List;
 public class LimitController {
     private final LimitService limitService;
 
-
     public LimitController( LimitService limitService ) {
         this.limitService = limitService;
     }

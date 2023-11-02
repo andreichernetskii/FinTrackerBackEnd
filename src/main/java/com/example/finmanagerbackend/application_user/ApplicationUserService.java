@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.application_user;
 
+import com.example.finmanagerbackend.not_for_use.ApplicationUserRoleNotUse;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,7 +35,7 @@ public class ApplicationUserService implements UserDetailsService {
         applicationUserRepository.save( new ApplicationUser(
                 applicationUserDTO.getEmail(),
                 passEncoder.encode( applicationUserDTO.getPassword()),
-                ApplicationUserRole.APP_USER.getGrantedAuthorities(),
+                ApplicationUserRoleNotUse.APP_USER.getGrantedAuthorities(),
                 true,
                 true,
                 true,

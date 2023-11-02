@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.application_user;
+package com.example.finmanagerbackend.not_for_use;
 
 import com.google.common.collect.Sets;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,19 +7,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.finmanagerbackend.application_user.ApplicationUserPermission.*;
+import static com.example.finmanagerbackend.not_for_use.ApplicationUserPermissionNotUse.*;
 
-public enum ApplicationUserRole {
+public enum ApplicationUserRoleNotUse {
     APP_USER( Sets.newHashSet() ),
     APP_ADMIN( Sets.newHashSet( USER_READ, USER_WRITE, DATA_READ, DATA_WRITE ) );
 
-    private final Set<ApplicationUserPermission> permissions;
+    private final Set<ApplicationUserPermissionNotUse> permissions;
 
-    ApplicationUserRole( Set<ApplicationUserPermission> permissions ) {
+    ApplicationUserRoleNotUse( Set<ApplicationUserPermissionNotUse> permissions ) {
         this.permissions = permissions;
     }
 
-    private Set<ApplicationUserPermission> getPermissions() {
+    private Set<ApplicationUserPermissionNotUse> getPermissions() {
         return permissions;
     }
 

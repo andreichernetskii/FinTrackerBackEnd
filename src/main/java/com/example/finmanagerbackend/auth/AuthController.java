@@ -8,10 +8,6 @@ import com.example.finmanagerbackend.payloads.request.LoginRequest;
 import com.example.finmanagerbackend.payloads.request.SignupRequest;
 import com.example.finmanagerbackend.payloads.response.MessageResponse;
 import com.example.finmanagerbackend.payloads.response.UserInfoResponse;
-import com.example.finmanagerbackend.role.Role;
-import com.example.finmanagerbackend.role.RoleRepository;
-import com.example.finmanagerbackend.role.UserRoles;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -27,25 +23,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.example.finmanagerbackend.application_user.Role;
+
 
 @CrossOrigin( origins = "*", maxAge = 3600 )
 @RestController
 @RequestMapping( "/api/auth" )
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    ApplicationUserRepository applicationUserRepository;
+    private final ApplicationUserRepository applicationUserRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    JwtUtils jwtUtils;
+    public AuthController( AuthenticationManager authenticationManager,
+                           ApplicationUserRepository applicationUserRepository,
+                           PasswordEncoder encoder,
+                           JwtUtils jwtUtils ) {
+        this.authenticationManager = authenticationManager;
+        this.applicationUserRepository = applicationUserRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping( "/signin" )
     public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest ) {
@@ -83,37 +84,22 @@ public class AuthController {
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
-        if ( strRoles == null ) {
-            Role userRole = roleRepository.findByName( UserRoles.ROLE_USER )
-                    .orElseThrow( () -> new RuntimeException( "Error: Role is not found." ) );
-            roles.add( userRole );
-        } else {
-            strRoles.forEach( role -> {
-                switch ( role ) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName( UserRoles.ROLE_ADMIN )
-                                .orElseThrow( () -> new RuntimeException( "Error: Role is not found." ) );
-                        roles.add( adminRole );
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName( UserRoles.ROLE_USER )
-                                .orElseThrow( () -> new RuntimeException( "Error: Role is not found." ) );
-                        roles.add( userRole );
-                }
-            } );
+        if ( strRoles != null && strRoles.contains( "admin" ) ) {
+            roles.add(Role.ROLE_ADMIN );
         }
 
-        user.setRoles( roles );
-        applicationUserRepository.save( user );
+        roles.add( Role.ROLE_USER );
 
-        return ResponseEntity.ok( new MessageResponse( "User registered successfully!" ) );
-    }
+        user.setRoles(roles );
+        applicationUserRepository.save(user );
 
-    @PostMapping("/signout")
+        return ResponseEntity.ok(new MessageResponse( "User registered successfully!" ) );
+}
+
+    @PostMapping( "/signout" )
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new MessageResponse("You've been signed out!"));
+        return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, cookie.toString() )
+                .body( new MessageResponse( "You've been signed out!" ) );
     }
 }

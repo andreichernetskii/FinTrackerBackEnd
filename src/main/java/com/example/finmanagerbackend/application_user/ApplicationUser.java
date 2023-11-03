@@ -1,13 +1,7 @@
 package com.example.finmanagerbackend.application_user;
 
-import com.example.finmanagerbackend.role.Role;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,10 +11,8 @@ public class ApplicationUser {
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable( name = "user_roles",
-                joinColumns = @JoinColumn( name = "user_email" ),
-                inverseJoinColumns = @JoinColumn( name = "role_name" ) )
+    @ElementCollection
+    @Enumerated( EnumType.STRING )
     private Set<Role> roles = new HashSet<>();
 
     public ApplicationUser() {

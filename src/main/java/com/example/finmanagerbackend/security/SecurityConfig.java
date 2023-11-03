@@ -65,8 +65,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth ->
                         auth
 //                                .requestMatchers( mvcMatcherBuilder.pattern( "/console/**" ) ).permitAll()
-//                                .requestMatchers( mvcMatcherBuilder.pattern("/api/auth/**") ).permitAll()
-                                .anyRequest().permitAll() );
+                                .requestMatchers( mvcMatcherBuilder.pattern("/api/auth/**") ).permitAll()
+                                .anyRequest().authenticated() );
 
         http.authenticationProvider( authenticationProvider() );
         http.addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class );

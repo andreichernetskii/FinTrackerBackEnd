@@ -15,6 +15,7 @@ import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -40,11 +41,12 @@ public class JwtUtils {
 
     // generate a Cookie containing JWT from username, date, expiration, secret
     public ResponseCookie generateJwtCookie( UserDetailsImpl userPrincipal ) {
-        String jwt = generateTokenFromUsername( userPrincipal.getUsername() );
+        String jwt = generateTokenFromUsername( userPrincipal );
         ResponseCookie cookie = ResponseCookie.from( jwtCookie, jwt )
                 .path( "/api" )
                 .maxAge( 24 * 60 * 60 )
                 .httpOnly( true )
+//                .secure( true )
                 .build();
 
         return cookie;
@@ -86,9 +88,10 @@ public class JwtUtils {
         return false;
     }
 
-    public String generateTokenFromUsername( String username ) {
+    public String generateTokenFromUsername( UserDetailsImpl userPrincipals ) {
         return Jwts.builder()
-                .setSubject( username )
+                .setSubject( userPrincipals.getUsername() )
+                .claim( "role", userPrincipals.getAuthorities().stream().map( auth -> auth.getAuthority() ).collect( Collectors.toList()) )
                 .setIssuedAt( new Date() )
                 .setExpiration( new Date( (new Date()).getTime() + jwtExpirationMs ) )
                 .signWith( key(), SignatureAlgorithm.HS256 )

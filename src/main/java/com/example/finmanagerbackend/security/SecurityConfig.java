@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.security;
 
 import com.example.finmanagerbackend.application_user.UserDetailsServiceImpl;
+import com.example.finmanagerbackend.jwt.AuthEntryPointJwt;
 import com.example.finmanagerbackend.jwt.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableMethodSecurity
@@ -51,12 +54,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
+    public SecurityFilterChain filterChain( HttpSecurity http, HandlerMappingIntrospector introspector ) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+
         http
                 .csrf( csrf -> csrf.disable() )
+                .headers(headers-> headers.disable())
                 .exceptionHandling( exception -> exception.authenticationEntryPoint( unauthorizedHandle ) )
                 .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-                .authorizeHttpRequests( auth -> auth.anyRequest().authenticated() );
+                .authorizeHttpRequests( auth ->
+                        auth
+//                                .requestMatchers( mvcMatcherBuilder.pattern( "/console/**" ) ).permitAll()
+//                                .requestMatchers( mvcMatcherBuilder.pattern("/api/auth/**") ).permitAll()
+                                .anyRequest().permitAll() );
 
         http.authenticationProvider( authenticationProvider() );
         http.addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class );

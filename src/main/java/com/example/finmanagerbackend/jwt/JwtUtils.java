@@ -21,15 +21,16 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger( JwtUtils.class );
 
     // todo: przeanalizować wystarzałe metody i porównać je z nowymi
-    @Value( "${application.properties.app.jwtSecret}" )
+    @Value( "${app.jwtSecret}" )
     private String jwtSecret;
 
-    @Value( "${application.properties.app.jwtExpirationMs}" )
+    @Value( "${app.jwtExpirationMs}" )
     private int jwtExpirationMs;
 
-    @Value( "${application.properties.app.jwtCookieName}" )
+    @Value( "${app.jwtCookieName}" )
     private String jwtCookie;
 
+    // get JWT from Cookies by Cookie name
     public String getJwtFromCookies( HttpServletRequest request ) {
         Cookie cookie = WebUtils.getCookie( request, jwtCookie );
 
@@ -37,6 +38,7 @@ public class JwtUtils {
         else return null;
     }
 
+    // generate a Cookie containing JWT from username, date, expiration, secret
     public ResponseCookie generateJwtCookie( UserDetailsImpl userPrincipal ) {
         String jwt = generateTokenFromUsername( userPrincipal.getUsername() );
         ResponseCookie cookie = ResponseCookie.from( jwtCookie, jwt )
@@ -48,6 +50,7 @@ public class JwtUtils {
         return cookie;
     }
 
+    // return Cookie with null value (used for clean Cookie)
     public ResponseCookie getCleanJwtCookie() {
         ResponseCookie cookie = ResponseCookie.from( jwtCookie, null )
                 .path( "/api" )
@@ -56,6 +59,7 @@ public class JwtUtils {
         return cookie;
     }
 
+    // get username from JWT
     public String getUserNameFromJwtToken( String token ) {
         return Jwts.parser().setSigningKey( key() ).build().parseClaimsJws( token ).getBody().getSubject();
     }
@@ -64,6 +68,7 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor( Decoders.BASE64.decode( jwtSecret ) );
     }
 
+    // validate a JWT with a secret
     public boolean validateJwtToken( String authToken ) {
         try {
             Jwts.parser().setSigningKey( key() ).build().parse( authToken );

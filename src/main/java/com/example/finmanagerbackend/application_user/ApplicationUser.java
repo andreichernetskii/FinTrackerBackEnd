@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table( name = "app_users" )
+//@Table( name = "app_users" )
 public class ApplicationUser {
     @Id
     private String email;
@@ -26,10 +26,9 @@ public class ApplicationUser {
     public ApplicationUser() {
     }
 
-    public ApplicationUser( String email, String password, Set<Role> roles ) {
+    public ApplicationUser( String email, String password ) {
         this.email = email;
         this.password = password;
-        this.roles = roles;
     }
 
     public String getEmail() {

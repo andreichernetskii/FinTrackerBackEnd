@@ -60,7 +60,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain( HttpSecurity http, HandlerMappingIntrospector introspector ) throws Exception {
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder( introspector );
-//        AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher( introspector );
 
         http
                 .csrf( csrf -> csrf.disable() )

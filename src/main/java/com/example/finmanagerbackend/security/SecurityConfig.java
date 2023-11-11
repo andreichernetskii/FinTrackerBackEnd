@@ -18,15 +18,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandle;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandle;
+
+    public SecurityConfig( UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandle ) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandle = unauthorizedHandle;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -55,18 +59,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain( HttpSecurity http, HandlerMappingIntrospector introspector ) throws Exception {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder( introspector );
+//        AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher( introspector );
 
         http
                 .csrf( csrf -> csrf.disable() )
-                .headers(headers-> headers.disable())
+                .headers( headers -> headers.disable() )
                 .exceptionHandling( exception -> exception.authenticationEntryPoint( unauthorizedHandle ) )
                 .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
                 .authorizeHttpRequests( auth ->
                         auth
-//                                .requestMatchers( mvcMatcherBuilder.pattern( "/console/**" ) ).permitAll()
-                                .requestMatchers( mvcMatcherBuilder.pattern("/api/auth/**") ).permitAll()
-                                .anyRequest().authenticated() );
+                                .requestMatchers( mvcMatcherBuilder.pattern( "/console" ) ).permitAll()
+                                .requestMatchers( mvcMatcherBuilder.pattern( "/api/auth/**" ) ).permitAll()
+                                .anyRequest().permitAll() );
 
         http.authenticationProvider( authenticationProvider() );
         http.addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class );

@@ -39,10 +39,6 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
-
     @Override
     public String getPassword() {
         return password;

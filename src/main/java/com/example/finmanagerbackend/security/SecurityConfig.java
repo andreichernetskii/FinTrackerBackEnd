@@ -70,7 +70,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers( mvcMatcherBuilder.pattern( "/console" ) ).permitAll()
                                 .requestMatchers( mvcMatcherBuilder.pattern( "/api/auth/**" ) ).permitAll()
-                                .anyRequest().permitAll() );
+                                .anyRequest().authenticated() );
 
         http.authenticationProvider( authenticationProvider() );
         http.addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class );

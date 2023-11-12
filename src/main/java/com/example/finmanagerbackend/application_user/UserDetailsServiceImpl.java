@@ -9,8 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    ApplicationUserRepository applicationUserRepository;
+    private final ApplicationUserRepository applicationUserRepository;
+
+    public UserDetailsServiceImpl( ApplicationUserRepository applicationUserRepository ) {
+        this.applicationUserRepository = applicationUserRepository;
+    }
 
     @Override
     @Transactional

@@ -1,8 +1,6 @@
 package com.example.finmanagerbackend.global;
 
-import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
-import com.example.finmanagerbackend.global.exceptions.NotFoundException;
-import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
+import com.example.finmanagerbackend.global.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,5 +26,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<?> handleAlreadyExistConflict ( UnprocessableEntityException exception ) {
         String message = exception.getMessage();
         return ResponseEntity.status( HttpStatus.UNPROCESSABLE_ENTITY ).body( message );
+    }
+
+    @ExceptionHandler( ExpiredTokenException.class )
+    protected ResponseEntity<?> handleAlreadyExistConflict ( ExpiredTokenException exception ) {
+        String message = exception.getMessage();
+        return ResponseEntity.status( HttpStatus.FORBIDDEN ).body( message );
+    }
+
+    @ExceptionHandler( AuthenticationException.class )
+    protected ResponseEntity<?> handleAlreadyExistConflict ( AuthenticationException exception ) {
+        String message = exception.getMessage();
+        return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( message );
     }
 }

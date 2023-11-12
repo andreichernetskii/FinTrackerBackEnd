@@ -10,7 +10,6 @@ public class ApplicationUser {
     @Id
     private String email;
     private String password;
-
     @ElementCollection
     @Enumerated( EnumType.STRING )
     private Set<Role> roles = new HashSet<>();

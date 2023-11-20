@@ -15,6 +15,7 @@ public class ApplicationUser {
     private Set<Role> roles = new HashSet<>();
 
     public ApplicationUser() {
+
     }
 
     public ApplicationUser( String email, String password ) {

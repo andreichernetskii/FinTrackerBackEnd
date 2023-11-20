@@ -16,6 +16,7 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
+
     public UserDetailsImpl( String email, String password, Collection<? extends GrantedAuthority> authorities ) {
         this.email = email;
         this.password = password;
@@ -33,6 +34,8 @@ public class UserDetailsImpl implements UserDetails {
                 authorities
         );
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -79,4 +82,6 @@ public class UserDetailsImpl implements UserDetails {
 
         return Objects.equals( email, user.email );
     }
+
+
 }

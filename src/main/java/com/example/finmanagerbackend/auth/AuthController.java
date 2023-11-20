@@ -31,23 +31,22 @@ import com.example.finmanagerbackend.application_user.Role;
 @RequestMapping( "/api/auth" )
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-
     private final ApplicationUserRepository applicationUserRepository;
-
     private final PasswordEncoder encoder;
-
     private final JwtUtils jwtUtils;
 
     public AuthController( AuthenticationManager authenticationManager,
                            ApplicationUserRepository applicationUserRepository,
                            PasswordEncoder encoder,
                            JwtUtils jwtUtils ) {
+
         this.authenticationManager = authenticationManager;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
     }
 
+    // todo: move some code to service
     @PostMapping( "/signin" )
     public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest ) {
         Authentication authentication = authenticationManager
@@ -99,6 +98,7 @@ public class AuthController {
     @PostMapping( "/signout" )
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        System.out.println( "You've been signed out!" );
         return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, cookie.toString() )
                 .body( new MessageResponse( "You've been signed out!" ) );
     }

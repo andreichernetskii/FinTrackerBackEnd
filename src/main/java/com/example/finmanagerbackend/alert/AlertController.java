@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// if something not good in user's financials will be shown a message
+// something like "you financials below of zero!"
 @RestController
 @RequestMapping( "/api/v1/alerts" )
 public class AlertController {

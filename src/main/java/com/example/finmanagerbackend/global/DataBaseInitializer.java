@@ -26,7 +26,7 @@ public class DataBaseInitializer implements ApplicationRunner {
                 LimitType.ZERO,
                 new BigDecimal( 0 ),
                 null,
-                LocalDate.now() // todo: pamiętać, że tutaj już ustalona data. bo niewiadomo teraz, jaki będzie algorytm pinowania limita od current date
+                LocalDate.now()
         );
     }
 
@@ -36,7 +36,6 @@ public class DataBaseInitializer implements ApplicationRunner {
         if ( !isZeroLimExists( limitDTO ) ) limitService.addLimit( limitDTO );
     }
 
-    // todo: czy ma to sens robić przez Example?
     private boolean isZeroLimExists(LimitDTO limitDTO) {
         return limitRepository.existsBy( limitDTO.getLimitType() );
     }

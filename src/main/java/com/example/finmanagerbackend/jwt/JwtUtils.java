@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.jwt;
 
+import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
 import com.example.finmanagerbackend.application_user.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger( JwtUtils.class );
+    private final ApplicationUserRepository applicationUserRepository;
 
     // todo: przeanalizować wystarzałe metody i porównać je z nowymi
     @Value( "${app.jwtSecret}" )
@@ -30,6 +32,10 @@ public class JwtUtils {
 
     @Value( "${app.jwtCookieName}" )
     private String jwtCookie;
+
+    public JwtUtils( ApplicationUserRepository applicationUserRepository ) {
+        this.applicationUserRepository = applicationUserRepository;
+    }
 
     // get JWT from Cookies by Cookie name
     public String getJwtFromCookies( HttpServletRequest request ) {
@@ -91,10 +97,17 @@ public class JwtUtils {
     public String generateTokenFromUsername( UserDetailsImpl userPrincipals ) {
         return Jwts.builder()
                 .setSubject( userPrincipals.getUsername() )
-                .claim( "role", userPrincipals.getAuthorities().stream().map( auth -> auth.getAuthority() ).collect( Collectors.toList()) )
+                .claim( "role", userPrincipals.getAuthorities().stream().map( auth ->
+                        auth.getAuthority() ).collect( Collectors.toList()) )
                 .setIssuedAt( new Date() )
                 .setExpiration( new Date( (new Date()).getTime() + jwtExpirationMs ) )
                 .signWith( key(), SignatureAlgorithm.HS256 )
                 .compact();
+    }
+
+    public String parseJwt( HttpServletRequest request ) {
+        String jwt = getJwtFromCookies( request );
+
+        return jwt;
     }
 }

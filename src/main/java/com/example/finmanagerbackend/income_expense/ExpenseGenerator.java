@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+// for generation a table with random financial statistics
 @Service
 public class ExpenseGenerator {
     private final IncomeExpenseRepository incomeExpenseRepository;

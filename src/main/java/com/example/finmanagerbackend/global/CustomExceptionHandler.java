@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+// main class what will handle with unchecked app exceptions
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     // for some forbidden actions with data

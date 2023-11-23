@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.jwt;
 
+import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
 import com.example.finmanagerbackend.application_user.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
 import org.slf4j.Logger;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -21,6 +23,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private ApplicationUserRepository applicationUserRepository;
 
     private static final Logger logger = LoggerFactory.getLogger( AuthTokenFilter.class );
 
@@ -36,10 +40,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                      FilterChain filterChain ) throws ServletException, IOException {
 
         try {
-            String jwt = parseJwt( request );
+            String jwt = jwtUtils.parseJwt( request );
 
             if ( jwt != null && jwtUtils.validateJwtToken( jwt ) ) {
                 String username = jwtUtils.getUserNameFromJwtToken( jwt );
+
+                if ( !applicationUserRepository.isUserActive( username ) ) {
+                    throw new Exception( "Cannot set user authentication: {}" );
+                }
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername( username );
 
@@ -54,15 +62,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication( authentication );
             }
         } catch ( Exception e ) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error( "Cannot set user authentication: {}", e );
         }
 
         filterChain.doFilter( request, response );
-    }
-
-    private String parseJwt( HttpServletRequest request ) {
-        String jwt = jwtUtils.getJwtFromCookies( request );
-
-        return jwt;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.alert;
 
-// todo: zcalić z LimitType
+// todo: not used for a while
 public enum AlertType {
     NEGATIVE_BALANCE( "Jesteś w ogóle na minusie!" ),
     MORE_THEN_PREV_MONTH( "Wydałeś więcej, niż w poprzednim miesięcu" ),

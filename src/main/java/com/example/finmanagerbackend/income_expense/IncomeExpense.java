@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+// here a table of financial operations: incomes and expenses
 @Entity
 public class IncomeExpense {
     @Id

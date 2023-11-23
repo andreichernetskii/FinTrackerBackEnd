@@ -2,9 +2,10 @@ package com.example.finmanagerbackend.alert;
 
 import com.example.finmanagerbackend.limit.Limit;
 
+// contains alert info inside the text
 public class AlertDTO {
     private String message;
-    private boolean positive;
+    private boolean positive; // todo: czy w ogóle jest nadal potrzebny?
 
     public AlertDTO() {    }
 

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-// todo: rozwiąć, żeby pokazywał o ile i jaki limit był przekrocony
+// table of limits, can be created by user
 @Entity
 @Table( name = "Limits" )
 public class Limit {
@@ -13,7 +13,7 @@ public class Limit {
     @GeneratedValue
     Long id;
     @Enumerated( EnumType.STRING )
-    // todo dodać nullable false
+    @Column( nullable = false )
     private LimitType limitType;
     @Column( nullable = false )
     private BigDecimal limitAmount;

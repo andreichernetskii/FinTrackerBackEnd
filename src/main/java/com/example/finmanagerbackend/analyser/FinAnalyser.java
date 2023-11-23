@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
+// this class will calculate statistics
 @Service
 public class FinAnalyser {
     private IncomeExpenseRepository incomeExpenseRepository;
@@ -33,7 +34,6 @@ public class FinAnalyser {
             BigDecimal discrepancy = calcDiscrepancy( limit );
 
             if ( discrepancy.compareTo( BigDecimal.ZERO ) > 0 ) {
-                // todo: ???
                 alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ), false ) );
             }
         }
@@ -41,6 +41,7 @@ public class FinAnalyser {
         return alerts;
     }
 
+    // choosing strategy of calculating balance of different periods of time: year, mont, etc.
     private void setStrategy( LimitType limitType ) {
         strategy = switch ( limitType ) {
             case ZERO -> new NegativeActualStatusCalcStrategy( incomeExpenseRepository );
@@ -52,6 +53,7 @@ public class FinAnalyser {
         };
     }
 
+    // calculating how big discrepancy is in a difference of limit if time
     private BigDecimal calcDiscrepancy( Limit limit ) {
         setStrategy( limit.getLimitType() );
 
@@ -74,8 +76,5 @@ public class FinAnalyser {
                 + " został przekrocony o " + discrepancy.toPlainString();
     }
 
-
     // todo: zrobić budżet
-    // todo: spróbować chain of responsibility
-    // todo: przerobić jeszcze z  punktu widzenia, że są już limity i po kategoriach
 }

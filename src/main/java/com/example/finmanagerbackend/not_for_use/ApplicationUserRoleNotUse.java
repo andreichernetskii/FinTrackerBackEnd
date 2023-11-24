@@ -23,7 +23,6 @@ public enum ApplicationUserRoleNotUse {
         return permissions;
     }
 
-    // todo: ???? jak to działa?
     public Set<GrantedAuthority> getGrantedAuthorities() {
         Set<GrantedAuthority> permissions = getPermissions().stream()
                 .map( permission -> new SimpleGrantedAuthority( permission.getPermission() ) )

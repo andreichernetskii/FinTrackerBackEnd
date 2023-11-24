@@ -29,17 +29,17 @@ public class LimitServiceTest {
     @Test
     public void deleteLimitTest_SuccessfulDeletion() {
         Long id = 1L;
-        // podłaczamy mock
+        // connecting mock
         when( limitRepository.existsById( id ) ).thenReturn( true );
 
-        // robimy usunięcie
+        // deleting
         limitService.deleteLimit( id );
 
-        // sprawdzamy, czy metody były używane
+        // checking methods usages
         verify( limitRepository ).existsById( id );
         verify( limitRepository ).deleteById( id );
 
-        // że już nie ma limita z takim ID
+        // limit with ID not exists
         when( limitRepository.existsById( id ) ).thenReturn( false );
         assertFalse( limitRepository.existsById( id ) );
     }

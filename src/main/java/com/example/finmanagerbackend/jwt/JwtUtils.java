@@ -23,7 +23,6 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger( JwtUtils.class );
     private final ApplicationUserRepository applicationUserRepository;
 
-    // todo: przeanalizować wystarzałe metody i porównać je z nowymi
     @Value( "${app.jwtSecret}" )
     private String jwtSecret;
 
@@ -48,23 +47,19 @@ public class JwtUtils {
     // generate a Cookie containing JWT from username, date, expiration, secret
     public ResponseCookie generateJwtCookie( UserDetailsImpl userPrincipal ) {
         String jwt = generateTokenFromUsername( userPrincipal );
-        ResponseCookie cookie = ResponseCookie.from( jwtCookie, jwt )
+        return ResponseCookie.from( jwtCookie, jwt )
                 .path( "/api" )
                 .maxAge( 24 * 60 * 60 )
                 .httpOnly( true )
 //                .secure( true )
                 .build();
-
-        return cookie;
     }
 
     // return Cookie with null value (used for clean Cookie)
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from( jwtCookie, null )
+        return ResponseCookie.from( jwtCookie, null )
                 .path( "/api" )
                 .build();
-
-        return cookie;
     }
 
     // get username from JWT
@@ -96,18 +91,19 @@ public class JwtUtils {
 
     public String generateTokenFromUsername( UserDetailsImpl userPrincipals ) {
         return Jwts.builder()
-                .setSubject( userPrincipals.getUsername() )
-                .claim( "role", userPrincipals.getAuthorities().stream().map( auth ->
-                        auth.getAuthority() ).collect( Collectors.toList()) )
-                .setIssuedAt( new Date() )
-                .setExpiration( new Date( (new Date()).getTime() + jwtExpirationMs ) )
+                .subject( userPrincipals.getUsername() )
+                .claim( "role",
+                        userPrincipals
+                                .getAuthorities()
+                                .stream()
+                                .map( auth -> auth.getAuthority() ).collect( Collectors.toList()) )
+                .issuedAt( new Date() )
+                .expiration( new Date( (new Date()).getTime() + jwtExpirationMs ) )
                 .signWith( key(), SignatureAlgorithm.HS256 )
                 .compact();
     }
 
     public String parseJwt( HttpServletRequest request ) {
-        String jwt = getJwtFromCookies( request );
-
-        return jwt;
+        return getJwtFromCookies( request );
     }
 }

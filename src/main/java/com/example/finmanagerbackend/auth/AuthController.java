@@ -31,89 +31,24 @@ import com.example.finmanagerbackend.application_user.Role;
 @RestController
 @RequestMapping( "/api/auth" )
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final ApplicationUserRepository applicationUserRepository;
-    private final PasswordEncoder encoder;
-    private final JwtUtils jwtUtils;
+    private final AuthService authService;
 
-    public AuthController( AuthenticationManager authenticationManager,
-                           ApplicationUserRepository applicationUserRepository,
-                           PasswordEncoder encoder,
-                           JwtUtils jwtUtils ) {
-
-        this.authenticationManager = authenticationManager;
-        this.applicationUserRepository = applicationUserRepository;
-        this.encoder = encoder;
-        this.jwtUtils = jwtUtils;
+    public AuthController( AuthService authService ) {
+        this.authService = authService;
     }
 
-    // todo: move some code to service
     @PostMapping( "/signin" )
     public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest ) {
-        Authentication authentication = authenticationManager
-                .authenticate( new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword() ) );
-
-        SecurityContextHolder.getContext().setAuthentication( authentication );
-
-        applicationUserRepository.setUserActivity( loginRequest.getEmail(), true);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie( userDetails );
-
-        List<String> roles = userDetails
-                .getAuthorities()
-                .stream()
-                .map( item -> item.getAuthority() )
-                .collect( Collectors.toList() );
-
-        return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, jwtCookie.toString() )
-                .body( new UserInfoResponse(
-                        userDetails.getUsername(),
-                        roles
-                ) );
+        return authService.authenticateUser( loginRequest );
     }
 
     @PostMapping( "/signup" )
     public ResponseEntity<?> registerUser( @RequestBody SignupRequest signUpRequest ) {
-        if ( applicationUserRepository.existsByUsername( signUpRequest.getEmail() ) ) {
-            return ResponseEntity.badRequest().body( new MessageResponse( "Error: Email is already taken!" ) );
-        }
-
-        // Create new user's account
-        ApplicationUser user = new ApplicationUser(
-                signUpRequest.getEmail(),
-                encoder.encode( signUpRequest.getPassword() ) );
-
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
-
-        if ( strRoles != null && strRoles.contains( "admin" ) ) {
-            roles.add(Role.ROLE_ADMIN );
-        }
-
-        roles.add( Role.ROLE_USER );
-
-        user.setRoles(roles );
-        applicationUserRepository.save(user );
-
-        return ResponseEntity.ok(new MessageResponse( "User registered successfully!" ) );
-}
+        return authService.registerUser( signUpRequest );
+    }
 
     @PostMapping( "/signout" )
     public ResponseEntity<?> logoutUser( HttpServletRequest request ) {
-        String jwt = jwtUtils.parseJwt( request );
-
-        if ( jwt != null && jwtUtils.validateJwtToken( jwt ) ) {
-            String username = jwtUtils.getUserNameFromJwtToken( jwt );
-            applicationUserRepository.setUserActivity( username, false );
-        }
-
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-
-        return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, cookie.toString() )
-                .body( new MessageResponse( "You've been signed out!" ) );
+        return authService.logoutUser( request );
     }
 }

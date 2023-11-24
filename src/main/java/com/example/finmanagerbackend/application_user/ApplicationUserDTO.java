@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.application_user;
 
-// todo: teraz w ogóle nie jest używany - trzeba coś z tym wymyślić
+// NOT USED
 public class ApplicationUserDTO {
     private String email;
     private String password;

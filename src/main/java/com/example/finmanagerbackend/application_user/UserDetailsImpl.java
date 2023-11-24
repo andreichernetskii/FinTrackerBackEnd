@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private String email;
     @JsonIgnore
-    private String password;
+    private String password; // passwords will be not putted inside the token
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -50,7 +50,8 @@ public class UserDetailsImpl implements UserDetails {
         return email;
     }
 
-    // todo: może to potem przerobic w pola klasy
+    // for now, it's not useful like field in class
+    // it is enough to be like this
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -80,6 +81,4 @@ public class UserDetailsImpl implements UserDetails {
 
         return Objects.equals( email, user.email );
     }
-
-
 }

@@ -34,7 +34,7 @@ public class FinAnalyser {
             BigDecimal discrepancy = calcDiscrepancy( limit );
 
             if ( discrepancy.compareTo( BigDecimal.ZERO ) > 0 ) {
-                alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ), false ) );
+                alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ) ) );
             }
         }
 
@@ -75,6 +75,4 @@ public class FinAnalyser {
                 + " Limit o wartości " + limit.getLimitAmount()
                 + " został przekrocony o " + discrepancy.toPlainString();
     }
-
-    // todo: zrobić budżet
 }

@@ -20,7 +20,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     Optional<ApplicationUser> findByEmail( @Param( "email" ) String email );
 
     @Query( """
-            SELECT 
+            SELECT
             CASE WHEN COUNT( users.email ) > 0 
             THEN true ELSE false
             END 

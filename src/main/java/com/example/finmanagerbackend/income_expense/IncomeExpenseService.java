@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.income_expense;
 
+import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,26 @@ public class IncomeExpenseService {
                 ? incomeExpenseDTO.getAmount().negate()
                 : incomeExpenseDTO.getAmount();
 
-        incomeExpenseRepository.save( new IncomeExpense(
+
+        IncomeExpense incomeExpense = new IncomeExpense(
                 incomeExpenseDTO.getOperationType(),
                 amount,
                 incomeExpenseDTO.getCategory(),
-                LocalDate.parse( incomeExpenseDTO.getDate() ) )
-        );
+                LocalDate.parse( incomeExpenseDTO.getDate() ) );
+
+        Account currentAccount = getCurrentAccount();
+        currentAccount.addIncome(incomeExpense);
+        accountService.save(currentAccount);
+
+        //incomeExpense.setAccount( currentAccount );
+
+       // incomeExpenseRepository.save( incomeExpense );
+    }
+
+
+    private Account getCurrentAccount(){
+        //wyciagnie z AccountService, który wyciągnie z AuthService, który wyciągnie z security
+        return null;
     }
 
     public List<IncomeExpense> getOperations() {

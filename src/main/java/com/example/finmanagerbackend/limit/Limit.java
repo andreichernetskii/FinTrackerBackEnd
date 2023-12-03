@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.limit;
 
+import com.example.finmanagerbackend.account.Account;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -12,6 +13,8 @@ public class Limit {
     @Id
     @GeneratedValue
     Long id;
+    @ManyToOne
+    private Account account;
     @Enumerated( EnumType.STRING )
     @Column( nullable = false )
     private LimitType limitType;

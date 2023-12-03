@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.income_expense;
 
+import com.example.finmanagerbackend.account.Account;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -11,6 +12,8 @@ public class IncomeExpense {
     @Id
     @GeneratedValue
     private Long id;
+    @ManyToOne
+    private Account account;
     @Enumerated( EnumType.STRING )
     private OperationType operationType;
     private BigDecimal amount;
@@ -78,5 +81,9 @@ public class IncomeExpense {
 
     public void setOperationType( OperationType operationType ) {
         this.operationType = operationType;
+    }
+
+    public void setAccount( Account account ) {
+        this.account = account;
     }
 }

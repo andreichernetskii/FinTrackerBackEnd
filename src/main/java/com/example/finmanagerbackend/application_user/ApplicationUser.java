@@ -1,6 +1,10 @@
 package com.example.finmanagerbackend.application_user;
 
+import com.example.finmanagerbackend.account.Account;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +19,9 @@ public class ApplicationUser {
     @Enumerated( EnumType.STRING )
     private Set<Role> roles = new HashSet<>();
     private boolean active;
+    @OneToOne
+    @Cascade( CascadeType.ALL )
+    private Account account;
 
     public ApplicationUser() {
 
@@ -23,6 +30,7 @@ public class ApplicationUser {
     public ApplicationUser( String email, String password ) {
         this.email = email;
         this.password = password;
+        this.account = new Account();
     }
 
     public String getEmail() {

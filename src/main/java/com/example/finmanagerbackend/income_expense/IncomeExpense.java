@@ -13,6 +13,7 @@ public class IncomeExpense {
     @GeneratedValue
     private Long id;
     @ManyToOne
+    @JoinColumn( name = "account_id" ) // connection with account entity
     private Account account;
     @Enumerated( EnumType.STRING )
     private OperationType operationType;

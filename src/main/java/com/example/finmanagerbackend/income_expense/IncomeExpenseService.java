@@ -37,7 +37,7 @@ public class IncomeExpenseService {
        // incomeExpenseRepository.save( incomeExpense );
     }
 
-
+    // todo: ważne!
     private Account getCurrentAccount(){
         //wyciagnie z AccountService, który wyciągnie z AuthService, który wyciągnie z security
         return null;

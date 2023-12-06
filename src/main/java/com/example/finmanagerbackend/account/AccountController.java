@@ -1,7 +1,7 @@
 package com.example.finmanagerbackend.account;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.finmanagerbackend.income_expense.IncomeExpenseDTO;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/account")
@@ -12,5 +12,10 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @PostMapping("/{userId}")
+    public void addNewOperation(@PathVariable ("userId") String userId,
+                                @RequestBody IncomeExpenseDTO incomeExpenseDTO) {
+        accountService.addNewOperation(userId, incomeExpenseDTO);
+    }
 
 }

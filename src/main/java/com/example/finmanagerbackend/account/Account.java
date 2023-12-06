@@ -15,6 +15,8 @@ import java.util.List;
 
 // this is all financial tracking instruments
 // user + financials + limits, etc.
+
+// todo: muszę zrozumieć, jak buduje się account w BD
 @Entity
 public class Account {
     @Id
@@ -26,7 +28,6 @@ public class Account {
     private List<IncomeExpense> operations = new ArrayList<>();
     @OneToMany( mappedBy = "account" ) // todo: sprawdzić, czy skuma, że to już inny object
     private List<Limit> limits;
-
 
     public void addIncome( IncomeExpense incomeExpense ) {
         operations.add( incomeExpense );

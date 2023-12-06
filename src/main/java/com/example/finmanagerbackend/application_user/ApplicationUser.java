@@ -16,18 +16,18 @@ public class ApplicationUser {
     private String email;
     private String password;
     @ElementCollection
-    @Enumerated( EnumType.STRING )
+    @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
     private boolean active;
     @OneToOne
-    @Cascade( CascadeType.ALL )
+    @Cascade(CascadeType.ALL)
     private Account account;
 
     public ApplicationUser() {
 
     }
 
-    public ApplicationUser( String email, String password ) {
+    public ApplicationUser(String email, String password) {
         this.email = email;
         this.password = password;
         this.account = new Account();
@@ -37,7 +37,7 @@ public class ApplicationUser {
         return email;
     }
 
-    public void setEmail( String email ) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -45,7 +45,7 @@ public class ApplicationUser {
         return password;
     }
 
-    public void setPassword( String password ) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -53,7 +53,7 @@ public class ApplicationUser {
         return roles;
     }
 
-    public void setRoles( Set<Role> roles ) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -61,7 +61,11 @@ public class ApplicationUser {
         return active;
     }
 
-    public void setActive( boolean active ) {
+    public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Account getAccount() {
+        return this.account;
     }
 }

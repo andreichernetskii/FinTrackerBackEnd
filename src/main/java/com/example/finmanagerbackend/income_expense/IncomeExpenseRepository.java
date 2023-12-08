@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
@@ -63,7 +64,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             FROM IncomeExpense  incomeExpense
             WHERE incomeExpense.operationType = 'EXPENSE'
             AND YEAR( incomeExpense.date ) = YEAR( :yearParam )
-            """)
+            """ )
     Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
 
     @Query( """
@@ -73,7 +74,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             AND YEAR( incomeExpense.date ) = YEAR( :dayParam )
             AND MONTH( incomeExpense.date ) = MONTH( :dayParam )
             AND DAY( incomeExpense.date ) = DAY( :dayParam )
-            """)
+            """ )
     Double calculateDayExpenses( @Param( "dayParam" ) LocalDate day );
 
     @Query( """
@@ -82,7 +83,16 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             WHERE incomeExpense.operationType = 'EXPENSE'
             AND ( :firstWeekDayParam IS NULL OR incomeExpense.date >= :firstWeekDayParam) 
             AND ( :lastWeekDayParam IS NULL OR incomeExpense.date <= :lastWeekDayParam)
-            """)
+            """ )
     Double calculateWeekExpenses( @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
                                   @Param( "lastWeekDayParam" ) LocalDate lastWeekDay );
+
+    @Query( """
+            SELECT operation
+            FROM IncomeExpense operation
+            WHERE operation.id = :operationId
+            AND operation.account.id = :accountId
+            """ )
+    Optional<IncomeExpense> findByAccountIdPlusOperationId( @Param( "operationId" ) Long operationId,
+                                                            @Param( "accountId" ) Long accountId );
 }

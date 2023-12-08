@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.account;
 
 import com.example.finmanagerbackend.application_user.ApplicationUser;
 import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
+import com.example.finmanagerbackend.income_expense.IncomeExpense;
 import com.example.finmanagerbackend.income_expense.IncomeExpenseDTO;
 import com.example.finmanagerbackend.income_expense.IncomeExpenseService;
 import com.example.finmanagerbackend.jwt.JwtUtils;
@@ -37,7 +38,7 @@ public class AccountService {
     public void addNewOperation( HttpServletRequest request, IncomeExpenseDTO incomeExpenseDTO ) {
         Account account = getAccountFromRequest( request );
 
-        if (account != null) {
+        if ( account != null ) {
             incomeExpenseService.addIncomeExpense( account, incomeExpenseDTO );
         } else {
             // todo: przerobić na jakiś porządny komunikat albo coś jeszcze
@@ -45,7 +46,18 @@ public class AccountService {
         }
     }
 
-    private Account getAccountFromRequest( HttpServletRequest request ) {
+    public void updateOperation( HttpServletRequest request, IncomeExpense incomeExpense ) {
+        Account account = getAccountFromRequest( request );
+
+        if ( account != null ) {
+            incomeExpenseService.updateIncomeExpense( account, incomeExpense );
+        } else {
+            // todo: przerobić na jakiś porządny komunikat albo coś jeszcze
+            System.out.println( "account not exist" );
+        }
+    }
+
+    public Account getAccountFromRequest( HttpServletRequest request ) {
         String jwt = jwtUtils.parseJwt( request );
         String userEmail = jwtUtils.getUserNameFromJwtToken( jwt );
         Optional<ApplicationUser> optionalUser = applicationUserRepository.findByEmail( userEmail );

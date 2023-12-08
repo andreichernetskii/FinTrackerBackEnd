@@ -28,20 +28,8 @@ public class IncomeExpenseService {
                 incomeExpenseDTO.getCategory(),
                 LocalDate.parse( incomeExpenseDTO.getDate() ) );
 
-//        Account currentAccount = getCurrentAccount();
-//        currentAccount.addIncome(incomeExpense);
-//        accountService.save(currentAccount);
-
-//        incomeExpense.setAccount( currentAccount );
-
         incomeExpense.setAccount( account );
         incomeExpenseRepository.save( incomeExpense );
-    }
-
-    // todo: ważne!
-    private Account getCurrentAccount(){
-        //wyciagnie z AccountService, który wyciągnie z AuthService, który wyciągnie z security
-        return null;
     }
 
     public List<IncomeExpense> getOperations() {
@@ -64,11 +52,17 @@ public class IncomeExpenseService {
         return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }
 
-    public void updateIncomeExpense( IncomeExpense incomeExpense ) {
-        Optional<IncomeExpense> incomeExpenseOptional = incomeExpenseRepository.findById( incomeExpense.getId() );
+    public void updateIncomeExpense( Account account, IncomeExpense incomeExpense ) {
+//        Optional<IncomeExpense> incomeExpenseOptional = incomeExpenseRepository.findById( incomeExpense.getId() );
+
+        Optional<IncomeExpense> incomeExpenseOptional =
+                incomeExpenseRepository.findByAccountIdPlusOperationId( incomeExpense.getId(), account.getId() );
+
         if ( !incomeExpenseOptional.isPresent() ) {
             throw new NotFoundException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
         }
+
+        incomeExpense.setAccount( account ); // todo: inne jakieś rozwiązanie, żeby zabronić zmianę account'a
         incomeExpenseRepository.save( incomeExpense );
     }
 

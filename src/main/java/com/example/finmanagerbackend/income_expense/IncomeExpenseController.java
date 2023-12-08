@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.income_expense;
 
+import com.example.finmanagerbackend.account.Account;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,13 +16,17 @@ public class IncomeExpenseController {
     }
 
     @PostMapping( "/" )
-    public void addNewIncomeExpense( @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
-        incomeExpenseService.addIncomeExpense( null, incomeExpenseDTO );
+    public void addNewIncomeExpense( Account account,
+                                     @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
+
+        incomeExpenseService.addIncomeExpense( account, incomeExpenseDTO );
     }
 
     @PutMapping( "/" )
-    public void updateIncomeExpense( @RequestBody IncomeExpense incomeExpense ) {
-        incomeExpenseService.updateIncomeExpense( incomeExpense );
+    public void updateIncomeExpense( Account account,
+                                     @RequestBody IncomeExpense incomeExpense ) {
+
+        incomeExpenseService.updateIncomeExpense( account, incomeExpense );
     }
 
     @DeleteMapping( "/{operationId}" )

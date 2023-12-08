@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.account;
 
 import com.example.finmanagerbackend.income_expense.IncomeExpenseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,11 +13,10 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping( "/{userId}" )
-    public void addNewOperation( @PathVariable( "userId" ) Long userId,
+    @PostMapping( "/add-operation" )
+    public void addNewOperation( HttpServletRequest request,
                                  @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
 
-        accountService.addNewOperation( userId, incomeExpenseDTO );
+        accountService.addNewOperation( request, incomeExpenseDTO );
     }
-
 }

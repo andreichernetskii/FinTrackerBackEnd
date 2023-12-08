@@ -16,7 +16,7 @@ public class IncomeExpenseController {
 
     @PostMapping( "/" )
     public void addNewIncomeExpense( @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
-        incomeExpenseService.addIncomeExpense( incomeExpenseDTO );
+        incomeExpenseService.addIncomeExpense( null, incomeExpenseDTO );
     }
 
     @PutMapping( "/" )

@@ -72,13 +72,14 @@ public class JwtUtils {
     }
 
     // validate a JWT with a secret
-    public boolean validateJwtToken( String authToken ) {
+    public boolean validateJwtToken( String token ) {
         try {
-            Jwts.parser().setSigningKey( key() ).build().parse( authToken );
+            Jwts.parser().setSigningKey( key() ).build().parse( token );
             return true;
         } catch ( MalformedJwtException e ) {
             logger.error("Invalid JWT token: {}", e.getMessage());
         } catch ( ExpiredJwtException e) {
+            applicationUserRepository.setUserActivity( getUserNameFromJwtToken( token ), false ); // dis-activate user
             logger.error("JWT token is expired: {}", e.getMessage());
         } catch ( UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: {}", e.getMessage());

@@ -19,9 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
         ApplicationUser user = applicationUserRepository.findByEmail( username )
-                .orElseThrow( () -> new UsernameNotFoundException( String.format( "User with use email %s not found", username ) ) );
-
-//        applicationUserRepository.setUserActivity(  username,true );
+                .orElseThrow( () -> new UsernameNotFoundException( String.format( "User with email %s not found", username ) ) );
 
         return UserDetailsImpl.build( user );
     }

@@ -16,7 +16,7 @@ public class IncomeExpenseService {
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
-    public void addIncomeExpense( IncomeExpenseDTO incomeExpenseDTO ) {
+    public void addIncomeExpense( Account account, IncomeExpenseDTO incomeExpenseDTO ) {
         BigDecimal amount = ( incomeExpenseDTO.getOperationType() == OperationType.EXPENSE )
                 ? incomeExpenseDTO.getAmount().negate()
                 : incomeExpenseDTO.getAmount();
@@ -28,13 +28,14 @@ public class IncomeExpenseService {
                 incomeExpenseDTO.getCategory(),
                 LocalDate.parse( incomeExpenseDTO.getDate() ) );
 
-        Account currentAccount = getCurrentAccount();
-        currentAccount.addIncome(incomeExpense);
-        accountService.save(currentAccount);
+//        Account currentAccount = getCurrentAccount();
+//        currentAccount.addIncome(incomeExpense);
+//        accountService.save(currentAccount);
 
-        //incomeExpense.setAccount( currentAccount );
+//        incomeExpense.setAccount( currentAccount );
 
-       // incomeExpenseRepository.save( incomeExpense );
+        incomeExpense.setAccount( account );
+        incomeExpenseRepository.save( incomeExpense );
     }
 
     // todo: ważne!

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 public class IncomeExpenseDTO {
     private OperationType operationType;
     private BigDecimal amount;
-    private String category;
+        private String category;
     private String date;
 
     public IncomeExpenseDTO() {

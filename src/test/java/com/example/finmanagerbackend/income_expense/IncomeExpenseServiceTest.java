@@ -31,7 +31,7 @@ public class IncomeExpenseServiceTest {
                 new String( "2005-12-12" )
         );
 
-        incomeExpenseService.addIncomeExpense( transactionDTO );
+        incomeExpenseService.addIncomeExpense( null, transactionDTO );
 
         ArgumentCaptor<IncomeExpense> transactionCaptor = ArgumentCaptor.forClass( IncomeExpense.class );
         verify( incomeExpenseRepository ).save( transactionCaptor.capture() );

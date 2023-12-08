@@ -23,7 +23,8 @@ public class IncomeExpense {
 
     // constructors
 
-    public IncomeExpense() {    }
+    public IncomeExpense() {
+    }
 
     public IncomeExpense( OperationType operationType, BigDecimal amount, String category, LocalDate date ) {
         this.operationType = operationType;

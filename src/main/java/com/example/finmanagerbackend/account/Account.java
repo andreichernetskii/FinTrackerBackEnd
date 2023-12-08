@@ -33,4 +33,8 @@ public class Account {
         operations.add( incomeExpense );
         incomeExpense.setAccount( this );
     }
+
+    public Long getId() {
+        return id;
+    }
 }

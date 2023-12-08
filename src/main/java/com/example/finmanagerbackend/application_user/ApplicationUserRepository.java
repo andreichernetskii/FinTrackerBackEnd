@@ -16,7 +16,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
             SELECT users
             FROM ApplicationUser users
             WHERE users.email = :email
-            """)
+            """ )
     Optional<ApplicationUser> findByEmail( @Param( "email" ) String email );
 
     @Query( """
@@ -26,7 +26,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
             END 
             FROM ApplicationUser users
             WHERE users.email = :email
-            """)
+            """ )
     Boolean existsByUsername( @Param( "email" ) String email );
 
     @Transactional

@@ -27,8 +27,6 @@ public class AccountController {
     public void addNewOperation( HttpServletRequest request,
                                  @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
 
-//        accountService.addNewOperation( request, incomeExpenseDTO );
-
         Account account = accountService.getAccountFromRequest( request );
         incomeExpenseController.addNewIncomeExpense( account, incomeExpenseDTO );
     }
@@ -37,9 +35,15 @@ public class AccountController {
     public void updateOperation( HttpServletRequest request,
                                  @RequestBody IncomeExpense incomeExpense ) {
 
-//        accountService.updateOperation( request, incomeExpense );
-
         Account account = accountService.getAccountFromRequest( request );
         incomeExpenseController.updateIncomeExpense( account, incomeExpense );
+    }
+
+    @DeleteMapping( "/operations/{operationId}" )
+    public void deleteOperation( HttpServletRequest request,
+                                 @PathVariable( "operationId" ) Long operationId ) {
+
+        Account account = accountService.getAccountFromRequest( request );
+        incomeExpenseController.deleteIncomeExpense( account, operationId );
     }
 }

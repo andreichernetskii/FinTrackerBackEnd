@@ -66,7 +66,7 @@ public class IncomeExpenseServiceTest {
     public void deleteOperationTest_SuccessfulDeletion() {
         Long id = 1L;
         when( incomeExpenseRepository.existsById( id ) ).thenReturn( true );
-        incomeExpenseService.deleteIncomeExpense( id );
+        incomeExpenseService.deleteIncomeExpense( null, id );
 
         verify( incomeExpenseRepository ).existsById( id );
         verify( incomeExpenseRepository ).deleteById( id );
@@ -81,7 +81,7 @@ public class IncomeExpenseServiceTest {
         when( incomeExpenseRepository.existsById( id ) ).thenReturn( false );
 
         assertThrows( IllegalStateException.class,
-                () -> incomeExpenseService.deleteIncomeExpense( id ) );
+                () -> incomeExpenseService.deleteIncomeExpense( null, id ) );
         verify( incomeExpenseRepository ).existsById( id );
         verifyNoMoreInteractions( incomeExpenseRepository );
     }

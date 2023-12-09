@@ -36,25 +36,7 @@ public class IncomeExpenseService {
         return incomeExpenseRepository.findAll();
     }
 
-    public void deleteIncomeExpense( Long operationId ) {
-        boolean exists = incomeExpenseRepository.existsById( operationId );
-        if ( !exists ) {
-            throw new NotFoundException( "Operations with id " + operationId + " is not exists!" );
-        }
-        incomeExpenseRepository.deleteById( operationId );
-    }
-
-    public Double getAnnualBalance( Integer year,
-                                    Integer month,
-                                    OperationType operationType,
-                                    String category ) {
-
-        return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
-    }
-
     public void updateIncomeExpense( Account account, IncomeExpense incomeExpense ) {
-//        Optional<IncomeExpense> incomeExpenseOptional = incomeExpenseRepository.findById( incomeExpense.getId() );
-
         Optional<IncomeExpense> incomeExpenseOptional =
                 incomeExpenseRepository.findByAccountIdPlusOperationId( incomeExpense.getId(), account.getId() );
 
@@ -64,6 +46,27 @@ public class IncomeExpenseService {
 
         incomeExpense.setAccount( account ); // todo: inne jakieś rozwiązanie, żeby zabronić zmianę account'a
         incomeExpenseRepository.save( incomeExpense );
+    }
+
+    public void deleteIncomeExpense( Account account,
+                                     Long operationId ) {
+
+        Optional<IncomeExpense> incomeExpenseOptional =
+                incomeExpenseRepository.findByAccountIdPlusOperationId( operationId, account.getId() );
+
+        if ( !incomeExpenseOptional.isPresent() ) {
+            throw new NotFoundException( "Operations with id " + operationId + " is not exists!" );
+        }
+
+        incomeExpenseRepository.deleteById( operationId );
+    }
+
+    public Double getAnnualBalance( Integer year,
+                                    Integer month,
+                                    OperationType operationType,
+                                    String category ) {
+
+        return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }
 
     public List<IncomeExpense> getOperationsByCriteria( Integer year,

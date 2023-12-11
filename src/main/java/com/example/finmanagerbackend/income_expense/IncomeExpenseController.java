@@ -36,12 +36,19 @@ public class IncomeExpenseController {
     }
 
     @GetMapping( "/" )
-    public List<IncomeExpense> getOperationsOfPeriod( @RequestParam( name = "year", required = false ) Integer year,
+    public List<IncomeExpense> getOperationsOfPeriod( Account account,
+                                                      @RequestParam( name = "year", required = false ) Integer year,
                                                       @RequestParam( name = "month", required = false ) Integer month,
                                                       @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                                       @RequestParam( name = "category", required = false ) String category ) {
 
-        List<IncomeExpense> list = incomeExpenseService.getOperationsByCriteria( year, month, operationType, category );
+        List<IncomeExpense> list = incomeExpenseService.getOperationsByCriteria(
+                account,
+                year,
+                month,
+                operationType,
+                category );
+
         return list;
     }
 

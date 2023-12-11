@@ -69,12 +69,19 @@ public class IncomeExpenseService {
         return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
     }
 
-    public List<IncomeExpense> getOperationsByCriteria( Integer year,
+    public List<IncomeExpense> getOperationsByCriteria( Account account,
+                                                        Integer year,
                                                         Integer month,
                                                         OperationType operationType,
                                                         String category ) {
 
-        List<IncomeExpense> list = incomeExpenseRepository.findOperationsByCriteria( year, month, operationType, category );
+        List<IncomeExpense> list = incomeExpenseRepository.findOperationsByCriteria(
+                account.getId(),
+                year,
+                month,
+                operationType,
+                category );
+
         return list;
     }
 

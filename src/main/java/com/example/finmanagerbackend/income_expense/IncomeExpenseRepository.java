@@ -14,13 +14,15 @@ import java.util.Optional;
 public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
     @Query( """
             SELECT incomeExpense 
-            FROM IncomeExpense incomeExpense 
-            WHERE ( :yearParam IS NULL OR YEAR( incomeExpense.date ) = :yearParam ) 
+            FROM IncomeExpense incomeExpense
+            WHERE  incomeExpense.account.id = :accountId
+            AND ( :yearParam IS NULL OR YEAR( incomeExpense.date ) = :yearParam ) 
             AND ( :monthParam IS NULL OR MONTH( incomeExpense.date ) = :monthParam ) 
             AND ( :operationTypeParam IS NULL OR incomeExpense.operationType = :operationTypeParam) 
             AND ( :categoryParam IS NULL OR incomeExpense.category = :categoryParam )
             """ )
-    List<IncomeExpense> findOperationsByCriteria( @Param( "yearParam" ) Integer year,
+    List<IncomeExpense> findOperationsByCriteria( @Param( "accountId" ) Long accountId,
+                                                  @Param( "yearParam" ) Integer year,
                                                   @Param( "monthParam" ) Integer month,
                                                   @Param( "operationTypeParam" ) OperationType operationType,
                                                   @Param( "categoryParam" ) String category );

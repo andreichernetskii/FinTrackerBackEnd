@@ -8,8 +8,11 @@ public class NegativeStatusCalcStrategy implements LimitCalcStrategy {
     public NegativeStatusCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
+
+    // todo: zagłuszka
+    // todo: limit dlaczego tutaj?
     @Override
     public boolean isLimitExceeded( Limit limit ) {
-        return incomeExpenseRepository.calculateAnnualBalance() <0;
+        return incomeExpenseRepository.calculateAnnualBalance( null ) <0;
     }
 }

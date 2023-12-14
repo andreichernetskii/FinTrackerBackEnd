@@ -68,4 +68,22 @@ public class AccountController {
         Account account = accountService.getAccountFromRequest( request );
         incomeExpenseController.deleteIncomeExpense( account, operationId );
     }
+
+    @GetMapping( "/operations/annual_balance" )
+    public Double getAnnualBalance( HttpServletRequest request,
+                                    @RequestParam( name = "year", required = false ) Integer year,
+                                    @RequestParam( name = "month", required = false ) Integer month,
+                                    @RequestParam( name = "operationType", required = false ) OperationType operationType,
+                                    @RequestParam( name = "category", required = false ) String category ) {
+
+        Account account = accountService.getAccountFromRequest( request );
+        return incomeExpenseController.getAnnualBalance( account, year, month, operationType, category );
+    }
+
+    @GetMapping( "operations/categories" )
+    public List<String> getCategories( HttpServletRequest request ) {
+        Account account = accountService.getAccountFromRequest( request );
+
+        return incomeExpenseController.getCategories( account );
+    }
 }

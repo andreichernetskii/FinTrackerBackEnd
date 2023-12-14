@@ -15,6 +15,7 @@ public class IncomeExpenseController {
         this.incomeExpenseService = incomeExpenseService;
     }
 
+    // ++
     @PostMapping( "/" )
     public void addNewIncomeExpense( Account account,
                                      @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
@@ -22,6 +23,7 @@ public class IncomeExpenseController {
         incomeExpenseService.addIncomeExpense( account, incomeExpenseDTO );
     }
 
+    // ++
     @PutMapping( "/" )
     public void updateIncomeExpense( Account account,
                                      @RequestBody IncomeExpense incomeExpense ) {
@@ -29,12 +31,14 @@ public class IncomeExpenseController {
         incomeExpenseService.updateIncomeExpense( account, incomeExpense );
     }
 
+    // ++
     @DeleteMapping( "/{operationId}" )
     public void deleteIncomeExpense( Account account,
                                      @PathVariable( "operationId" ) Long operationId ) {
         incomeExpenseService.deleteIncomeExpense( account, operationId );
     }
 
+    // ++
     @GetMapping( "/" )
     public List<IncomeExpense> getOperationsOfPeriod( Account account,
                                                       @RequestParam( name = "year", required = false ) Integer year,
@@ -52,19 +56,21 @@ public class IncomeExpenseController {
         return list;
     }
 
+    // ++
     @GetMapping( "/annual" )
-    public Double getAnnualBalance( @RequestParam( name = "year", required = false ) Integer year,
+    public Double getAnnualBalance( Account account,
+                                    @RequestParam( name = "year", required = false ) Integer year,
                                     @RequestParam( name = "month", required = false ) Integer month,
                                     @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                     @RequestParam( name = "category", required = false ) String category ) {
 
-        Double totalAmount = incomeExpenseService.getAnnualBalance( year, month, operationType, category );
+        Double totalAmount = incomeExpenseService.getAnnualBalance( account, year, month, operationType, category );
         return totalAmount;
     }
 
+    // ++
     @GetMapping( "/categories" )
-    public List<String> getCategories() {
-        List<String> categories = incomeExpenseService.getCategories();
-        return categories;
+    public List<String> getCategories( Account account ) {
+        return incomeExpenseService.getCategories( account );
     }
 }

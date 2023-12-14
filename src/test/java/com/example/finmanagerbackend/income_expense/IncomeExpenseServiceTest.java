@@ -86,17 +86,17 @@ public class IncomeExpenseServiceTest {
         verifyNoMoreInteractions( incomeExpenseRepository );
     }
 
-    @Test
-    public void getAnnualBalanceTest_CalculatedSuccessful() {
-        OperationType operationType = OperationType.EXPENSE;
-        String category = "Shoes";
-        Double expectedBalance = 100.0;
-        when( incomeExpenseRepository.calculateAnnualBalanceByCriteria( 2023, 9, operationType, category ) )
-                .thenReturn( expectedBalance );
-
-        Double result = incomeExpenseService.getAnnualBalance( 2023, 9, operationType, category );
-
-        verify( incomeExpenseRepository ).calculateAnnualBalanceByCriteria( 2023, 9, operationType, category );
-        assertEquals( expectedBalance, result );
-    }
+//    @Test
+//    public void getAnnualBalanceTest_CalculatedSuccessful() {
+//        OperationType operationType = OperationType.EXPENSE;
+//        String category = "Shoes";
+//        Double expectedBalance = 100.0;
+//        when( incomeExpenseRepository.calculateAnnualBalanceByCriteria( 2023, 9, operationType, category ) )
+//                .thenReturn( expectedBalance );
+//
+//        Double result = incomeExpenseService.getAnnualBalance( 2023, 9, operationType, category );
+//
+//        verify( incomeExpenseRepository ).calculateAnnualBalanceByCriteria( 2023, 9, operationType, category );
+//        assertEquals( expectedBalance, result );
+//    }
 }

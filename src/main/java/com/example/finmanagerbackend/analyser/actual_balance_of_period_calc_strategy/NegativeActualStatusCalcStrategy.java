@@ -10,8 +10,10 @@ public class NegativeActualStatusCalcStrategy implements ActualBalanceCalcStrate
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
+    // todo: zagłuszka
+    // todo: limit dlaczego tutaj?
     @Override
     public Double calcActualBalanceOfPeriod( Limit limit ) {
-        return incomeExpenseRepository.calculateAnnualBalance();
+        return incomeExpenseRepository.calculateAnnualBalance( null );
     }
 }

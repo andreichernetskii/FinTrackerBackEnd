@@ -61,12 +61,13 @@ public class IncomeExpenseService {
         incomeExpenseRepository.deleteById( operationId );
     }
 
-    public Double getAnnualBalance( Integer year,
+    public Double getAnnualBalance( Account account,
+                                    Integer year,
                                     Integer month,
                                     OperationType operationType,
                                     String category ) {
 
-        return incomeExpenseRepository.calculateAnnualBalanceByCriteria( year, month, operationType, category );
+        return incomeExpenseRepository.calculateAnnualBalanceByCriteria( account.getId(), year, month, operationType, category );
     }
 
     public List<IncomeExpense> getOperationsByCriteria( Account account,
@@ -85,8 +86,7 @@ public class IncomeExpenseService {
         return list;
     }
 
-    public List<String> getCategories() {
-        List<String> categories = incomeExpenseRepository.getCategories();
-        return categories;
+    public List<String> getCategories( Account account ) {
+        return incomeExpenseRepository.getCategories( account.getId() );
     }
 }

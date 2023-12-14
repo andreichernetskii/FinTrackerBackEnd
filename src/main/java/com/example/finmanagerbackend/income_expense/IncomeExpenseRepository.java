@@ -30,27 +30,30 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
     @Query( """
             SELECT SUM( incomeExpense.amount ) 
             FROM IncomeExpense incomeExpense 
-            WHERE ( :yearParam IS NULL OR YEAR( incomeExpense.date ) = :yearParam ) 
+            WHERE  incomeExpense.account.id = :accountId 
+            AND ( :yearParam IS NULL OR YEAR( incomeExpense.date ) = :yearParam ) 
             AND ( :monthParam IS NULL OR MONTH( incomeExpense.date ) = :monthParam ) 
             AND ( :operationTypeParam IS NULL OR incomeExpense.operationType = :operationTypeParam) 
             AND ( :categoryParam IS NULL OR incomeExpense.category = :categoryParam )
             """ )
-    Double calculateAnnualBalanceByCriteria( @Param( "yearParam" ) Integer year,
+    Double calculateAnnualBalanceByCriteria( @Param( "accountId" ) Long accountId,
+                                             @Param( "yearParam" ) Integer year,
                                              @Param( "monthParam" ) Integer month,
                                              @Param( "operationTypeParam" ) OperationType operationType,
                                              @Param( "categoryParam" ) String category );
 
-    default Double calculateAnnualBalance() {
-        return calculateAnnualBalanceByCriteria( null, null, null, null );
+    default Double calculateAnnualBalance( Long accountId) {
+        return calculateAnnualBalanceByCriteria( accountId, null, null, null, null );
     }
 
     @Query( """
-            SELECT category 
-            FROM IncomeExpense 
-            GROUP BY category 
-            ORDER BY category
+            SELECT incomeExpense.category 
+            FROM IncomeExpense incomeExpense
+            WHERE  incomeExpense.account.id = :accountId 
+            GROUP BY incomeExpense.category 
+            ORDER BY incomeExpense.category
             """ )
-    List<String> getCategories();
+    List<String> getCategories( @Param( "accountId" ) Long accountId );
 
     @Query( """
             SELECT SUM( incomeExpense.amount )

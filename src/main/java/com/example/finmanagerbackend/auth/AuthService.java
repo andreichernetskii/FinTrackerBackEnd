@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.auth;
 
+import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.application_user.ApplicationUser;
 import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
 import com.example.finmanagerbackend.application_user.Role;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,17 @@ public class AuthService {
         this.jwtUtils = jwtUtils;
     }
 
+    public ApplicationUser getLoggedUser() {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (!(principal instanceof UserDetails ) ) {
+                throw new RuntimeException("User not logged");
+            }
+
+            UserDetails userDetails = ( UserDetails ) principal;
+
+          return   applicationUserRepository.findById( userDetails.getUsername() ).orElseThrow();
+    }
 
     public ResponseEntity<?> authenticateUser( LoginRequest loginRequest ) {
         Authentication authentication = authenticationManager

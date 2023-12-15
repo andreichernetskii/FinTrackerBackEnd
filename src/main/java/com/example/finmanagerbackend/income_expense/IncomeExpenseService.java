@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.income_expense;
 
 import com.example.finmanagerbackend.account.Account;
+import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +12,14 @@ import java.util.*;
 @Service
 public class IncomeExpenseService {
     private final IncomeExpenseRepository incomeExpenseRepository;
+    private final AccountService accountService;
 
-    public IncomeExpenseService( IncomeExpenseRepository incomeExpenseRepository ) {
+    public IncomeExpenseService( IncomeExpenseRepository incomeExpenseRepository, AccountService accountService ) {
         this.incomeExpenseRepository = incomeExpenseRepository;
+        this.accountService = accountService;
     }
 
-    public void addIncomeExpense( Account account, IncomeExpenseDTO incomeExpenseDTO ) {
+    public void addIncomeExpense( IncomeExpenseDTO incomeExpenseDTO ) {
         BigDecimal amount = ( incomeExpenseDTO.getOperationType() == OperationType.EXPENSE )
                 ? incomeExpenseDTO.getAmount().negate()
                 : incomeExpenseDTO.getAmount();
@@ -28,6 +31,7 @@ public class IncomeExpenseService {
                 incomeExpenseDTO.getCategory(),
                 LocalDate.parse( incomeExpenseDTO.getDate() ) );
 
+        Account account = accountService.getAccount();
         incomeExpense.setAccount( account );
         incomeExpenseRepository.save( incomeExpense );
     }
@@ -36,7 +40,9 @@ public class IncomeExpenseService {
         return incomeExpenseRepository.findAll();
     }
 
-    public void updateIncomeExpense( Account account, IncomeExpense incomeExpense ) {
+    public void updateIncomeExpense( IncomeExpense incomeExpense ) {
+        Account account = accountService.getAccount();
+
         Optional<IncomeExpense> incomeExpenseOptional =
                 incomeExpenseRepository.findByAccountIdPlusOperationId( incomeExpense.getId(), account.getId() );
 
@@ -44,12 +50,12 @@ public class IncomeExpenseService {
             throw new NotFoundException( "Operacji z id " + incomeExpense.getId() + " nie istnieje w bazie!" );
         }
 
-        incomeExpense.setAccount( account ); // todo: inne jakieś rozwiązanie, żeby zabronić zmianę account'a
+        incomeExpense.setAccount( account );
         incomeExpenseRepository.save( incomeExpense );
     }
 
-    public void deleteIncomeExpense( Account account,
-                                     Long operationId ) {
+    public void deleteIncomeExpense( Long operationId ) {
+        Account account = accountService.getAccount();
 
         Optional<IncomeExpense> incomeExpenseOptional =
                 incomeExpenseRepository.findByAccountIdPlusOperationId( operationId, account.getId() );
@@ -61,23 +67,22 @@ public class IncomeExpenseService {
         incomeExpenseRepository.deleteById( operationId );
     }
 
-    public Double getAnnualBalance( Account account,
-                                    Integer year,
+    public Double getAnnualBalance( Integer year,
                                     Integer month,
                                     OperationType operationType,
                                     String category ) {
 
+        Account account = accountService.getAccount();
         return incomeExpenseRepository.calculateAnnualBalanceByCriteria( account.getId(), year, month, operationType, category );
     }
 
-    public List<IncomeExpense> getOperationsByCriteria( Account account,
-                                                        Integer year,
+    public List<IncomeExpense> getOperationsByCriteria( Integer year,
                                                         Integer month,
                                                         OperationType operationType,
                                                         String category ) {
 
         List<IncomeExpense> list = incomeExpenseRepository.findOperationsByCriteria(
-                account.getId(),
+                accountService.getAccount().getId(),
                 year,
                 month,
                 operationType,
@@ -86,7 +91,8 @@ public class IncomeExpenseService {
         return list;
     }
 
-    public List<String> getCategories( Account account ) {
+    public List<String> getCategories() {
+        Account account = accountService.getAccount();
         return incomeExpenseRepository.getCategories( account.getId() );
     }
 }

@@ -15,11 +15,12 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
             SELECT limits
             FROM Limit limits
             WHERE limits.limitType != 'ZERO'
+            AND limits.account.id = :accountId
             """)
-    List<Limit> getAllLimitsWithoutZero();
+    List<Limit> getAllLimitsWithoutZero( @Param( "accountId" ) Long accountId );
 
     @Query( """
-            SELECT limitAmount FROM Limit 
+            SELECT limitAmount FROM Limit
             WHERE limitType = :limitType
             """ )
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );

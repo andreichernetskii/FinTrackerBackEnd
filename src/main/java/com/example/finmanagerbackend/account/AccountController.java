@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// todo: wywalić
 @RestController
 @RequestMapping( "api/v1/accounts" )
 public class AccountController {
@@ -26,14 +27,14 @@ public class AccountController {
         this.limitController = limitController;
     }
 
-    @GetMapping( "/operations" )
-    public List<IncomeExpense> getOperations( HttpServletRequest request,
-                                              @RequestParam( name = "year", required = false ) Integer year,
+    //IncomeExpenseController: GET:/incomeexpenses
+    /*@GetMapping( "/operations" )
+    public List<IncomeExpense> getOperations( @RequestParam( name = "year", required = false ) Integer year,
                                               @RequestParam( name = "month", required = false ) Integer month,
                                               @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                               @RequestParam( name = "category", required = false ) String category ) {
 
-        Account account = accountService.getAccountFromRequest( request );
+        Account account = accountService.getAccountFromRequest();
         List<IncomeExpense> list = incomeExpenseController.getOperationsOfPeriod(
                 account,
                 year,
@@ -45,6 +46,7 @@ public class AccountController {
         return list;
     }
 
+    //IncomeExpenseController: POST:/incomeexpenses
     @PostMapping( "/operations" )
     public void addNewOperation( HttpServletRequest request,
                                  @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
@@ -53,6 +55,7 @@ public class AccountController {
         incomeExpenseController.addNewIncomeExpense( account, incomeExpenseDTO );
     }
 
+    //IncomeExpenseController: PUT:/incomeexpenses
     @PutMapping( "/operations" )
     public void updateOperation( HttpServletRequest request,
                                  @RequestBody IncomeExpense incomeExpense ) {
@@ -61,6 +64,7 @@ public class AccountController {
         incomeExpenseController.updateIncomeExpense( account, incomeExpense );
     }
 
+    //IncomeExpenseController: DELETE:/incomeexpenses/id
     @DeleteMapping( "/operations/{operationId}" )
     public void deleteOperation( HttpServletRequest request,
                                  @PathVariable( "operationId" ) Long operationId ) {
@@ -69,8 +73,9 @@ public class AccountController {
         incomeExpenseController.deleteIncomeExpense( account, operationId );
     }
 
-    @GetMapping( "/operations/annual_balance" )
-    public Double getAnnualBalance( HttpServletRequest request,
+    //ResourcesController: GET:/annualBallances
+    @GetMapping( "/operations/annual_balances" )
+    public Double getAnnualBalance( HttpServletRequest request, *//* Filter filter *//*
                                     @RequestParam( name = "year", required = false ) Integer year,
                                     @RequestParam( name = "month", required = false ) Integer month,
                                     @RequestParam( name = "operationType", required = false ) OperationType operationType,
@@ -79,11 +84,18 @@ public class AccountController {
         Account account = accountService.getAccountFromRequest( request );
         return incomeExpenseController.getAnnualBalance( account, year, month, operationType, category );
     }
-
+///ResourcesController: GET:/categories
     @GetMapping( "operations/categories" )
     public List<String> getCategories( HttpServletRequest request ) {
         Account account = accountService.getAccountFromRequest( request );
 
         return incomeExpenseController.getCategories( account );
-    }
+    }*/
 }
+
+//accounts/id/incomes
+
+//ApplicationUser
+//Account
+//IncomeExpense
+//Limit

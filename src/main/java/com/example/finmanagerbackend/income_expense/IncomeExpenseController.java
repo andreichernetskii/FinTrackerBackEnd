@@ -17,37 +17,32 @@ public class IncomeExpenseController {
 
     // ++
     @PostMapping( "/" )
-    public void addNewIncomeExpense( Account account,
-                                     @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
+    public void addNewIncomeExpense( @RequestBody IncomeExpenseDTO incomeExpenseDTO ) {
 
-        incomeExpenseService.addIncomeExpense( account, incomeExpenseDTO );
+        incomeExpenseService.addIncomeExpense( incomeExpenseDTO );
     }
 
     // ++
     @PutMapping( "/" )
-    public void updateIncomeExpense( Account account,
-                                     @RequestBody IncomeExpense incomeExpense ) {
+    public void updateIncomeExpense( @RequestBody IncomeExpense incomeExpense ) {
 
-        incomeExpenseService.updateIncomeExpense( account, incomeExpense );
+        incomeExpenseService.updateIncomeExpense( incomeExpense );
     }
 
     // ++
     @DeleteMapping( "/{operationId}" )
-    public void deleteIncomeExpense( Account account,
-                                     @PathVariable( "operationId" ) Long operationId ) {
-        incomeExpenseService.deleteIncomeExpense( account, operationId );
+    public void deleteIncomeExpense( @PathVariable( "operationId" ) Long operationId ) {
+        incomeExpenseService.deleteIncomeExpense( operationId );
     }
 
     // ++
     @GetMapping( "/" )
-    public List<IncomeExpense> getOperationsOfPeriod( Account account,
-                                                      @RequestParam( name = "year", required = false ) Integer year,
+    public List<IncomeExpense> getOperationsOfPeriod( @RequestParam( name = "year", required = false ) Integer year,
                                                       @RequestParam( name = "month", required = false ) Integer month,
                                                       @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                                       @RequestParam( name = "category", required = false ) String category ) {
 
         List<IncomeExpense> list = incomeExpenseService.getOperationsByCriteria(
-                account,
                 year,
                 month,
                 operationType,
@@ -58,19 +53,18 @@ public class IncomeExpenseController {
 
     // ++
     @GetMapping( "/annual" )
-    public Double getAnnualBalance( Account account,
-                                    @RequestParam( name = "year", required = false ) Integer year,
+    public Double getAnnualBalance( @RequestParam( name = "year", required = false ) Integer year,
                                     @RequestParam( name = "month", required = false ) Integer month,
                                     @RequestParam( name = "operationType", required = false ) OperationType operationType,
                                     @RequestParam( name = "category", required = false ) String category ) {
 
-        Double totalAmount = incomeExpenseService.getAnnualBalance( account, year, month, operationType, category );
+        Double totalAmount = incomeExpenseService.getAnnualBalance( year, month, operationType, category );
         return totalAmount;
     }
 
     // ++
     @GetMapping( "/categories" )
-    public List<String> getCategories( Account account ) {
-        return incomeExpenseService.getCategories( account );
+    public List<String> getCategories() {
+        return incomeExpenseService.getCategories();
     }
 }

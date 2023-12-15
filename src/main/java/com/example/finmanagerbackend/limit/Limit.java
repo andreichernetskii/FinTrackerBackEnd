@@ -75,4 +75,8 @@ public class Limit {
     public void setCreationDate( LocalDate creationDate ) {
         this.creationDate = creationDate;
     }
+
+    public void setAccount( Account account ) {
+        this.account = account;
+    }
 }

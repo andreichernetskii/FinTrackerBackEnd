@@ -3,10 +3,7 @@ package com.example.finmanagerbackend.account;
 import com.example.finmanagerbackend.application_user.ApplicationUser;
 import com.example.finmanagerbackend.income_expense.IncomeExpense;
 import com.example.finmanagerbackend.limit.Limit;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -22,12 +19,16 @@ public class Account {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToMany( mappedBy = "account" )  // tą relację bedzie mapować polę o nazwie account w IncomeExpence
-                                        // oby uniknąc tworzenia nowej tabeli przez Hibernate
+
+    // todo: relacje hibernatowe poczytać - Typ'y LAZY i EAGER + wzorzec projektowy Proxy + cykl życia Hibernate
+    @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
+    // tą relację bedzie mapować polę o nazwie account w IncomeExpence
+    // oby uniknąc tworzenia nowej tabeli przez Hibernate
     @Cascade( CascadeType.ALL )
     private List<IncomeExpense> operations = new ArrayList<>();
-    @OneToMany( mappedBy = "account" ) // todo: sprawdzić, czy skuma, że to już inny object
-    private List<Limit> limits;
+
+    @OneToMany( mappedBy = "account", fetch = FetchType.LAZY ) // todo: sprawdzić, czy skuma, że to już inny object
+    private List<Limit> limits = new ArrayList<>();
 
     public void addIncome( IncomeExpense incomeExpense ) {
         operations.add( incomeExpense );

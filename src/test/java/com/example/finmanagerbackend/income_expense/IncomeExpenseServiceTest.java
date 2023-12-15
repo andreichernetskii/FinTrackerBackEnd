@@ -31,7 +31,7 @@ public class IncomeExpenseServiceTest {
                 new String( "2005-12-12" )
         );
 
-        incomeExpenseService.addIncomeExpense( null, transactionDTO );
+        incomeExpenseService.addIncomeExpense( transactionDTO );
 
         ArgumentCaptor<IncomeExpense> transactionCaptor = ArgumentCaptor.forClass( IncomeExpense.class );
         verify( incomeExpenseRepository ).save( transactionCaptor.capture() );
@@ -66,7 +66,7 @@ public class IncomeExpenseServiceTest {
     public void deleteOperationTest_SuccessfulDeletion() {
         Long id = 1L;
         when( incomeExpenseRepository.existsById( id ) ).thenReturn( true );
-        incomeExpenseService.deleteIncomeExpense( null, id );
+        incomeExpenseService.deleteIncomeExpense( id );
 
         verify( incomeExpenseRepository ).existsById( id );
         verify( incomeExpenseRepository ).deleteById( id );
@@ -81,7 +81,7 @@ public class IncomeExpenseServiceTest {
         when( incomeExpenseRepository.existsById( id ) ).thenReturn( false );
 
         assertThrows( IllegalStateException.class,
-                () -> incomeExpenseService.deleteIncomeExpense( null, id ) );
+                () -> incomeExpenseService.deleteIncomeExpense( id ) );
         verify( incomeExpenseRepository ).existsById( id );
         verifyNoMoreInteractions( incomeExpenseRepository );
     }

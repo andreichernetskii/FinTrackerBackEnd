@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    @Query( """
+ /*   @Query( """
             SELECT accs
             FROM Account accs
             WHERE accs.id = :id
             """ )
-    Optional<Account> findById( @Param( "id" ) Long id );
+    Optional<Account> findById( @Param( "id" ) Long id );*/
 }

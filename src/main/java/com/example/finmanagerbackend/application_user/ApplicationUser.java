@@ -8,7 +8,7 @@ import org.hibernate.annotations.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
-// user table in DB
+// user table in DB with logins and passwords
 @Entity
 public class ApplicationUser {
     @Id

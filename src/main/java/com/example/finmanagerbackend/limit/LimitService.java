@@ -1,5 +1,7 @@
 package com.example.finmanagerbackend.limit;
 
+import com.example.finmanagerbackend.account.Account;
+import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
@@ -13,14 +15,18 @@ import java.util.Optional;
 @Service
 public class LimitService {
     private final LimitRepository limitRepository;
+    private final AccountService accountService;
 
-    public LimitService( LimitRepository limitRepository ) {
+    public LimitService( LimitRepository limitRepository, AccountService accountService ) {
         this.limitRepository = limitRepository;
+        this.accountService = accountService;
     }
 
     @Transactional
     public void deleteLimit( Long limitId ) {
+        Account account = accountService.getAccount();
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
+
         if ( !optionalLimit.isPresent() ) return;
         if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
             throw new ForbiddenException( "Cannot delete the default limit." );
@@ -30,15 +36,21 @@ public class LimitService {
     }
 
     public List<Limit> getLimits() {
-        return limitRepository.getAllLimitsWithoutZero();
+        Account account = accountService.getAccount();
+
+        return limitRepository.getAllLimitsWithoutZero( account.getId() );
     }
 
     public void addLimit( LimitDTO limitDTO ) {
+        Account account = accountService.getAccount();
+
         Limit limit = createLimit( limitDTO );
+
         if ( isLimitExists( limit ) ) {
             throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
+        limit.setAccount( account );
         limitRepository.save( limit );
     }
 

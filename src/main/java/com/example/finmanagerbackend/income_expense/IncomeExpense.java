@@ -87,5 +87,6 @@ public class IncomeExpense {
 
     public void setAccount( Account account ) {
         this.account = account;
+        //account.addIncome( this );
     }
 }

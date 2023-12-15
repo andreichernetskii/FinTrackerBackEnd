@@ -82,6 +82,7 @@ public class LimitService {
 
     public List<String> getLimitTypes() {
         List<String> list = new ArrayList<>();
+
         for ( LimitType limType : LimitType.values() ) {
             list.add( limType.toString() );
         }

@@ -46,7 +46,7 @@ public class LimitService {
 
         Limit limit = createLimit( limitDTO );
 
-        if ( isLimitExists( limit ) ) {
+        if ( isLimitExists( account, limit ) ) {
             throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
@@ -66,7 +66,7 @@ public class LimitService {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
 
-        if ( isLimitExists( optimalLimit.get() ) ) {
+        if ( isLimitExists( account, optimalLimit.get() ) ) {
             throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
@@ -76,8 +76,8 @@ public class LimitService {
 
     // not DB using functions
 
-    private boolean isLimitExists( Limit limitToCheck ) {
-        return limitRepository.existsBy( limitToCheck.getLimitType() );
+    private boolean isLimitExists( Account account, Limit limitToCheck ) {
+        return limitRepository.existsBy( account.getId(), limitToCheck.getLimitType() );
     }
 
     public List<String> getLimitTypes() {

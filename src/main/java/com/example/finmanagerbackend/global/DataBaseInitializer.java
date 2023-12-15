@@ -37,6 +37,6 @@ public class DataBaseInitializer implements ApplicationRunner {
     }
 
     private boolean isZeroLimExists(LimitDTO limitDTO) {
-        return limitRepository.existsBy( limitDTO.getLimitType() );
+        return limitRepository.existsBy( null, limitDTO.getLimitType() );
     }
 }

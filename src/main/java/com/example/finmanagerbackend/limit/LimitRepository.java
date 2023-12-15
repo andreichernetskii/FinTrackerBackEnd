@@ -42,9 +42,11 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
           THEN true ELSE false
           END 
           FROM Limit 
-          WHERE limitType = :limitType
+          WHERE ( :accountId IS NULL OR account.id = :accountId )
+          AND limitType = :limitType
           """ )
-    Boolean existsBy( @Param( "limitType" ) LimitType limitType );
+    Boolean existsBy( @Param( "accountId" ) Long accountId,
+                      @Param( "limitType" ) LimitType limitType );
 
     @Modifying
     @Query( """

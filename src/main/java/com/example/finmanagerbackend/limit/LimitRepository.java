@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -18,6 +19,15 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
             AND limits.account.id = :accountId
             """)
     List<Limit> getAllLimitsWithoutZero( @Param( "accountId" ) Long accountId );
+
+    @Query( """
+            SELECT limit
+            FROM Limit limit
+            WHERE limit.account.id = :accountId
+            AND limit.id = :limitId
+            """)
+    Optional<Limit> findLimit( @Param( "limitId" ) Long limitId,
+                               @Param( "accountId" ) Long accountId );
 
     @Query( """
             SELECT limitAmount FROM Limit

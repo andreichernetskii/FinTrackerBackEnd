@@ -55,7 +55,9 @@ public class LimitService {
     }
 
     public void updateLimit( Long limitId, Limit limit ) {
-        Optional<Limit> optimalLimit = limitRepository.findById( limitId );
+        Account account = accountService.getAccount();
+        Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
+
         if ( !optimalLimit.isPresent() ) {
             throw new NotFoundException( "Limit z id " + limitId + " nie istnieje w bazie!" );
         }
@@ -68,6 +70,7 @@ public class LimitService {
             throw new UnprocessableEntityException( "Taki limit już istnieje!" );
         }
 
+        limit.setAccount( account );
         limitRepository.save( limit );
     }
 

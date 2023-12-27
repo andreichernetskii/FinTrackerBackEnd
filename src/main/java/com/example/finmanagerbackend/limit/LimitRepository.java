@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Repository interface for managing Limit entities in the database.
+ */
 @Repository
 public interface LimitRepository extends JpaRepository<Limit, Long> {
+
+    // Retrieves all limits except for the ZERO type associated with a specific account.
     @Query( """
             SELECT limits
             FROM Limit limits
@@ -20,6 +24,7 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
             """)
     List<Limit> getAllLimitsWithoutZero( @Param( "accountId" ) Long accountId );
 
+    // Retrieves a specific limit associated with a given account.
     @Query( """
             SELECT limit
             FROM Limit limit
@@ -29,13 +34,14 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
     Optional<Limit> findLimit( @Param( "limitId" ) Long limitId,
                                @Param( "accountId" ) Long accountId );
 
+    // Retrieves the limit amount for a specific limit type.
     @Query( """
             SELECT limitAmount FROM Limit
             WHERE limitType = :limitType
             """ )
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );
 
-
+    // Checks if a limit of a specific type exists for a given account.
     @Query( """
           SELECT 
           CASE WHEN COUNT( limitType ) > 0 
@@ -48,6 +54,7 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
     Boolean existsBy( @Param( "accountId" ) Long accountId,
                       @Param( "limitType" ) LimitType limitType );
 
+    // Deletes limits of a specific type.
     @Modifying
     @Query( """
             DELETE 

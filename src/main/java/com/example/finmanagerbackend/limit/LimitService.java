@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for managing Limit entities.
+ */
 @Service
 public class LimitService {
     private final LimitRepository limitRepository;
@@ -22,6 +25,7 @@ public class LimitService {
         this.accountService = accountService;
     }
 
+    // Deletes a specific limit.
     @Transactional
     public void deleteLimit( Long limitId ) {
         Account account = accountService.getAccount();
@@ -35,12 +39,14 @@ public class LimitService {
         limitRepository.deleteById( limitId );
     }
 
+    // Retrieves all limits associated with the current account except for the ZERO type.
     public List<Limit> getLimits() {
         Account account = accountService.getAccount();
 
         return limitRepository.getAllLimitsWithoutZero( account.getId() );
     }
 
+    // Adds a new limit.
     public void addLimit( LimitDTO limitDTO ) {
         Account account = accountService.getAccount();
 
@@ -54,6 +60,7 @@ public class LimitService {
         limitRepository.save( limit );
     }
 
+    // Updates an existing limit.
     public void updateLimit( Long limitId, Limit limit ) {
         Account account = accountService.getAccount();
         Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
@@ -76,10 +83,12 @@ public class LimitService {
 
     // not DB using functions
 
+    // Checks if a limit of a specific type exists for a given account.
     private boolean isLimitExists( Account account, Limit limitToCheck ) {
         return limitRepository.existsBy( account.getId(), limitToCheck.getLimitType() );
     }
 
+    // Retrieves a list of available limit types.
     public List<String> getLimitTypes() {
         List<String> list = new ArrayList<>();
 
@@ -90,6 +99,7 @@ public class LimitService {
         return list;
     }
 
+    // Creates a new Limit entity based on the given DTO.
     private Limit createLimit( LimitDTO limitDTO ) {
         return new Limit(
                 limitDTO.getLimitType(),

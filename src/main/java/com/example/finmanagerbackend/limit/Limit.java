@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-// table of limits, can be created by user
+/**
+ * Entity class representing the table of limits that can be created by users.
+ */
 @Entity
 @Table( name = "Limits" )
 public class Limit {

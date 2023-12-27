@@ -3,6 +3,9 @@ package com.example.finmanagerbackend.limit;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Data Transfer Object (DTO) class for transferring information about limits.
+ */
 public class LimitDTO {
     private LimitType limitType;
     private BigDecimal limitAmount;

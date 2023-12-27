@@ -1,6 +1,5 @@
 package com.example.finmanagerbackend.auth;
 
-import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.application_user.ApplicationUser;
 import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
 import com.example.finmanagerbackend.application_user.Role;
@@ -27,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Service for handling authentication-related logic
+ */
 @Service
 public class AuthService {
     private final AuthenticationManager authenticationManager;
@@ -41,38 +43,48 @@ public class AuthService {
         this.jwtUtils = jwtUtils;
     }
 
+    // Method to get the currently logged-in user
     public ApplicationUser getLoggedUser() {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if (!(principal instanceof UserDetails ) ) {
-                throw new RuntimeException("User not logged");
-            }
+        if (!(principal instanceof UserDetails ) ) {
+            throw new RuntimeException("User not logged");
+        }
 
-            UserDetails userDetails = ( UserDetails ) principal;
+        UserDetails userDetails = ( UserDetails ) principal;
 
-          return   applicationUserRepository.findById( userDetails.getUsername() ).orElseThrow();
+        return   applicationUserRepository.findById( userDetails.getUsername() ).orElseThrow();
     }
 
+    // Authenticates a user and generates a JWT token.
     public ResponseEntity<?> authenticateUser( LoginRequest loginRequest ) {
+
+        // Authenticate the user using the provided credentials
         Authentication authentication = authenticationManager
                 .authenticate( new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
                         loginRequest.getPassword() ) );
 
+        // Set the authentication in the security context
         SecurityContextHolder.getContext().setAuthentication( authentication );
 
+        // Set user activity status as active in the database
         applicationUserRepository.setUserActivity( loginRequest.getEmail(), true);
 
+        // Retrieve UserDetails from the authenticated principal
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+        // Generate a JWT token and create a response cookie
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie( userDetails );
 
+        // Extract user roles from UserDetails
         List<String> roles = userDetails
                 .getAuthorities()
                 .stream()
                 .map( item -> item.getAuthority() )
                 .collect( Collectors.toList() );
 
+        // Build and return the response containing JWT token and user information
         return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, jwtCookie.toString() )
                 .body( new UserInfoResponse(
                         userDetails.getUsername(),
@@ -80,6 +92,7 @@ public class AuthService {
                 ) );
     }
 
+    // Registers a new user.
     public ResponseEntity<?> registerUser( SignupRequest signUpRequest ) {
         if ( applicationUserRepository.existsByUsername( signUpRequest.getEmail() ) ) {
             return ResponseEntity.badRequest().body( new MessageResponse( "Error: Email is already taken!" ) );
@@ -90,6 +103,7 @@ public class AuthService {
                 signUpRequest.getEmail(),
                 encoder.encode( signUpRequest.getPassword() ) );
 
+        // Set user roles based on the requested roles
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -105,16 +119,24 @@ public class AuthService {
         return ResponseEntity.ok(new MessageResponse( "User registered successfully!" ) );
     }
 
+    // Logs out a user and invalidates the JWT token.
     public ResponseEntity<?> logoutUser( HttpServletRequest request ) {
+
+        // Parse the JWT token from the request
         String jwt = jwtUtils.parseJwt( request );
 
         if ( jwt != null ) {
+            // Extract the username from the JWT token
             String username = jwtUtils.getUserNameFromJwtToken( jwt );
+
+            // Set user activity status as inactive in the database
             applicationUserRepository.setUserActivity( username, false );
         }
 
+        // Generate a clean JWT cookie
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
 
+        // Return a success response with the clean JWT cookie
         return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, cookie.toString() )
                 .body( new MessageResponse( "You've been signed out!" ) );
     }

@@ -1,6 +1,5 @@
 package com.example.finmanagerbackend.application_user;
 
-import com.github.javafaker.Bool;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Repository interface for accessing ApplicationUser entities in the database.
+ */
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, String> {
+
+    // Query to find an ApplicationUser by email
     @Query( """
             SELECT users
             FROM ApplicationUser users
@@ -19,6 +23,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
             """ )
     Optional<ApplicationUser> findByEmail( @Param( "email" ) String email );
 
+    // Query to check if an ApplicationUser with a given email exists
     @Query( """
             SELECT
             CASE WHEN COUNT( users.email ) > 0 
@@ -29,6 +34,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
             """ )
     Boolean existsByUsername( @Param( "email" ) String email );
 
+    // Transactional query to update the active status of an ApplicationUser by email
     @Transactional
     @Modifying
     @Query( """
@@ -39,6 +45,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     void setUserActivity( @Param( "email" ) String email,
                           @Param( "isActive" ) boolean isActive );
 
+    // Query to check if an ApplicationUser is active by email
     @Query( """
             SELECT user.active
             FROM ApplicationUser user

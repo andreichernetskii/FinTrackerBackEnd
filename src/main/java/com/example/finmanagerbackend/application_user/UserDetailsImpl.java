@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * UserDetails implementation representing a user's details for authentication
+ */
 public class UserDetailsImpl implements UserDetails {
     private String email;
     @JsonIgnore
-    private String password; // passwords will be not putted inside the token
+    private String password; // Passwords will not be included in the token
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -23,7 +26,9 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    // Static method to build a UserDetailsImpl instance from an ApplicationUser
     public static UserDetailsImpl build(ApplicationUser applicationUser) {
+
         List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
                 .map( role -> new SimpleGrantedAuthority( role.name() ) )
                 .collect( Collectors.toList());
@@ -72,6 +77,7 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+    // Equals method based on email for comparing UserDetailsImpl instances
     @Override
     public boolean equals( Object obj ) {
         if ( this == obj ) return true;

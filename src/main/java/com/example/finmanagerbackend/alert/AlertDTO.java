@@ -1,8 +1,8 @@
 package com.example.finmanagerbackend.alert;
 
-import com.example.finmanagerbackend.limit.Limit;
-
-// contains alert info inside the text
+/**
+ * Data Transfer Object (DTO) class containing alert information in text form.
+ */
 public class AlertDTO {
     private String message;
 

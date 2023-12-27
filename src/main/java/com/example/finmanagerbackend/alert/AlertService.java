@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class responsible for managing and displaying alerts based on financial analysis.
+ */
 @Service
 public class AlertService {
     private final IncomeExpenseRepository incomeExpenseRepository;
@@ -17,6 +20,7 @@ public class AlertService {
         this.limitRepository = limitRepository;
     }
 
+    // Method to retrieve and display all alerts using the FinAnalyser.
     public List<AlertDTO> showAllAlerts() {
         FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
         return finAnalyser.createAlerts();

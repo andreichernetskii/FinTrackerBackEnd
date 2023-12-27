@@ -5,6 +5,9 @@ import com.example.finmanagerbackend.limit.Limit;
 
 import java.time.LocalDate;
 
+/**
+ * Strategy class for calculating the actual balance of a specific year.
+ */
 public class YearActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
     private final IncomeExpenseRepository incomeExpenseRepository;
 
@@ -12,6 +15,7 @@ public class YearActualBalanceCalcStrategy implements ActualBalanceCalcStrategy 
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
+    // Method to calculate the actual balance of the year based on the provided limit.
     @Override
     public Double calcActualBalanceOfPeriod( Limit limit ) {
         return incomeExpenseRepository.calculateYearExpenses( LocalDate.now() );

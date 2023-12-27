@@ -5,6 +5,9 @@ import com.example.finmanagerbackend.limit.Limit;
 
 import java.time.LocalDate;
 
+/**
+ * Strategy class for calculating the actual balance of a specific day.
+ */
 public class DayActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
     private final IncomeExpenseRepository incomeExpenseRepository;
 
@@ -12,6 +15,7 @@ public class DayActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
+    // Method to calculate the actual balance of the day based on the provided limit.
     @Override
     public Double calcActualBalanceOfPeriod( Limit limit ) {
         return incomeExpenseRepository.calculateDayExpenses( LocalDate.now() );

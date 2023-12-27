@@ -1,6 +1,5 @@
 package com.example.finmanagerbackend.account;
 
-import com.example.finmanagerbackend.application_user.ApplicationUser;
 import com.example.finmanagerbackend.income_expense.IncomeExpense;
 import com.example.finmanagerbackend.limit.Limit;
 import jakarta.persistence.*;
@@ -10,10 +9,9 @@ import org.hibernate.annotations.CascadeType;
 import java.util.ArrayList;
 import java.util.List;
 
-// this is all financial tracking instruments
-// user + financials + limits, etc.
-
-// todo: muszę zrozumieć, jak buduje się account w BD
+/**
+ * Entity representing all financial tracking instruments, including user, financials, limits, etc.
+ */
 @Entity
 public class Account {
     @Id
@@ -21,19 +19,16 @@ public class Account {
     private Long id;
 
     // todo: relacje hibernatowe poczytać - Typ'y LAZY i EAGER + wzorzec projektowy Proxy + cykl życia Hibernate
+    // Relationship mapping: One Account has many IncomeExpense records (Lazy loading for efficiency).
     @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
-    // tą relację bedzie mapować polę o nazwie account w IncomeExpence
-    // oby uniknąc tworzenia nowej tabeli przez Hibernate
+    // Cascade option is used to apply the same operation (e.g., save, update, delete) to the associated entities.
+    // This avoids creating a new table for the relationship.
     @Cascade( CascadeType.ALL )
     private List<IncomeExpense> operations = new ArrayList<>();
 
-    @OneToMany( mappedBy = "account", fetch = FetchType.LAZY ) // todo: sprawdzić, czy skuma, że to już inny object
+    // Relationship mapping: One Account has many Limit records (Lazy loading for efficiency).
+    @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
     private List<Limit> limits = new ArrayList<>();
-
-    public void addIncome( IncomeExpense incomeExpense ) {
-        operations.add( incomeExpense );
-        incomeExpense.setAccount( this );
-    }
 
     public Long getId() {
         return id;

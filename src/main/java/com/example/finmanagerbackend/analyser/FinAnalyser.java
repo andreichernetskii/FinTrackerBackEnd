@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
-// this class will calculate statistics
+/**
+ * Service class responsible for calculating financial statistics and generating alerts.
+ */
 @Service
 public class FinAnalyser {
     private IncomeExpenseRepository incomeExpenseRepository;
@@ -23,16 +25,19 @@ public class FinAnalyser {
         this.limitRepository = limitRepository;
     }
 
+    // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
         List<Limit> limitsList = limitRepository.findAll();
         List<AlertDTO> alerts = new ArrayList<>();
 
+        // Iterate through all limits to check if they have been exceeded
         for ( Limit limit : limitsList ) {
             if ( limit.getLimitAmount() == null ) continue;
 
-            // if limit was exceeded, his value of discrepancy will be added to a new alert message
+            // Calculate the discrepancy between the limit and actual balance
             BigDecimal discrepancy = calcDiscrepancy( limit );
 
+            // If the discrepancy is positive, create a new alert message
             if ( discrepancy.compareTo( BigDecimal.ZERO ) > 0 ) {
                 alerts.add( new AlertDTO( generateAlertMessage( limit, discrepancy ) ) );
             }
@@ -41,7 +46,7 @@ public class FinAnalyser {
         return alerts;
     }
 
-    // choosing strategy of calculating balance of different periods of time: year, mont, etc.
+    // Method to set the strategy for calculating actual balance based on the limit type.
     private void setStrategy( LimitType limitType ) {
         strategy = switch ( limitType ) {
             case ZERO -> new NegativeActualStatusCalcStrategy( incomeExpenseRepository );
@@ -53,7 +58,7 @@ public class FinAnalyser {
         };
     }
 
-    // calculating how big discrepancy is in a difference of limit if time
+    // Method to calculate the discrepancy between the limit and actual balance.
     private BigDecimal calcDiscrepancy( Limit limit ) {
         setStrategy( limit.getLimitType() );
 
@@ -66,10 +71,12 @@ public class FinAnalyser {
         return actualBalance.subtract( limit.getLimitAmount() );
     }
 
+    // Method to calculate the actual balance of the limit period using the selected strategy.
     private Double calcActualLimitOfLimitPeriod( Limit limit ) {
         return strategy.calcActualBalanceOfPeriod( limit );
     }
 
+    // Method to generate an alert message based on the limit and discrepancy.
     public String generateAlertMessage( Limit limit, BigDecimal discrepancy ) {
         return "!!! " + limit.getLimitType().getAlert()
                 + " Limit o wartości " + limit.getLimitAmount()

@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-// here a table of financial operations: incomes and expenses
+/**
+ * Entity representing financial transactions, including both incomes and expenses.
+ */
 @Entity
 public class IncomeExpense {
     @Id
@@ -55,6 +57,7 @@ public class IncomeExpense {
         return date;
     }
 
+    // toString method for better representation
     @Override
     public String toString() {
         return "IncomeExpenseManager {" +
@@ -87,6 +90,5 @@ public class IncomeExpense {
 
     public void setAccount( Account account ) {
         this.account = account;
-        //account.addIncome( this );
     }
 }

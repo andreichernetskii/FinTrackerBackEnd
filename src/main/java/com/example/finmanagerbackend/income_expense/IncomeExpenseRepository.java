@@ -10,8 +10,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository interface for managing and querying financial transactions stored in the database.
+ */
 @Repository
 public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Long> {
+
+    // Custom query to find financial transactions based on specified criteria.
     @Query( """
             SELECT incomeExpense 
             FROM IncomeExpense incomeExpense
@@ -27,6 +32,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
                                                   @Param( "operationTypeParam" ) OperationType operationType,
                                                   @Param( "categoryParam" ) String category );
 
+    // Custom query to calculate the annual balance based on specified criteria.
     @Query( """
             SELECT SUM( incomeExpense.amount ) 
             FROM IncomeExpense incomeExpense 
@@ -42,10 +48,12 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
                                              @Param( "operationTypeParam" ) OperationType operationType,
                                              @Param( "categoryParam" ) String category );
 
+    // Default method to calculate the annual balance without specifying criteria.
     default Double calculateAnnualBalance( Long accountId) {
         return calculateAnnualBalanceByCriteria( accountId, null, null, null, null );
     }
 
+    // Custom query to retrieve a list of categories for a specific account.
     @Query( """
             SELECT incomeExpense.category 
             FROM IncomeExpense incomeExpense
@@ -55,6 +63,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             """ )
     List<String> getCategories( @Param( "accountId" ) Long accountId );
 
+    // Custom query to calculate monthly expenses for a given month.
     @Query( """
             SELECT SUM( incomeExpense.amount )
             FROM IncomeExpense incomeExpense
@@ -64,6 +73,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             """ )
     Double calculateMonthExpenses( @Param( "monthParam" ) LocalDate month );
 
+    // Custom query to calculate yearly expenses for a given year.
     @Query( """
             SELECT SUM( incomeExpense.amount )
             FROM IncomeExpense  incomeExpense
@@ -72,6 +82,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             """ )
     Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
 
+    // Custom query to calculate daily expenses for a given day.
     @Query( """
             SELECT SUM( incomeExpense.amount )
             FROM IncomeExpense incomeExpense
@@ -82,6 +93,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
             """ )
     Double calculateDayExpenses( @Param( "dayParam" ) LocalDate day );
 
+    // Custom query to calculate weekly expenses for a given week.
     @Query( """
             SELECT SUM( incomeExpense.amount )
             FROM IncomeExpense incomeExpense
@@ -92,6 +104,7 @@ public interface IncomeExpenseRepository extends JpaRepository<IncomeExpense, Lo
     Double calculateWeekExpenses( @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
                                   @Param( "lastWeekDayParam" ) LocalDate lastWeekDay );
 
+    // Custom query to find a financial transaction by its ID and associated account.
     @Query( """
             SELECT operation
             FROM IncomeExpense operation

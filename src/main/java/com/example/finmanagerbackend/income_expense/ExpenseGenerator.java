@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// for generation a table with random financial statistics
+/**
+ * Service for generating a table with random financial statistics.
+ */
 @Service
 public class ExpenseGenerator {
     private final IncomeExpenseRepository incomeExpenseRepository;
@@ -20,6 +22,7 @@ public class ExpenseGenerator {
         this.incomeExpenseRepository = incomeExpenseRepository;
     }
 
+    // PostConstruct method to create random expenses if the repository is empty.
     @PostConstruct
     public void createRandomExpenses() {
         if ( incomeExpenseRepository.count() == 0 ) {
@@ -27,17 +30,25 @@ public class ExpenseGenerator {
         }
     }
 
+    // Method to generate a list of random expenses based on the specified count.
     public List<IncomeExpense> generateExpenses( int count ) {
+
         List<IncomeExpense> expenses = new ArrayList<>();
 
+        // Generate 'count' number of random expenses
         for ( int i = 0; i < count; i++ ) {
             IncomeExpense incomeExpense = new IncomeExpense();
+            // Set a random category using the commerce department from the Faker library
             incomeExpense.setCategory( faker.commerce().department() );
+            // Set the operation type to EXPENSE
             incomeExpense.setOperationType( OperationType.EXPENSE );
-            incomeExpense.setAmount( new BigDecimal( faker.commerce().price() ).multiply( new BigDecimal( 3 ) ) ); // income większy
+            // Set the amount to a random price multiplied by 3 for higher income
+            incomeExpense.setAmount( new BigDecimal( faker.commerce().price() ).multiply( new BigDecimal( 3 ) ) );
+            // Set the date to a random past date within the last 60 days
             incomeExpense.setDate( faker.date().past( 60, TimeUnit.DAYS ).toInstant()
                     .atZone( ZoneId.systemDefault() )
                     .toLocalDate() );
+            // Add the generated expense to the list
             expenses.add( incomeExpense );
         }
 

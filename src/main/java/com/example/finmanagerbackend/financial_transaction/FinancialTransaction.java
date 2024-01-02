@@ -42,7 +42,7 @@ public class FinancialTransaction {
         return id;
     }
 
-    public FinancialTransactionType getOperationType() {
+    public FinancialTransactionType getFinancialTransactionType() {
         return financialTransactionType;
     }
 
@@ -61,9 +61,9 @@ public class FinancialTransaction {
     // toString method for better representation
     @Override
     public String toString() {
-        return "IncomeExpenseManager {" +
+        return "FinancialTransactionManager {" +
                 "id=" + id +
-                ", operationType=" + financialTransactionType +
+                ", financialTransactionType=" + financialTransactionType +
                 ", amount=" + amount +
                 ", category='" + category + '\'' +
                 ", date='" + date + '\'' +
@@ -85,7 +85,7 @@ public class FinancialTransaction {
         this.date = date;
     }
 
-    public void setOperationType( FinancialTransactionType financialTransactionType ) {
+    public void setFinancialTransactionType( FinancialTransactionType financialTransactionType ) {
         this.financialTransactionType = financialTransactionType;
     }
 

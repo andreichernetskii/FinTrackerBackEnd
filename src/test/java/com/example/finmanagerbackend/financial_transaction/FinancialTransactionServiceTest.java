@@ -38,7 +38,7 @@ public class FinancialTransactionServiceTest {
 
         FinancialTransaction transaction = transactionCaptor.getValue();
 
-        assertEquals( transactionDTO.getFinancialTransactionType(), transaction.getOperationType() );
+        assertEquals( transactionDTO.getFinancialTransactionType(), transaction.getFinancialTransactionType() );
         assertEquals( transactionDTO.getAmount(), transaction.getAmount() );
         assertEquals( transactionDTO.getCategory(), transaction.getCategory() );
         assertEquals( transactionDTO.getDate(), transaction.getDate().toString() );

@@ -2,7 +2,6 @@ package com.example.finmanagerbackend.financial_transaction;
 
 import com.github.javafaker.Faker;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -41,7 +40,7 @@ public class ExpenseGenerator {
             // Set a random category using the commerce department from the Faker library
             financialTransaction.setCategory( faker.commerce().department() );
             // Set the operation type to EXPENSE
-            financialTransaction.setOperationType( FinancialTransactionType.EXPENSE );
+            financialTransaction.setFinancialTransactionType( FinancialTransactionType.EXPENSE );
             // Set the amount to a random price multiplied by 3 for higher income
             financialTransaction.setAmount( new BigDecimal( faker.commerce().price() ).multiply( new BigDecimal( 3 ) ) );
             // Set the date to a random past date within the last 60 days

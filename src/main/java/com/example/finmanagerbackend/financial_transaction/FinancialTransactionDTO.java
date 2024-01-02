@@ -25,7 +25,7 @@ public class FinancialTransactionDTO {
 
     // Getters are required by the Jackson library for JSON serialization/deserialization:
 
-    public FinancialTransactionType getOperationType() {
+    public FinancialTransactionType getFinancialTransactionType() {
         return financialTransactionType;
     }
 

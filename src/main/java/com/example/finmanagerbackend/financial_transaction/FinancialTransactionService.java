@@ -26,12 +26,12 @@ public class FinancialTransactionService {
     public void addIncomeExpense( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
-        BigDecimal amount = ( financialTransactionDTO.getOperationType() == FinancialTransactionType.EXPENSE )
+        BigDecimal amount = ( financialTransactionDTO.getFinancialTransactionType() == FinancialTransactionType.EXPENSE )
                 ? financialTransactionDTO.getAmount().negate()
                 : financialTransactionDTO.getAmount();
 
         FinancialTransaction financialTransaction = new FinancialTransaction(
-                financialTransactionDTO.getOperationType(),
+                financialTransactionDTO.getFinancialTransactionType(),
                 amount,
                 financialTransactionDTO.getCategory(),
                 LocalDate.parse( financialTransactionDTO.getDate() ) );

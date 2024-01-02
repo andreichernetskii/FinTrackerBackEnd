@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.income_expense;
+package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
 import jakarta.persistence.*;
@@ -10,7 +10,8 @@ import java.time.LocalDate;
  * Entity representing financial transactions, including both incomes and expenses.
  */
 @Entity
-public class IncomeExpense {
+//@Table( name = "IncomeExpense" )
+public class FinancialTransaction {
     @Id
     @GeneratedValue
     private Long id;
@@ -18,18 +19,18 @@ public class IncomeExpense {
     @JoinColumn( name = "account_id" ) // connection with account entity
     private Account account;
     @Enumerated( EnumType.STRING )
-    private OperationType operationType;
+    private FinancialTransactionType financialTransactionType;
     private BigDecimal amount;
     private String category;
     private LocalDate date;
 
     // constructors
 
-    public IncomeExpense() {
+    public FinancialTransaction() {
     }
 
-    public IncomeExpense( OperationType operationType, BigDecimal amount, String category, LocalDate date ) {
-        this.operationType = operationType;
+    public FinancialTransaction( FinancialTransactionType financialTransactionType, BigDecimal amount, String category, LocalDate date ) {
+        this.financialTransactionType = financialTransactionType;
         this.amount = amount;
         this.category = category;
         this.date = date;
@@ -41,8 +42,8 @@ public class IncomeExpense {
         return id;
     }
 
-    public OperationType getOperationType() {
-        return operationType;
+    public FinancialTransactionType getOperationType() {
+        return financialTransactionType;
     }
 
     public BigDecimal getAmount() {
@@ -62,7 +63,7 @@ public class IncomeExpense {
     public String toString() {
         return "IncomeExpenseManager {" +
                 "id=" + id +
-                ", operationType=" + operationType +
+                ", operationType=" + financialTransactionType +
                 ", amount=" + amount +
                 ", category='" + category + '\'' +
                 ", date='" + date + '\'' +
@@ -73,7 +74,7 @@ public class IncomeExpense {
 
     public void setAmount( BigDecimal amount ) {
         BigDecimal tempAmount = amount.abs();
-        this.amount = ( operationType == OperationType.EXPENSE ) ? tempAmount.negate() : tempAmount;
+        this.amount = ( financialTransactionType == FinancialTransactionType.EXPENSE ) ? tempAmount.negate() : tempAmount;
     }
 
     public void setCategory( String category ) {
@@ -84,8 +85,8 @@ public class IncomeExpense {
         this.date = date;
     }
 
-    public void setOperationType( OperationType operationType ) {
-        this.operationType = operationType;
+    public void setOperationType( FinancialTransactionType financialTransactionType ) {
+        this.financialTransactionType = financialTransactionType;
     }
 
     public void setAccount( Account account ) {

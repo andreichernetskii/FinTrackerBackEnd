@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class YearLimitCalculations extends LimitCalculations {
     public YearLimitCalculations() {
-        this.limitCalcStrategy = new YearLimitCalcStrategy( incomeExpenseRepository );
+        this.limitCalcStrategy = new YearLimitCalcStrategy( financialTransactionRepository );
     }
     @Override
     protected BigDecimal calculateDiscrepancy() {

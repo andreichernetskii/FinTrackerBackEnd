@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.income_expense;
+package com.example.finmanagerbackend.financial_transaction;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,27 +16,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
-public class IncomeExpenseServiceTest {
+public class FinancialTransactionServiceTest {
     @Mock
-    private IncomeExpenseRepository incomeExpenseRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
     @InjectMocks
-    private IncomeExpenseService incomeExpenseService;
+    private FinancialTransactionService financialTransactionService;
 
     @Test
     public void addTransactionTest_SuccessfulAddedTransaction() {
-        IncomeExpenseDTO transactionDTO = new IncomeExpenseDTO(
-                OperationType.INCOME,
+        FinancialTransactionDTO transactionDTO = new FinancialTransactionDTO(
+                FinancialTransactionType.INCOME,
                 new BigDecimal( 100 ),
                 new String( "Shoes" ),
                 new String( "2005-12-12" )
         );
 
-        incomeExpenseService.addIncomeExpense( transactionDTO );
+        financialTransactionService.addIncomeExpense( transactionDTO );
 
-        ArgumentCaptor<IncomeExpense> transactionCaptor = ArgumentCaptor.forClass( IncomeExpense.class );
-        verify( incomeExpenseRepository ).save( transactionCaptor.capture() );
+        ArgumentCaptor<FinancialTransaction> transactionCaptor = ArgumentCaptor.forClass( FinancialTransaction.class );
+        verify( financialTransactionRepository ).save( transactionCaptor.capture() );
 
-        IncomeExpense transaction = transactionCaptor.getValue();
+        FinancialTransaction transaction = transactionCaptor.getValue();
 
         assertEquals( transactionDTO.getOperationType(), transaction.getOperationType() );
         assertEquals( transactionDTO.getAmount(), transaction.getAmount() );
@@ -46,44 +46,44 @@ public class IncomeExpenseServiceTest {
 
     @Test
     public void getOperationsTest_SuccessfulShownOperations() {
-        List<IncomeExpense> expectedIncomeExpenses = new ArrayList<>();
-        expectedIncomeExpenses.add(
-                new IncomeExpense(
-                    OperationType.EXPENSE ,
+        List<FinancialTransaction> expectedIncomeExpens = new ArrayList<>();
+        expectedIncomeExpens.add(
+                new FinancialTransaction(
+                    FinancialTransactionType.EXPENSE ,
                     new BigDecimal( 100 ),
                     "Shoes",
                     LocalDate.now() ) );
-        when( incomeExpenseRepository.findAll() ).thenReturn( expectedIncomeExpenses );
+        when( financialTransactionRepository.findAll() ).thenReturn( expectedIncomeExpens );
 
-        List<IncomeExpense> actualIncomeExpenses = incomeExpenseService.getOperations();
+        List<FinancialTransaction> actualIncomeExpens = financialTransactionService.getOperations();
 
-        verify( incomeExpenseRepository ).findAll();
-        assertNotNull( actualIncomeExpenses );
-        assertEquals( expectedIncomeExpenses, actualIncomeExpenses );
+        verify( financialTransactionRepository ).findAll();
+        assertNotNull( actualIncomeExpens );
+        assertEquals( expectedIncomeExpens, actualIncomeExpens );
     }
 
     @Test
     public void deleteOperationTest_SuccessfulDeletion() {
         Long id = 1L;
-        when( incomeExpenseRepository.existsById( id ) ).thenReturn( true );
-        incomeExpenseService.deleteIncomeExpense( id );
+        when( financialTransactionRepository.existsById( id ) ).thenReturn( true );
+        financialTransactionService.deleteIncomeExpense( id );
 
-        verify( incomeExpenseRepository ).existsById( id );
-        verify( incomeExpenseRepository ).deleteById( id );
+        verify( financialTransactionRepository ).existsById( id );
+        verify( financialTransactionRepository ).deleteById( id );
 
-        when( incomeExpenseRepository.existsById( id ) ).thenReturn( false );
-        assertFalse( incomeExpenseRepository.existsById( id ) );
+        when( financialTransactionRepository.existsById( id ) ).thenReturn( false );
+        assertFalse( financialTransactionRepository.existsById( id ) );
     }
 
     @Test
     public void deleteOperationTest_OperationNotExits() {
         Long id = 1L;
-        when( incomeExpenseRepository.existsById( id ) ).thenReturn( false );
+        when( financialTransactionRepository.existsById( id ) ).thenReturn( false );
 
         assertThrows( IllegalStateException.class,
-                () -> incomeExpenseService.deleteIncomeExpense( id ) );
-        verify( incomeExpenseRepository ).existsById( id );
-        verifyNoMoreInteractions( incomeExpenseRepository );
+                () -> financialTransactionService.deleteIncomeExpense( id ) );
+        verify( financialTransactionRepository ).existsById( id );
+        verifyNoMoreInteractions( financialTransactionRepository );
     }
 
 //    @Test

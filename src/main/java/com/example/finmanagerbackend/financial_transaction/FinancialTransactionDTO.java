@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.income_expense;
+package com.example.finmanagerbackend.financial_transaction;
 
 
 import java.math.BigDecimal;
@@ -7,17 +7,17 @@ import java.math.BigDecimal;
  * Data Transfer Object (DTO) representing financial transactions, used for communication between layers.
  */
 
-public class IncomeExpenseDTO {
-    private OperationType operationType;
+public class FinancialTransactionDTO {
+    private FinancialTransactionType financialTransactionType;
     private BigDecimal amount;
-        private String category;
+    private String category;
     private String date;
 
-    public IncomeExpenseDTO() {
+    public FinancialTransactionDTO() {
     }
 
-    public IncomeExpenseDTO( OperationType operationType, BigDecimal amount, String category, String date ) {
-        this.operationType = operationType;
+    public FinancialTransactionDTO( FinancialTransactionType financialTransactionType, BigDecimal amount, String category, String date ) {
+        this.financialTransactionType = financialTransactionType;
         this.amount = amount;
         this.category = category;
         this.date = date;
@@ -25,8 +25,8 @@ public class IncomeExpenseDTO {
 
     // Getters are required by the Jackson library for JSON serialization/deserialization:
 
-    public OperationType getOperationType() {
-        return operationType;
+    public FinancialTransactionType getOperationType() {
+        return financialTransactionType;
     }
 
     public BigDecimal getAmount() {
@@ -44,8 +44,8 @@ public class IncomeExpenseDTO {
     // Override of the toString method for better representation
     @Override
     public String toString() {
-        return "IncomeExpenseDTO {" +
-                "operationType=" + operationType +
+        return "FinancialTransactionDTO {" +
+                "financialTransactionType=" + financialTransactionType +
                 ", amount=" + amount +
                 ", category='" + category + '\'' +
                 ", date='" + date + '\'' +

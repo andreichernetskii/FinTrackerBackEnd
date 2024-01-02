@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.account;
 
-import com.example.finmanagerbackend.income_expense.IncomeExpense;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransaction;
 import com.example.finmanagerbackend.limit.Limit;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
@@ -24,7 +24,7 @@ public class Account {
     // Cascade option is used to apply the same operation (e.g., save, update, delete) to the associated entities.
     // This avoids creating a new table for the relationship.
     @Cascade( CascadeType.ALL )
-    private List<IncomeExpense> operations = new ArrayList<>();
+    private List<FinancialTransaction> operations = new ArrayList<>();
 
     // Relationship mapping: One Account has many Limit records (Lazy loading for efficiency).
     @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )

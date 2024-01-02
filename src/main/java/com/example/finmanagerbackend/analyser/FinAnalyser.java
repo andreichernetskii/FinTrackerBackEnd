@@ -2,7 +2,7 @@ package com.example.finmanagerbackend.analyser;
 
 import com.example.finmanagerbackend.alert.AlertDTO;
 import com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy.*;
-import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;
 import com.example.finmanagerbackend.limit.LimitRepository;
 import com.example.finmanagerbackend.limit.LimitType;
@@ -16,12 +16,12 @@ import java.util.*;
  */
 @Service
 public class FinAnalyser {
-    private IncomeExpenseRepository incomeExpenseRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
     private LimitRepository limitRepository;
     private ActualBalanceCalcStrategy strategy;
 
-    public FinAnalyser( IncomeExpenseRepository incomeExpenseRepository, LimitRepository limitRepository ) {
-        this.incomeExpenseRepository = incomeExpenseRepository;
+    public FinAnalyser( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository ) {
+        this.financialTransactionRepository = financialTransactionRepository;
         this.limitRepository = limitRepository;
     }
 
@@ -49,11 +49,11 @@ public class FinAnalyser {
     // Method to set the strategy for calculating actual balance based on the limit type.
     private void setStrategy( LimitType limitType ) {
         strategy = switch ( limitType ) {
-            case ZERO -> new NegativeActualStatusCalcStrategy( incomeExpenseRepository );
-            case YEAR -> new YearActualBalanceCalcStrategy( incomeExpenseRepository );
-            case MONTH -> new MonthActualBalanceCalcStrategy( incomeExpenseRepository );
-            case WEEK -> new WeekActualBalanceCalcStrategy( incomeExpenseRepository );
-            case DAY -> new DayActualBalanceCalcStrategy( incomeExpenseRepository );
+            case ZERO -> new NegativeActualStatusCalcStrategy( financialTransactionRepository );
+            case YEAR -> new YearActualBalanceCalcStrategy( financialTransactionRepository );
+            case MONTH -> new MonthActualBalanceCalcStrategy( financialTransactionRepository );
+            case WEEK -> new WeekActualBalanceCalcStrategy( financialTransactionRepository );
+            case DAY -> new DayActualBalanceCalcStrategy( financialTransactionRepository );
             default -> throw new IllegalStateException();
         };
     }

@@ -1,7 +1,7 @@
 package com.example.finmanagerbackend.alert;
 
 import com.example.finmanagerbackend.analyser.FinAnalyser;
-import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.LimitRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +12,17 @@ import java.util.List;
  */
 @Service
 public class AlertService {
-    private final IncomeExpenseRepository incomeExpenseRepository;
+    private final FinancialTransactionRepository financialTransactionRepository;
     private final LimitRepository limitRepository;
 
-    public AlertService( IncomeExpenseRepository incomeExpenseRepository, LimitRepository limitRepository ) {
-        this.incomeExpenseRepository = incomeExpenseRepository;
+    public AlertService( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository ) {
+        this.financialTransactionRepository = financialTransactionRepository;
         this.limitRepository = limitRepository;
     }
 
     // Method to retrieve and display all alerts using the FinAnalyser.
     public List<AlertDTO> showAllAlerts() {
-        FinAnalyser finAnalyser = new FinAnalyser( incomeExpenseRepository, limitRepository );
+        FinAnalyser finAnalyser = new FinAnalyser( financialTransactionRepository, limitRepository );
         return finAnalyser.createAlerts();
     }
 }

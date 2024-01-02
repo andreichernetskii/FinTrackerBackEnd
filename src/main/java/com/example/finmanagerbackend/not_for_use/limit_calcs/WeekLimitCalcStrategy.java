@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.not_for_use.limit_calcs;
 
-import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;
 
 import java.math.BigDecimal;
@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeekLimitCalcStrategy implements LimitCalcStrategy {
-    private IncomeExpenseRepository incomeExpenseRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
-    public WeekLimitCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
-        this.incomeExpenseRepository = incomeExpenseRepository;
+    public WeekLimitCalcStrategy( FinancialTransactionRepository financialTransactionRepository ) {
+        this.financialTransactionRepository = financialTransactionRepository;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class WeekLimitCalcStrategy implements LimitCalcStrategy {
         if ( limit.getLimitAmount() == null ) return false;
         List<LocalDate> firstLastWeekDay = getStartAndEndOfWeekDates();
 
-        Double actualBalanceAsDouble = incomeExpenseRepository
+        Double actualBalanceAsDouble = financialTransactionRepository
                 .calculateWeekExpenses( firstLastWeekDay.get( 0 ), firstLastWeekDay.get( 1 ) );
         if ( actualBalanceAsDouble == null ) return false;
 

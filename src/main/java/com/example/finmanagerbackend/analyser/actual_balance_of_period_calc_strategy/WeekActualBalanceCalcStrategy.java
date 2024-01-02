@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy;
 
-import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;
 
 import java.time.DayOfWeek;
@@ -12,10 +12,10 @@ import java.util.List;
  * Strategy class for calculating the actual balance of a specific week.
  */
 public class WeekActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
-    private final IncomeExpenseRepository incomeExpenseRepository;
+    private final FinancialTransactionRepository financialTransactionRepository;
 
-    public WeekActualBalanceCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
-        this.incomeExpenseRepository = incomeExpenseRepository;
+    public WeekActualBalanceCalcStrategy( FinancialTransactionRepository financialTransactionRepository ) {
+        this.financialTransactionRepository = financialTransactionRepository;
     }
 
     // Method to calculate the actual balance of the week based on the provided limit.
@@ -23,7 +23,7 @@ public class WeekActualBalanceCalcStrategy implements ActualBalanceCalcStrategy 
     public Double calcActualBalanceOfPeriod( Limit limit ) {
         List<LocalDate> firstLastWeekDay = getStartAndEndOfWeekDates();
 
-        return incomeExpenseRepository.calculateWeekExpenses(
+        return financialTransactionRepository.calculateWeekExpenses(
                 firstLastWeekDay.get( 0 ),
                 firstLastWeekDay.get( 1 )
         );

@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy;
 
-import com.example.finmanagerbackend.income_expense.IncomeExpenseRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;
 
 import java.time.LocalDate;
@@ -9,15 +9,15 @@ import java.time.LocalDate;
  * Strategy class for calculating the actual balance of a specific year.
  */
 public class YearActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
-    private final IncomeExpenseRepository incomeExpenseRepository;
+    private final FinancialTransactionRepository financialTransactionRepository;
 
-    public YearActualBalanceCalcStrategy( IncomeExpenseRepository incomeExpenseRepository ) {
-        this.incomeExpenseRepository = incomeExpenseRepository;
+    public YearActualBalanceCalcStrategy( FinancialTransactionRepository financialTransactionRepository ) {
+        this.financialTransactionRepository = financialTransactionRepository;
     }
 
     // Method to calculate the actual balance of the year based on the provided limit.
     @Override
     public Double calcActualBalanceOfPeriod( Limit limit ) {
-        return incomeExpenseRepository.calculateYearExpenses( LocalDate.now() );
+        return financialTransactionRepository.calculateYearExpenses( LocalDate.now() );
     }
 }

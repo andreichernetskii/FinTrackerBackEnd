@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,15 +46,15 @@ public class AuthService {
 
     // Method to get the currently logged-in user
     public ApplicationUser getLoggedUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = ( UserDetails ) principal;
 
-        if (!(principal instanceof UserDetails ) ) {
-            throw new RuntimeException("User not logged");
+            return applicationUserRepository.findById( userDetails.getUsername() ).orElseThrow();
+
+        } catch ( ClassCastException | NullPointerException e ) {
+            throw new AuthenticationException("User not logged") {};
         }
-
-        UserDetails userDetails = ( UserDetails ) principal;
-
-        return   applicationUserRepository.findById( userDetails.getUsername() ).orElseThrow();
     }
 
     // Authenticates a user and generates a JWT token.
@@ -69,10 +70,10 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication( authentication );
 
         // Set user activity status as active in the database
-        applicationUserRepository.setUserActivity( loginRequest.getEmail(), true);
+        applicationUserRepository.setUserActivity( loginRequest.getEmail(), true );
 
         // Retrieve UserDetails from the authenticated principal
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = ( UserDetailsImpl ) authentication.getPrincipal();
 
         // Generate a JWT token and create a response cookie
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie( userDetails );
@@ -108,15 +109,15 @@ public class AuthService {
         Set<Role> roles = new HashSet<>();
 
         if ( strRoles != null && strRoles.contains( "admin" ) ) {
-            roles.add(Role.ROLE_ADMIN );
+            roles.add( Role.ROLE_ADMIN );
         }
 
         roles.add( Role.ROLE_USER );
 
-        user.setRoles(roles );
-        applicationUserRepository.save(user );
+        user.setRoles( roles );
+        applicationUserRepository.save( user );
 
-        return ResponseEntity.ok(new MessageResponse( "User registered successfully!" ) );
+        return ResponseEntity.ok( new MessageResponse( "User registered successfully!" ) );
     }
 
     // Logs out a user and invalidates the JWT token.

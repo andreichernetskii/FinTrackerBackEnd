@@ -40,6 +40,6 @@ public class DataBaseInitializer implements ApplicationRunner {
 
     // Checks if a zero limit already exists in the database.
     private boolean isZeroLimExists(LimitDTO limitDTO) {
-        return limitRepository.existsBy( null, limitDTO.getLimitType() );
+        return limitRepository.existsBy( null, limitDTO.getLimitType(), null );
     }
 }

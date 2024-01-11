@@ -51,12 +51,12 @@ public class LimitService {
         Account account = accountService.getAccount();
 
         Limit limit = createLimit( limitDTO );
+        limit.setAccount( account );
 
         if ( isLimitExists( account, limit ) ) {
-            throw new UnprocessableEntityException( "Taki limit już istnieje!" );
+            throw new UnprocessableEntityException( "Limit already exist!" );
         }
 
-        limit.setAccount( account );
         limitRepository.save( limit );
     }
 
@@ -66,7 +66,7 @@ public class LimitService {
         Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
 
         if ( !optimalLimit.isPresent() ) {
-            throw new NotFoundException( "Limit z id " + limitId + " nie istnieje w bazie!" );
+            throw new NotFoundException( "Limit with ID " + limitId + " not exist!" );
         }
 
         if ( optimalLimit.get().getLimitType() == LimitType.ZERO ) {
@@ -74,7 +74,7 @@ public class LimitService {
         }
 
         if ( isLimitExists( account, optimalLimit.get() ) ) {
-            throw new UnprocessableEntityException( "Taki limit już istnieje!" );
+            throw new UnprocessableEntityException( "Limit already exist!" );
         }
 
         limit.setAccount( account );
@@ -85,7 +85,7 @@ public class LimitService {
 
     // Checks if a limit of a specific type exists for a given account.
     private boolean isLimitExists( Account account, Limit limitToCheck ) {
-        return limitRepository.existsBy( account.getId(), limitToCheck.getLimitType() );
+        return limitRepository.existsBy( account.getId(), limitToCheck.getLimitType(), limitToCheck.getCategory() );
     }
 
     // Retrieves a list of available limit types.

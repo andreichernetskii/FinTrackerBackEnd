@@ -68,7 +68,7 @@ public class SecurityConfig {
 
         http
                 .csrf( csrf -> csrf.disable() )
-                .headers( headers -> headers.disable() )
+                .headers( headers -> headers.disable() ) // for H2 console
                 .exceptionHandling( exception -> exception.authenticationEntryPoint( unauthorizedHandle ) )
                 .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
                 .authorizeHttpRequests( auth ->

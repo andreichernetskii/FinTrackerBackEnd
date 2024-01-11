@@ -41,7 +41,6 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
             """ )
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );
 
-    // Checks if a limit of a specific type exists for a given account.
     @Query( """
           SELECT 
           CASE WHEN COUNT( limitType ) > 0 
@@ -50,9 +49,12 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
           FROM Limit 
           WHERE ( :accountId IS NULL OR account.id = :accountId )
           AND limitType = :limitType
+          AND ( :category IS NULL OR category = :category )
           """ )
     Boolean existsBy( @Param( "accountId" ) Long accountId,
-                      @Param( "limitType" ) LimitType limitType );
+                      @Param( "limitType" ) LimitType limitType,
+                      @Param( "category" ) String category );
+    // Checks if a limit of a specific type exists for a given account.
 
     // Deletes limits of a specific type.
     @Modifying

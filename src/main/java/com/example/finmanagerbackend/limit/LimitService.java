@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,13 +91,9 @@ public class LimitService {
 
     // Retrieves a list of available limit types.
     public List<String> getLimitTypes() {
-        List<String> list = new ArrayList<>();
-
-        for ( LimitType limType : LimitType.values() ) {
-            list.add( limType.toString() );
-        }
-
-        return list;
+        return Arrays.stream( LimitType.values() )
+                .map( Enum::toString )
+                .toList();
     }
 
     // Creates a new Limit entity based on the given DTO.

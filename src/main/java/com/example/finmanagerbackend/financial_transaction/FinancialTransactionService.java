@@ -26,9 +26,10 @@ public class FinancialTransactionService {
     public void addIncomeExpense( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
-        BigDecimal amount = ( financialTransactionDTO.getFinancialTransactionType() == FinancialTransactionType.EXPENSE )
-                ? financialTransactionDTO.getAmount().negate()
-                : financialTransactionDTO.getAmount();
+        BigDecimal amount =
+                ( financialTransactionDTO.getFinancialTransactionType() == FinancialTransactionType.EXPENSE )
+                        ? financialTransactionDTO.getAmount().negate()
+                        : financialTransactionDTO.getAmount();
 
         FinancialTransaction financialTransaction = new FinancialTransaction(
                 financialTransactionDTO.getFinancialTransactionType(),
@@ -107,5 +108,11 @@ public class FinancialTransactionService {
     public List<String> getCategories() {
         Account account = accountService.getAccount();
         return financialTransactionRepository.getCategories( account.getId() );
+    }
+
+    public List<String> getTransactionTypes() {
+        return Arrays.stream( FinancialTransactionType.values() )
+                .map( Enum::toString )
+                .toList();
     }
 }

@@ -69,4 +69,9 @@ public class FinancialTransactionController {
     public List<String> getCategories() {
         return financialTransactionService.getCategories();
     }
+
+    @GetMapping("/types")
+    public List<String> getTransactionTypes() {
+        return financialTransactionService.getTransactionTypes();
+    }
 }

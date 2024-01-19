@@ -74,10 +74,6 @@ public class LimitService {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
 
-        if ( isLimitExists( account, optimalLimit.get() ) ) {
-            throw new UnprocessableEntityException( "Limit already exist!" );
-        }
-
         limit.setAccount( account );
         limitRepository.save( limit );
     }

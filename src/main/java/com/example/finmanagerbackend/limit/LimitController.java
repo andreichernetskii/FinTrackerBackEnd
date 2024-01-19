@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.limit;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class LimitController {
     }
 
     // Gets a list of available limit types.
-    @GetMapping("/types")
+    @GetMapping( "/types" )
     public List<String> getLimitTypes() {
         return limitService.getLimitTypes();
     }

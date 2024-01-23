@@ -1,7 +1,9 @@
-package com.example.finmanagerbackend.analyser;
+package com.example.finmanagerbackend.alert.analyser;
 
+import com.example.finmanagerbackend.account.Account;
+import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.alert.AlertDTO;
-import com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy.*;
+import com.example.finmanagerbackend.alert.analyser.strategy.*;
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;
 import com.example.finmanagerbackend.limit.LimitRepository;
@@ -19,15 +21,19 @@ public class FinAnalyser {
     private FinancialTransactionRepository financialTransactionRepository;
     private LimitRepository limitRepository;
     private ActualBalanceCalcStrategy strategy;
+    private final AccountService accountService;
 
-    public FinAnalyser( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository ) {
+    public FinAnalyser( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository, AccountService accountService ) {
         this.financialTransactionRepository = financialTransactionRepository;
         this.limitRepository = limitRepository;
+        this.accountService = accountService;
     }
 
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
-        List<Limit> limitsList = limitRepository.findAll();
+//        List<Limit> limitsList = limitRepository.findAll();
+        Account account = accountService.getAccount();
+        List<Limit> limitsList = limitRepository.getAllLimitsWithoutZero( account.getId() );
         List<AlertDTO> alerts = new ArrayList<>();
 
         // Iterate through all limits to check if they have been exceeded

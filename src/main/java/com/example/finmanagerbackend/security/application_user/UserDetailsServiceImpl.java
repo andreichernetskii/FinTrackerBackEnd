@@ -1,5 +1,6 @@
-package com.example.finmanagerbackend.application_user;
+package com.example.finmanagerbackend.security.application_user;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow( () -> new UsernameNotFoundException( String.format( "User with email %s not found", username ) ) );
 
         // Build and return UserDetailsImpl using the found user
+        // todo: albo zaimplementować UserDetails w ApplicationUser
+       /* return User.builder()
+                .build();*/
         return UserDetailsImpl.build( user );
     }
 }

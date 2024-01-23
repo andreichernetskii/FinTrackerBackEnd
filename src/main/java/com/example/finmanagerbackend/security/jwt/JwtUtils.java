@@ -1,7 +1,7 @@
-package com.example.finmanagerbackend.jwt;
+package com.example.finmanagerbackend.security.jwt;
 
-import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
-import com.example.finmanagerbackend.application_user.UserDetailsImpl;
+import com.example.finmanagerbackend.security.application_user.ApplicationUserRepository;
+import com.example.finmanagerbackend.security.application_user.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

@@ -20,8 +20,6 @@ public class LimitController {
     // Adds a new limit.
     @PostMapping( "/" )
     public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
-        // todo not like null on creation date field?
-        // todo or something with account id?
         limitService.addLimit( limitDTO );
     }
 

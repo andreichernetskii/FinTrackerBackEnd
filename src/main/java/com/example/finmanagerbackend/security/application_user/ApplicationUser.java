@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.application_user;
+package com.example.finmanagerbackend.security.application_user;
 
 import com.example.finmanagerbackend.account.Account;
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import java.util.Set;
  * Entity class representing the user table in the database with logins and passwords.
  */
 @Entity
-public class ApplicationUser {
+public class ApplicationUser  {
     @Id
     private String email;
     private String password;

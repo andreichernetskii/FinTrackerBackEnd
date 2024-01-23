@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.payloads.request;
+package com.example.finmanagerbackend.security.application_user.request;
 
 import java.util.Set;
 

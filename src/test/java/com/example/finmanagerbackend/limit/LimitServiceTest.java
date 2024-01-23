@@ -1,6 +1,6 @@
 package com.example.finmanagerbackend.limit;
 
-import com.example.finmanagerbackend.analyser.FinAnalyser;
+import com.example.finmanagerbackend.alert.analyser.FinAnalyser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class ) // pozwala używać Mockito dla symulacji działania objektów

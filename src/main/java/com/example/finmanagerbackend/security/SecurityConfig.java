@@ -1,8 +1,8 @@
 package com.example.finmanagerbackend.security;
 
-import com.example.finmanagerbackend.application_user.UserDetailsServiceImpl;
-import com.example.finmanagerbackend.jwt.AuthEntryPointJwt;
-import com.example.finmanagerbackend.jwt.AuthTokenFilter;
+import com.example.finmanagerbackend.security.application_user.UserDetailsServiceImpl;
+import com.example.finmanagerbackend.security.jwt.AuthEntryPointJwt;
+import com.example.finmanagerbackend.security.jwt.AuthTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

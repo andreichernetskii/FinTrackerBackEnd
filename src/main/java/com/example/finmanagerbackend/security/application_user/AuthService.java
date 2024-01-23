@@ -1,14 +1,14 @@
-package com.example.finmanagerbackend.auth;
+package com.example.finmanagerbackend.security.application_user;
 
-import com.example.finmanagerbackend.application_user.ApplicationUser;
-import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
-import com.example.finmanagerbackend.application_user.Role;
-import com.example.finmanagerbackend.application_user.UserDetailsImpl;
-import com.example.finmanagerbackend.jwt.JwtUtils;
-import com.example.finmanagerbackend.payloads.request.LoginRequest;
-import com.example.finmanagerbackend.payloads.request.SignupRequest;
-import com.example.finmanagerbackend.payloads.response.MessageResponse;
-import com.example.finmanagerbackend.payloads.response.UserInfoResponse;
+import com.example.finmanagerbackend.security.application_user.ApplicationUser;
+import com.example.finmanagerbackend.security.application_user.ApplicationUserRepository;
+import com.example.finmanagerbackend.security.application_user.Role;
+import com.example.finmanagerbackend.security.application_user.UserDetailsImpl;
+import com.example.finmanagerbackend.security.jwt.JwtUtils;
+import com.example.finmanagerbackend.security.application_user.request.LoginRequest;
+import com.example.finmanagerbackend.security.application_user.request.SignupRequest;
+import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
+import com.example.finmanagerbackend.security.application_user.response.UserInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;

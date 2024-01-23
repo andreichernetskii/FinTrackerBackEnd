@@ -64,4 +64,6 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
             WHERE lt.limitType = :limitType
             """ )
     void deleteByLimitType( @Param( "limitType" ) LimitType limitType );
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.payloads.response;
+package com.example.finmanagerbackend.security.application_user.response;
 
 public class MessageResponse {
     private String message;

@@ -1,7 +1,7 @@
-package com.example.finmanagerbackend.auth;
+package com.example.finmanagerbackend.security.application_user;
 
-import com.example.finmanagerbackend.payloads.request.LoginRequest;
-import com.example.finmanagerbackend.payloads.request.SignupRequest;
+import com.example.finmanagerbackend.security.application_user.request.LoginRequest;
+import com.example.finmanagerbackend.security.application_user.request.SignupRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // todo może jeszcze przerobić na zasoby
     // Endpoint for authenticating a user
     @PostMapping( "/signin" )
     public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest ) {

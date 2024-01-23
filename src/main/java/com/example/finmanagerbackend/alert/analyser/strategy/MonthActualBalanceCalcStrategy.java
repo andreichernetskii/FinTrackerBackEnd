@@ -1,4 +1,4 @@
-package com.example.finmanagerbackend.analyser.actual_balance_of_period_calc_strategy;
+package com.example.finmanagerbackend.alert.analyser.strategy;
 
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
 import com.example.finmanagerbackend.limit.Limit;

@@ -1,7 +1,7 @@
-package com.example.finmanagerbackend.jwt;
+package com.example.finmanagerbackend.security.jwt;
 
-import com.example.finmanagerbackend.application_user.ApplicationUserRepository;
-import com.example.finmanagerbackend.application_user.UserDetailsServiceImpl;
+import com.example.finmanagerbackend.security.application_user.ApplicationUserRepository;
+import com.example.finmanagerbackend.security.application_user.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

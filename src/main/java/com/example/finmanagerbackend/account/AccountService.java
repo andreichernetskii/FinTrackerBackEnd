@@ -1,7 +1,7 @@
 package com.example.finmanagerbackend.account;
 
-import com.example.finmanagerbackend.application_user.ApplicationUser;
-import com.example.finmanagerbackend.auth.AuthService;
+import com.example.finmanagerbackend.security.application_user.ApplicationUser;
+import com.example.finmanagerbackend.security.application_user.AuthService;
 import org.springframework.stereotype.Service;
 
 /**

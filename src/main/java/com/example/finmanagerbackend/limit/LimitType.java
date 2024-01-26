@@ -1,12 +1,12 @@
 package com.example.finmanagerbackend.limit;
 
 public enum LimitType {
-    ZERO( "Twoje konto jest na minusie!" ),
-    BUDGET( "Przekrociłeś budżet!" ),
-    YEAR( "Przekrociłeś roczny limit!" ),
-    MONTH( "Przekrociłeś miesięczny limit!" ),
-    WEEK( "Przekrociłeś tygodniowy limit!" ),
-    DAY( "Przekrociłeś dzienny limit!" );
+    ZERO( "You are in the negative overall!" ),
+    BUDGET( "You exceeded the budget!" ),
+    YEAR( "You exceeded the year limit!" ),
+    MONTH( "You exceeded the monthly limit!" ),
+    WEEK( "You exceeded the weekly limit!" ),
+    DAY( "You exceeded the daily limit!" );
 
     private String alert;
 

@@ -31,7 +31,6 @@ public class FinAnalyser {
 
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
-//        List<Limit> limitsList = limitRepository.findAll();
         Account account = accountService.getAccount();
         List<Limit> limitsList = limitRepository.getAllLimitsWithoutZero( account.getId() );
         List<AlertDTO> alerts = new ArrayList<>();
@@ -85,7 +84,7 @@ public class FinAnalyser {
     // Method to generate an alert message based on the limit and discrepancy.
     public String generateAlertMessage( Limit limit, BigDecimal discrepancy ) {
         return "!!! " + limit.getLimitType().getAlert()
-                + " Limit o wartości " + limit.getLimitAmount()
-                + " został przekrocony o " + discrepancy.toPlainString();
+                + " Limit of " + limit.getLimitAmount()
+                + " has been exceeded by " + discrepancy.toPlainString();
     }
 }

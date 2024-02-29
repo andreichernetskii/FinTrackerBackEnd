@@ -20,9 +20,9 @@ public class Account {
 
     // todo: relacje hibernatowe poczytać - Typ'y LAZY i EAGER + wzorzec projektowy Proxy + cykl życia Hibernate
     // Relationship mapping: One Account has many IncomeExpense records (Lazy loading for efficiency).
+    // This avoids creating a new table for the relationship.
     @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
     // Cascade option is used to apply the same operation (e.g., save, update, delete) to the associated entities.
-    // This avoids creating a new table for the relationship.
     @Cascade( CascadeType.ALL )
     private List<FinancialTransaction> operations = new ArrayList<>();
 

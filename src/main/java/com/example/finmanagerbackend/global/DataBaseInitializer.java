@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /**
  * ApplicationRunner that initializes the database with a zero limit if it doesn't already exist.
  */
-@Component
+//@Component
 public class DataBaseInitializer implements ApplicationRunner {
     private LimitService limitService;
     private LimitRepository limitRepository;

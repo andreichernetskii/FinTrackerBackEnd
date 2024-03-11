@@ -116,6 +116,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <image>
+                        <name>upagge/backend:spring-plugin</name>
+                        <env>
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
+                    </image>
                     <!-- Exclude Lombok from Packaging -->
                     <excludes>
                         <exclude>

@@ -1,1 +1,1 @@
-CREATE DATABASE postgresql-db;
+CREATE DATABASE db2;

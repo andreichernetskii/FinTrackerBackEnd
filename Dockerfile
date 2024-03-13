@@ -9,7 +9,7 @@ RUN ./mvnw clean install -DskipTests=true
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /opt/app
-COPY --from=builder /opt/app/target/*.jar /opt/app/*.jar
+COPY --from=builder /opt/app/target/*.jar /opt/app/
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/*.jar"]

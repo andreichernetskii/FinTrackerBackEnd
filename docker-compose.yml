@@ -1,13 +1,13 @@
 version: '3.8'
 services:
   client-frontend:
-    image: upagge/frontend:spring-plugin
-    restart: always
+    image: orcxus/fin_man_front_end:latest
+#    restart: always
     ports:
       - '8081:8081'
 
   client-backend:
-    image: upagge/backend:spring-plugin
+    image: orcxus/fin_man_back_end:latest
     ports:
       - "8080:8080"
     depends_on:

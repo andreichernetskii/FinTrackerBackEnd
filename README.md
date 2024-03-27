@@ -14,5 +14,4 @@ This project emerged as a personal challenge for me to create a web application 
 - **User Authentication**: The application provides user registration, login, and logout functionality using JSON Web Token (JWT) on the backend.e.
 
 ### How it works
-- Client adress - localhost:8081.
-- Client side of application conects to server side (localhost:8080) via RestTemplate object. 
+Now the project works with Docker Compose. To run the project, simply grab the docker-compose.yml file and execute `docker-compose up`.

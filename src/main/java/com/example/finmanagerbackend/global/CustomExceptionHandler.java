@@ -29,21 +29,21 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     // Handles UnprocessableEntityException, returns a response with HTTP status UNPROCESSABLE_ENTITY and the exception message.
     @ExceptionHandler( UnprocessableEntityException.class )
-    protected ResponseEntity<?> handleAlreadyExistConflict ( UnprocessableEntityException exception ) {
+    protected ResponseEntity<?> handleUnauthorizedConflict( UnprocessableEntityException exception ) {
         String message = exception.getMessage();
         return ResponseEntity.status( HttpStatus.UNPROCESSABLE_ENTITY ).body( message );
     }
 
     // Handles ExpiredTokenException, returns a response with HTTP status FORBIDDEN and the exception message.
     @ExceptionHandler( ExpiredTokenException.class )
-    protected ResponseEntity<?> handleAlreadyExistConflict ( ExpiredTokenException exception ) {
+    protected ResponseEntity<?> handleUnauthorizedConflict( ExpiredTokenException exception ) {
         String message = exception.getMessage();
         return ResponseEntity.status( HttpStatus.FORBIDDEN ).body( message );
     }
 
     // Handles AuthenticationException, returns a response with HTTP status UNAUTHORIZED and the exception message.
     @ExceptionHandler( AuthenticationException.class )
-    protected ResponseEntity<?> handleAlreadyExistConflict ( AuthenticationException exception ) {
+    protected ResponseEntity<?> handleUnauthorizedConflict( AuthenticationException exception ) {
         String message = exception.getMessage();
         return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( message );
     }

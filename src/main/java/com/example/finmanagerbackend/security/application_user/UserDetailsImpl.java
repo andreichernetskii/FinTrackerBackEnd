@@ -19,7 +19,6 @@ public class UserDetailsImpl implements UserDetails {
     private String password; // Passwords will not be included in the token
     private Collection<? extends GrantedAuthority> authorities;
 
-
     public UserDetailsImpl( String email, String password, Collection<? extends GrantedAuthority> authorities ) {
         this.email = email;
         this.password = password;

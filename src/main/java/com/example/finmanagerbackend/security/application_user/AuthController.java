@@ -37,4 +37,9 @@ public class AuthController {
     public ResponseEntity<?> logoutUser( HttpServletRequest request ) {
         return authService.logoutUser( request );
     }
+
+    @GetMapping( "/username" )
+    public String getActualUserName() {
+        return authService.getActualUserName();
+    }
 }

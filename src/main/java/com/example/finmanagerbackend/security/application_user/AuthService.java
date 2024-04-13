@@ -144,7 +144,6 @@ public class AuthService {
 
     public String getActualUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        return authentication.getName();
+        return authentication.getName().split( "@" )[0];
     }
 }

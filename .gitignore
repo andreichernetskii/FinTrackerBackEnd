@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 *.db
+bd1.trace.db
 
 ### STS ###
 .apt_generated

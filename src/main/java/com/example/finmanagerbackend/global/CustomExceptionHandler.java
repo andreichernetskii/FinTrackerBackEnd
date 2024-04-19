@@ -47,4 +47,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         String message = exception.getMessage();
         return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( message );
     }
+
+    // Handles NotExistException, returns a response with HTTP status NOT_FOUND and the exception message.
+    @ExceptionHandler( NotExistException.class )
+    protected ResponseEntity<?> handleNotExistException ( NotExistException exception ) {
+        String message = exception.getMessage();
+        return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( message );
+    }
 }

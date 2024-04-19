@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.limit;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,20 +20,20 @@ public class LimitController {
 
     // Adds a new limit.
     @PostMapping( "/" )
-    public void addNewLimit( @RequestBody LimitDTO limitDTO ) {
-        limitService.addLimit( limitDTO );
+    public ResponseEntity<?> addNewLimit( @RequestBody LimitDTO limitDTO ) {
+        return limitService.addLimit( limitDTO );
     }
 
     // Updates an existing limit.
     @PutMapping( "/{limitId}" )
-    public void updateLimit( @PathVariable( "limitId" ) Long limitId, @RequestBody Limit limit ) {
-        limitService.updateLimit( limitId, limit );
+    public ResponseEntity<?> updateLimit( @PathVariable( "limitId" ) Long limitId, @RequestBody Limit limit ) {
+        return limitService.updateLimit( limitId, limit );
     }
 
     // Deletes an existing limit.
     @DeleteMapping( "/{limitId}" )
-    public void deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
-        limitService.deleteLimit( limitId );
+    public ResponseEntity<?> deleteLimit( @PathVariable( "limitId" ) Long limitId ) {
+        return limitService.deleteLimit( limitId );
     }
 
     // Gets a list of all limits.

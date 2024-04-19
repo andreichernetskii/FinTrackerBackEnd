@@ -5,10 +5,11 @@ import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
+import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,16 +29,20 @@ public class LimitService {
 
     // Deletes a specific limit.
     @Transactional
-    public void deleteLimit( Long limitId ) {
+    public ResponseEntity<?> deleteLimit( Long limitId ) {
         Account account = accountService.getAccount();
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
 
-        if ( !optionalLimit.isPresent() ) return;
+        if ( !optionalLimit.isPresent() ) {
+            throw new NotFoundException( "This limit does not exist." );
+        }
         if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
 
         limitRepository.deleteById( limitId );
+
+        return ResponseEntity.ok(new MessageResponse( "Limit successfully deleted" ) );
     }
 
     // Retrieves all limits associated with the current account except for the ZERO type.
@@ -48,21 +53,24 @@ public class LimitService {
     }
 
     // Adds a new limit.
-    public void addLimit( LimitDTO limitDTO ) {
+    public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {
         Account account = accountService.getAccount();
 
         Limit limit = createLimit( limitDTO );
         limit.setAccount( account );
 
+        // if limit exists (amount or amount with category) will be thrown the exception
         if ( isLimitExists( account, limit ) ) {
             throw new UnprocessableEntityException( "Limit already exist!" );
         }
 
         limitRepository.save( limit );
+
+        return ResponseEntity.ok(new MessageResponse( "Limit successfully added" ));
     }
 
     // Updates an existing limit.
-    public void updateLimit( Long limitId, Limit limit ) {
+    public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
         Account account = accountService.getAccount();
         Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
 
@@ -76,6 +84,8 @@ public class LimitService {
 
         limit.setAccount( account );
         limitRepository.save( limit );
+
+        return ResponseEntity.ok(new MessageResponse( "Limit successfully updated" ));
     }
 
     // not DB using functions

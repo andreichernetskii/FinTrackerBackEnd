@@ -3,6 +3,8 @@ package com.example.finmanagerbackend.financial_transaction;
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
+import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,7 +25,7 @@ public class FinancialTransactionService {
     }
 
     // Method to add a new financial transaction based on DTO information.
-    public void addIncomeExpense( FinancialTransactionDTO financialTransactionDTO ) {
+    public ResponseEntity<?> addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
         BigDecimal amount =
@@ -42,6 +44,8 @@ public class FinancialTransactionService {
         financialTransaction.setAccount( account );
 
         financialTransactionRepository.save( financialTransaction );
+
+        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully added." ) );
     }
 
     // Method to retrieve all financial transactions.
@@ -50,7 +54,7 @@ public class FinancialTransactionService {
     }
 
     // Method to update an existing financial transaction.
-    public void updateIncomeExpense( FinancialTransaction financialTransaction ) {
+    public ResponseEntity<?> updateFinancialTransaction( FinancialTransaction financialTransaction ) {
         Account account = accountService.getAccount();
 
         Optional<FinancialTransaction> incomeExpenseOptional =
@@ -62,10 +66,12 @@ public class FinancialTransactionService {
 
         financialTransaction.setAccount( account );
         financialTransactionRepository.save( financialTransaction );
+
+        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully updated" ) );
     }
 
     // Method to delete a financial transaction by its ID.
-    public void deleteIncomeExpense( Long operationId ) {
+    public ResponseEntity<?> deleteFinancialTransaction( Long operationId ) {
         Account account = accountService.getAccount();
 
         Optional<FinancialTransaction> incomeExpenseOptional =
@@ -76,6 +82,8 @@ public class FinancialTransactionService {
         }
 
         financialTransactionRepository.deleteById( operationId );
+
+        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully deleted" ) );
     }
 
     // Method to get the annual balance based on specified criteria.
@@ -85,6 +93,7 @@ public class FinancialTransactionService {
                                     String category ) {
 
         Account account = accountService.getAccount();
+
         return financialTransactionRepository.calculateAnnualBalanceByCriteria( account.getId(), year, month, financialTransactionType, category );
     }
 

@@ -1,5 +1,6 @@
 package com.example.finmanagerbackend.financial_transaction;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +20,20 @@ public class FinancialTransactionController {
 
     // Endpoint to add a new income or expense operation.
     @PostMapping( "/" )
-    public void addNewIncomeExpense( @RequestBody FinancialTransactionDTO financialTransactionDTO ) {
-
-        financialTransactionService.addIncomeExpense( financialTransactionDTO );
+    public ResponseEntity<?> addNewFinancialTransaction( @RequestBody FinancialTransactionDTO financialTransactionDTO ) {
+        return financialTransactionService.addFinancialTransaction( financialTransactionDTO );
     }
 
     // Endpoint to update an existing income or expense operation.
     @PutMapping( "/" )
-    public void updateIncomeExpense( @RequestBody FinancialTransaction financialTransaction ) {
-
-        financialTransactionService.updateIncomeExpense( financialTransaction );
+    public ResponseEntity<?> updateFinancialTransaction( @RequestBody FinancialTransaction financialTransaction ) {
+        return financialTransactionService.updateFinancialTransaction( financialTransaction );
     }
 
     // Endpoint to delete an income or expense operation based on the operationId.
     @DeleteMapping( "/{operationId}" )
-    public void deleteIncomeExpense( @PathVariable( "operationId" ) Long operationId ) {
-        financialTransactionService.deleteIncomeExpense( operationId );
+    public ResponseEntity<?> deleteFinancialTransaction( @PathVariable( "operationId" ) Long operationId ) {
+        return financialTransactionService.deleteFinancialTransaction( operationId );
     }
 
     // Endpoint to retrieve a list of income and expense operations based on specified criteria.

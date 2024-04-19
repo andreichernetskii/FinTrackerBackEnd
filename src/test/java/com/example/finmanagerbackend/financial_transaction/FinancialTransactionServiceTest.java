@@ -31,7 +31,7 @@ public class FinancialTransactionServiceTest {
                 new String( "2005-12-12" )
         );
 
-        financialTransactionService.addIncomeExpense( transactionDTO );
+        financialTransactionService.addFinancialTransaction( transactionDTO );
 
         ArgumentCaptor<FinancialTransaction> transactionCaptor = ArgumentCaptor.forClass( FinancialTransaction.class );
         verify( financialTransactionRepository ).save( transactionCaptor.capture() );
@@ -66,7 +66,7 @@ public class FinancialTransactionServiceTest {
     public void deleteOperationTest_SuccessfulDeletion() {
         Long id = 1L;
         when( financialTransactionRepository.existsById( id ) ).thenReturn( true );
-        financialTransactionService.deleteIncomeExpense( id );
+        financialTransactionService.deleteFinancialTransaction( id );
 
         verify( financialTransactionRepository ).existsById( id );
         verify( financialTransactionRepository ).deleteById( id );
@@ -81,7 +81,7 @@ public class FinancialTransactionServiceTest {
         when( financialTransactionRepository.existsById( id ) ).thenReturn( false );
 
         assertThrows( IllegalStateException.class,
-                () -> financialTransactionService.deleteIncomeExpense( id ) );
+                () -> financialTransactionService.deleteFinancialTransaction( id ) );
         verify( financialTransactionRepository ).existsById( id );
         verifyNoMoreInteractions( financialTransactionRepository );
     }

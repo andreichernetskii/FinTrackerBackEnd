@@ -29,13 +29,13 @@ public class LimitService {
 
     // Deletes a specific limit.
     @Transactional
-    public ResponseEntity<?> deleteLimit( Long limitId ) {
-        Account account = accountService.getAccount();
+    public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
 
         if ( !optionalLimit.isPresent() ) {
             throw new NotFoundException( "This limit does not exist." );
         }
+
         if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
@@ -46,14 +46,13 @@ public class LimitService {
     }
 
     // Retrieves all limits associated with the current account except for the ZERO type.
-    public List<Limit> getLimits() {
+    public List<Limit> getLimits() {    // +
         Account account = accountService.getAccount();
-
         return limitRepository.getAllLimitsWithoutZero( account.getId() );
     }
 
     // Adds a new limit.
-    public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {
+    public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
         Account account = accountService.getAccount();
 
         Limit limit = createLimit( limitDTO );

@@ -18,7 +18,6 @@ public class AccountService {
 
     public Account getAccount() {
         ApplicationUser user = authService.getLoggedUser();
-
         return user.getAccount();
     }
 }

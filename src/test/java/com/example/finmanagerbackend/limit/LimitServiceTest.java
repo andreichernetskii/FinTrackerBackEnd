@@ -1,103 +1,102 @@
 package com.example.finmanagerbackend.limit;
 
+import com.example.finmanagerbackend.account.Account;
+import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.alert.analyser.FinAnalyser;
+import com.example.finmanagerbackend.global.exceptions.NotFoundException;
+import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
+import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith( MockitoExtension.class ) // pozwala używać Mockito dla symulacji działania objektów
+@ExtendWith( MockitoExtension.class ) // Mockito for simulate objects job
 public class LimitServiceTest {
-    @InjectMocks // wywołamy ten objekt
+    @InjectMocks
     private LimitService limitService;
-    @Mock // dla symulacji działania repo
+    @Mock // Repo's job sim
     private LimitRepository limitRepository;
-    @Mock // symulacja działania finAnalyzer'a
-    private FinAnalyser finAnalyser;
+    @Mock
+    private AccountService accountService;
 
-    // todo: przerobić testy zgodnie ze zmianami klasy LimitService
+    //region delete limit tests section
     @Test
     public void deleteLimitTest_SuccessfulDeletion() {
-        Long id = 1L;
-        // connecting mock
-        when( limitRepository.existsById( id ) ).thenReturn( true );
+        Long limitId = 1L;
+        Limit limit = mock( Limit.class );
 
-        // deleting
-        limitService.deleteLimit( id );
+        when( limit.getId() ).thenReturn( limitId );
+        when( limitRepository.findById( limitId ) ).thenReturn( Optional.of( limit ) );
 
-        // checking methods usages
-        verify( limitRepository ).existsById( id );
-        verify( limitRepository ).deleteById( id );
+        ResponseEntity<?> responseEntity = limitService.deleteLimit( limitId );
 
-        // limit with ID not exists
-        when( limitRepository.existsById( id ) ).thenReturn( false );
-        assertFalse( limitRepository.existsById( id ) );
+        // assert
+        verify( limitRepository, times( 1 ) ).deleteById( limitId );
+        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+        assertEquals( "Limit successfully deleted", ( ( MessageResponse ) responseEntity.getBody() ).getMessage() );
     }
 
     @Test
     public void deleteLimitTest_LimitNotFound() {
-        Long id = 1L;
-        // podłączamy mock, żeby on symulował brak istnienia limita
-        when( limitRepository.existsById( id ) ).thenReturn( false );
+        Long limitId = 1L;
 
-        // sprawdzamy, czy wysakuje wyjątek po próbie usunięcia nieistniejącego limita
-        assertThrows( IllegalStateException.class, () -> limitService.deleteLimit( id ) );
+        when( limitRepository.findById( limitId ) ).thenReturn( Optional.empty() );
 
-        // czy była metoda zawołana
-        verify( limitRepository ).existsById( id );
-
-        // czy nie było więcej niepotrzebnych wyławań
-        verifyNoMoreInteractions( limitRepository );
+        assertThrows( NotFoundException.class, () -> limitService.deleteLimit( limitId ) );
+        verify( limitRepository, never() ).deleteById( limitId );
     }
-
+    //endregion
+    //region get limit tests section
     @Test
     public void getLimitsTest_SuccessfulReturning() {
-        // tworzymy fikcyjną listę limitów
-        List<Limit> expectedLimits = new ArrayList<>();
-        expectedLimits.add( new Limit(
-                LimitType.DAY,
-                new BigDecimal( 100 ),
-                null,
-                null) );
+        Long accountId = 1L;
+        Account account = mock( Account.class );
 
-        // mock dla zwracania oczekiwanej listy limitów
-        when( limitRepository.findAll() ).thenReturn( expectedLimits );
+        when( account.getId() ).thenReturn( accountId );
+        when( accountService.getAccount() ).thenReturn( account );
 
-        // tworzymy aktualną listę limitów
-        List<Limit> actualLimits = limitService.getLimits();
+        List<Limit> limits = new ArrayList<>();
+        limits.add( new Limit() );
+        limits.add( new Limit() );
 
-        // czy była wyłowana metoda
-        verify( limitRepository ).findAll();
+        when( limitRepository.getAllLimitsWithoutZero( accountId ) ).thenReturn( limits );
 
-        // czy nie null
-        assertNotNull( actualLimits );
+        List<Limit> result = limitService.getLimits();
 
-        // czy listy są podobne
-        assertEquals( expectedLimits, actualLimits );
+        assertEquals( limits.size(), result.size() );
+        verify( accountService, times( 1 ) ).getAccount();
+        verify( limitRepository, times( 1 ) ).getAllLimitsWithoutZero( accountId );
     }
-
-
+    //endregion
+    //region add limit tests section
     @Test
     public void addLimitTest_SuccessfulAddedLimit() {
-        // first, original limit adding to mock
-        Limit oldLimit = new Limit( LimitType.DAY, new BigDecimal( 100 ), null, null );
-        when( limitRepository.save( any() ) ).thenReturn( oldLimit );
+        Account account = mock( Account.class );
+        when( accountService.getAccount() ).thenReturn( account );
 
-        // preparing new limit for update operation
-        LimitDTO newLimit = new LimitDTO( LimitType.DAY, new BigDecimal( 120 ), null, null );
-        // and adding to mock for update
-        limitService.addLimit( newLimit );
+        LimitDTO limitDTO = new LimitDTO(
+                LimitType.DAY,
+                new BigDecimal( 100 ),
+                "Category",
+                LocalDate.now()
+        );
 
-        // create object for capturing values
+        ResponseEntity<?> responseEntity = limitService.addLimit( limitDTO );
+
         ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass( Limit.class );
         // capturing saved object
         verify( limitRepository ).save( limitCaptor.capture() );
@@ -105,7 +104,43 @@ public class LimitServiceTest {
         Limit capturedLimit = limitCaptor.getValue();
 
         // asserting got and expected values
-        assertEquals( newLimit.getLimitAmount(), capturedLimit.getLimitAmount() );
-        assertEquals( newLimit.getLimitType(), capturedLimit.getLimitType() );
+        assertEquals( limitDTO.getLimitAmount(), capturedLimit.getLimitAmount() );
+        assertEquals( limitDTO.getLimitType(), capturedLimit.getLimitType() );
+        assertEquals( limitDTO.getCategory(), capturedLimit.getCategory() );
+        assertEquals( limitDTO.getCreationDate(), capturedLimit.getCreationDate() );
+
+        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+
+        verify( accountService, times( 1 ) ).getAccount();
+        verify( limitRepository, times( 1 ) ).save( any( Limit.class ) );
     }
+
+    @Test
+    public void addLimitTest_LimitAlreadyExist() {
+        Account account = mock( Account.class );
+        when( accountService.getAccount() ).thenReturn( account );
+        when( account.getId() ).thenReturn( 1L );
+
+        Limit existsLimit = new Limit(
+                LimitType.DAY,
+                new BigDecimal( 100 ),
+                "Category",
+                LocalDate.now()
+        );
+
+        LimitDTO limitDto = new LimitDTO(
+                LimitType.DAY,
+                new BigDecimal( 100 ),
+                "Category",
+                LocalDate.now()
+        );
+
+        when( limitRepository.existsBy( account.getId(), existsLimit.getLimitType(), existsLimit.getCategory() ) )
+                .thenReturn( true );
+
+        assertThrows( UnprocessableEntityException.class, () -> limitService.addLimit( limitDto ) );
+        verify( accountService, times( 1 ) ).getAccount();
+        verify( limitRepository, never() ).save( any( Limit.class ) );
+    }
+    //endregion
 }

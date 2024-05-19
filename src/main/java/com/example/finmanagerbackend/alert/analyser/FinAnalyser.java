@@ -18,10 +18,10 @@ import java.util.*;
  */
 @Service
 public class FinAnalyser {
-    private FinancialTransactionRepository financialTransactionRepository;
-    private LimitRepository limitRepository;
-    private ActualBalanceCalcStrategy strategy;
+    private final FinancialTransactionRepository financialTransactionRepository;
+    private final LimitRepository limitRepository;
     private final AccountService accountService;
+    private ActualBalanceCalcStrategy strategy;
 
     public FinAnalyser( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository, AccountService accountService ) {
         this.financialTransactionRepository = financialTransactionRepository;

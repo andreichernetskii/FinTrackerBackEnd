@@ -1,4 +1,7 @@
 ## Financial Tracker Web-Application (Backend Side)
+> [!IMPORTANT]
+> [Website for testing](http://23.94.117.251:8081)
+
 Client side: [https://github.com/andreichernetskii/FinManagerBackEnd](https://github.com/andreichernetskii/FinMangerFrontEnd)
 
 ### The Genesis

@@ -1,7 +1,6 @@
 package com.example.finmanagerbackend.limit;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +44,6 @@ public class LimitControllerTest {
                 .andExpect( MockMvcResultMatchers.status().isOk() );
     }
 
-    // todo: i potem zmienić na oczekiwanie ...perform...andExpect(notFound)
     @Test
     public void deleteLimitTest_ExceptionIdIsNotExists() throws Exception {
         Assertions.assertThrows( ServletException.class, () -> {

@@ -39,7 +39,6 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
-    // todo: i tutaj by w AppUser ta metoda przemapowała role z AppUser
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

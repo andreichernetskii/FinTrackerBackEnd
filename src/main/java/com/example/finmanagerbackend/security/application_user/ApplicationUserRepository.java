@@ -45,8 +45,6 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     void setUserActivity( @Param( "email" ) String email,
                           @Param( "isActive" ) boolean isActive );
 
-    // todo: token musi być odpowiedzialny wiedzieć, czy jest
-    // todo albo dodać datę ostatniego wylogowania
     // Query to check if an ApplicationUser is active by email
     @Query( """
             SELECT user.active
@@ -55,15 +53,3 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
             """ )
     boolean isUserActive( @Param( "email" ) String email );
 }
-
-/*
-* login     -> singup i dostaj cookie (z nowym JWT)
-*           -> uzytkownik zmieniony w bazie danych na aktywny
-*
-* refresh   -> front zalacza trzyne cookie z zapytaniem
-*           -> backend kontroluje czas i prawdziwość
-*               -> jeśli coś nie tak to przestawia w bazie na nieaktywny i zwraca status forbiden
-*           -> front przekierowuje na zalowanie jeszcze raz
-*
-*
-* */

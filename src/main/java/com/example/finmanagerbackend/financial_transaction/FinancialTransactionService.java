@@ -14,17 +14,24 @@ import java.util.*;
 /**
  * Service class for managing financial transactions.
  */
+
+// todo: maybe will be better to add id_account to the repo's method?
 @Service
 public class FinancialTransactionService {
     private final FinancialTransactionRepository financialTransactionRepository;
     private final AccountService accountService;
+    private final FinTransactionGenerator finTransactionGenerator;
 
-    public FinancialTransactionService( FinancialTransactionRepository financialTransactionRepository, AccountService accountService ) {
+    public FinancialTransactionService( FinancialTransactionRepository financialTransactionRepository,
+                                        AccountService accountService,
+                                        FinTransactionGenerator finTransactionGenerator ) {
         this.financialTransactionRepository = financialTransactionRepository;
         this.accountService = accountService;
+        this.finTransactionGenerator = finTransactionGenerator;
     }
 
     // Method to add a new financial transaction based on DTO information.
+
     public ResponseEntity<?> addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
@@ -103,8 +110,15 @@ public class FinancialTransactionService {
                                                                FinancialTransactionType financialTransactionType,
                                                                String category ) {
 
+        Account account = accountService.getAccount();
+
+        // generate table of random transactions for showcase if user is demo and his transactions table is empty
+        if ( account.isDemo() && financialTransactionRepository.countByAccountId( account.getId() ) == 0 ) {
+            finTransactionGenerator.createRandomExpenses( account );
+        }
+
         List<FinancialTransaction> list = financialTransactionRepository.findOperationsByCriteria(
-                accountService.getAccount().getId(),
+                account.getId(),
                 year,
                 month,
                 financialTransactionType,

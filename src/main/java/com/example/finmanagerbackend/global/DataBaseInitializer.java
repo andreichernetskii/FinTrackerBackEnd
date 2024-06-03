@@ -3,7 +3,6 @@ package com.example.finmanagerbackend.global;
 import com.example.finmanagerbackend.limit.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +38,7 @@ public class DataBaseInitializer implements ApplicationRunner {
     }
 
     // Checks if a zero limit already exists in the database.
-    private boolean isZeroLimExists(LimitDTO limitDTO) {
+    private boolean isZeroLimExists( LimitDTO limitDTO ) {
         return limitRepository.existsBy( null, limitDTO.getLimitType(), null );
     }
 }

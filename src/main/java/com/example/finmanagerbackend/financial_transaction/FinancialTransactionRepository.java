@@ -113,4 +113,11 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             """ )
     Optional<FinancialTransaction> findByAccountIdPlusOperationId( @Param( "operationId" ) Long operationId,
                                                                    @Param( "accountId" ) Long accountId );
+
+    @Query( """
+            SELECT COUNT(*)
+            FROM FinancialTransaction operation 
+            WHERE operation.account.id = :accountId
+            """)
+    Integer countByAccountId( @Param( "accountId" ) Long accountId );
 }

@@ -18,7 +18,6 @@ public class Account {
     @GeneratedValue
     private Long id;
 
-    // todo: relacje hibernatowe poczytać - Typ'y LAZY i EAGER + wzorzec projektowy Proxy + cykl życia Hibernate
     // Relationship mapping: One Account has many IncomeExpense records (Lazy loading for efficiency).
     // This avoids creating a new table for the relationship.
     @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
@@ -29,8 +28,17 @@ public class Account {
     // Relationship mapping: One Account has many Limit records (Lazy loading for efficiency).
     @OneToMany( mappedBy = "account", fetch = FetchType.LAZY )
     private List<Limit> limits = new ArrayList<>();
+    private boolean isDemo;
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isDemo() {
+        return isDemo;
+    }
+
+    public void setDemo( boolean demo ) {
+        isDemo = demo;
     }
 }

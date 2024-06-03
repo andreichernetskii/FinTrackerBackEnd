@@ -1,9 +1,6 @@
 package com.example.finmanagerbackend.security.application_user;
 
-import com.example.finmanagerbackend.security.application_user.ApplicationUser;
-import com.example.finmanagerbackend.security.application_user.ApplicationUserRepository;
-import com.example.finmanagerbackend.security.application_user.Role;
-import com.example.finmanagerbackend.security.application_user.UserDetailsImpl;
+import com.example.finmanagerbackend.financial_transaction.FinTransactionGenerator;
 import com.example.finmanagerbackend.security.jwt.JwtUtils;
 import com.example.finmanagerbackend.security.application_user.request.LoginRequest;
 import com.example.finmanagerbackend.security.application_user.request.SignupRequest;
@@ -36,12 +33,19 @@ public class AuthService {
     private final ApplicationUserRepository applicationUserRepository;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
+    // for demo user
+    private final FinTransactionGenerator finTransactionGenerator;
 
-    public AuthService( AuthenticationManager authenticationManager, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, JwtUtils jwtUtils ) {
+    public AuthService( AuthenticationManager authenticationManager,
+                        ApplicationUserRepository applicationUserRepository,
+                        PasswordEncoder encoder,
+                        JwtUtils jwtUtils,
+                        FinTransactionGenerator finTransactionGenerator ) {
         this.authenticationManager = authenticationManager;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.finTransactionGenerator = finTransactionGenerator;
     }
 
     // Method to get the currently logged-in user
@@ -99,25 +103,30 @@ public class AuthService {
             return ResponseEntity.badRequest().body( new MessageResponse( "Error: Email is already taken!" ) );
         }
 
-        // Create new user's account
+        // Create new user's account and save to DB
+        ApplicationUser user = createNewUser( signUpRequest );
+        applicationUserRepository.save( user );
+
+        return ResponseEntity.ok( new MessageResponse( "User registered successfully!" ) );
+    }
+
+    private ApplicationUser createNewUser( SignupRequest signUpRequest ) {
         ApplicationUser user = new ApplicationUser(
                 signUpRequest.getEmail(),
-                encoder.encode( signUpRequest.getPassword() ) );
+                encoder.encode( signUpRequest.getPassword() ),
+                signUpRequest.isDemo()
+                );
 
         // Set user roles based on the requested roles
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
-        if ( strRoles != null && strRoles.contains( "admin" ) ) {
-            roles.add( Role.ROLE_ADMIN );
-        }
+        if ( strRoles != null && strRoles.contains( "admin" ) ) roles.add( Role.ROLE_ADMIN );
 
         roles.add( Role.ROLE_USER );
-
         user.setRoles( roles );
-        applicationUserRepository.save( user );
 
-        return ResponseEntity.ok( new MessageResponse( "User registered successfully!" ) );
+        return user;
     }
 
     // Logs out a user and invalidates the JWT token.

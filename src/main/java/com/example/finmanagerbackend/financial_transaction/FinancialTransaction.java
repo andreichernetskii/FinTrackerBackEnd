@@ -10,7 +10,6 @@ import java.time.LocalDate;
  * Entity representing financial transactions, including both incomes and expenses.
  */
 @Entity
-//@Table( name = "IncomeExpense" )
 public class FinancialTransaction {
     @Id
     @GeneratedValue

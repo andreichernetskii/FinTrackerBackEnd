@@ -19,7 +19,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // todo może jeszcze przerobić na zasoby
     // Endpoint for authenticating a user
     @PostMapping( "/signin" )
     public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest ) {

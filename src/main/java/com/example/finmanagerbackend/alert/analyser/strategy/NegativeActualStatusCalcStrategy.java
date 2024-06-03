@@ -11,7 +11,6 @@ public class NegativeActualStatusCalcStrategy implements ActualBalanceCalcStrate
     }
 
     // todo: zagłuszka
-    // todo: limit dlaczego tutaj?
     @Override
     public Double calcActualBalanceOfPeriod( Limit limit ) {
         return financialTransactionRepository.calculateAnnualBalance( null );

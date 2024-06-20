@@ -40,7 +40,7 @@ public class FinTransactionGenerator {
         for ( int i = 0; i < count; i++ ) {
             FinancialTransaction financialTransaction = new FinancialTransaction();
             // Set a random category using the commerce department from the Faker library
-            financialTransaction.setCategory( faker.commerce().department() );
+            financialTransaction.setCategory( faker.commerce().department().split( "," )[0].split( " " )[0] );
             // Set the operation type to EXPENSE
             financialTransaction.setFinancialTransactionType(
                     random.nextBoolean() ? FinancialTransactionType.EXPENSE : FinancialTransactionType.INCOME

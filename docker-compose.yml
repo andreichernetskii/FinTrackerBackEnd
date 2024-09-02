@@ -2,19 +2,20 @@ version: '3.8'
 services:
   client-frontend:
     image: orcxus/fin_man_front_end:latest
-#    restart: always
     ports:
       - '8081:8081'
+    networks:
+      - finman-inner-network
 
   client-backend:
     image: orcxus/fin_man_back_end:latest
-    ports:
-      - "8080:8080"
     depends_on:
       - service-db
     environment:
       - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/db2
+    networks:
+      - finman-inner-network
 
   service-db:
     image: postgres:14.7-alpine
@@ -24,27 +25,13 @@ services:
     volumes:
         - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
         - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     restart: unless-stopped
-
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4:7
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "books_db" ]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - finman-inner-network
 
 volumes:
   db-data:
   pgadmin-data:
+
+networks:
+  finman-inner-network:

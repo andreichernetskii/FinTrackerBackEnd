@@ -68,8 +68,8 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :monthParam )
-            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM :monthParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM CAST( :monthParam AS DATE) )
+            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM CAST( :monthParam AS DATE) )
             """ )
     Double calculateMonthExpenses( @Param( "monthParam" ) LocalDate month );
 
@@ -78,7 +78,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction  financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :yearParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM CAST( :yearParam AS DATE) )
             """ )
     Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
 
@@ -87,9 +87,9 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :dayParam )
-            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM :dayParam )
-            AND EXTRACT( DAY FROM financialTransaction.date ) = EXTRACT( DAY FROM :dayParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM CAST( :dayParam AS DATE) )
+            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM :CAST( :dayParam AS DATE) )
+            AND EXTRACT( DAY FROM financialTransaction.date ) = EXTRACT( DAY FROM :CAST( :dayParam AS DATE) )
             """ )
     Double calculateDayExpenses( @Param( "dayParam" ) LocalDate day );
 
@@ -98,8 +98,8 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND ( :firstWeekDayParam IS NULL OR financialTransaction.date >= :firstWeekDayParam) 
-            AND ( :lastWeekDayParam IS NULL OR financialTransaction.date <= :lastWeekDayParam)
+            AND ( :firstWeekDayParam IS NULL OR financialTransaction.date >= CAST( :firstWeekDayParam AS DATE)) 
+            AND ( :lastWeekDayParam IS NULL OR financialTransaction.date <= CAST( :lastWeekDayParam AS DATE ))
             """ )
     Double calculateWeekExpenses( @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,
                                   @Param( "lastWeekDayParam" ) LocalDate lastWeekDay );

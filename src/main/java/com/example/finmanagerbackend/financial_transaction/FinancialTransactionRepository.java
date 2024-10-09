@@ -49,7 +49,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
                                              @Param( "categoryParam" ) String category );
 
     // Default method to calculate the annual balance without specifying criteria.
-    default Double calculateAnnualBalance( Long accountId) {
+    default Double calculateAnnualBalance( Long accountId ) {
         return calculateAnnualBalanceByCriteria( accountId, null, null, null, null );
     }
 
@@ -68,8 +68,8 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND YEAR( financialTransaction.date ) = YEAR( :monthParam )
-            AND MONTH( financialTransaction.date ) = MONTH( :monthParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :monthParam )
+            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM :monthParam )
             """ )
     Double calculateMonthExpenses( @Param( "monthParam" ) LocalDate month );
 
@@ -78,7 +78,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction  financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND YEAR( financialTransaction.date ) = YEAR( :yearParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :yearParam )
             """ )
     Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
 
@@ -87,9 +87,9 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( financialTransaction.amount )
             FROM FinancialTransaction financialTransaction
             WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-            AND YEAR( financialTransaction.date ) = YEAR( :dayParam )
-            AND MONTH( financialTransaction.date ) = MONTH( :dayParam )
-            AND DAY( financialTransaction.date ) = DAY( :dayParam )
+            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM :dayParam )
+            AND EXTRACT( MONTH FROM financialTransaction.date ) = EXTRACT( MONTH FROM :dayParam )
+            AND EXTRACT( DAY FROM financialTransaction.date ) = EXTRACT( DAY FROM :dayParam )
             """ )
     Double calculateDayExpenses( @Param( "dayParam" ) LocalDate day );
 
@@ -118,6 +118,6 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT COUNT(*)
             FROM FinancialTransaction operation 
             WHERE operation.account.id = :accountId
-            """)
+            """ )
     Integer countByAccountId( @Param( "accountId" ) Long accountId );
 }

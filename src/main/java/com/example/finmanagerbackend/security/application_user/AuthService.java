@@ -7,6 +7,7 @@ import com.example.finmanagerbackend.security.application_user.request.SignupReq
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import com.example.finmanagerbackend.security.application_user.response.UserInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Service for handling authentication-related logic
  */
+@Log4j
 @Service
 public class AuthService {
     private final AuthenticationManager authenticationManager;
@@ -88,6 +90,8 @@ public class AuthService {
                 .stream()
                 .map( item -> item.getAuthority() )
                 .collect( Collectors.toList() );
+
+        log.info("Generated JWT: " + jwtCookie.toString());
 
         // Build and return the response containing JWT token and user information
         return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, jwtCookie.toString() )

@@ -91,7 +91,7 @@ public class AuthService {
                 .map( item -> item.getAuthority() )
                 .collect( Collectors.toList() );
 
-        log.info("Generated JWT: " + jwtCookie.toString());
+        log.debug("Generated JWT: " + jwtCookie.toString());
 
         // Build and return the response containing JWT token and user information
         return ResponseEntity.ok().header( HttpHeaders.SET_COOKIE, jwtCookie.toString() )

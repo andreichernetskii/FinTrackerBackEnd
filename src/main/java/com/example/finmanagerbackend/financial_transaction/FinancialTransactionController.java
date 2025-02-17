@@ -1,9 +1,11 @@
 package com.example.finmanagerbackend.financial_transaction;
 
+import com.example.finmanagerbackend.dto.FilterParameters;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Api Controller: This class serves as a controller for handling income and expense operations through API endpoints.
@@ -43,17 +45,24 @@ public class FinancialTransactionController {
                                                              @RequestParam( name = "financialTransactionType", required = false ) FinancialTransactionType financialTransactionType,
                                                              @RequestParam( name = "category", required = false ) String category ) {
 
-        List<FinancialTransaction> list = financialTransactionService.getOperationsByCriteria(
+            List<FinancialTransaction> result = financialTransactionService.getOperationsByCriteria(
                 year,
                 month,
                 financialTransactionType,
                 category );
 
-        return list;
+        return result;
     }
 
+    // Endpoint to retrieve a list of income and expense operations based on specified criteria.
+//    @PostMapping( "/all" )
+//    public List<FinancialTransaction> getOperationsOfPeriod(@RequestBody(required = false) FilterParameters filterParameters) {
+//
+//        return financialTransactionService.getOperationsByCriteria(filterParameters );
+//    }
+
     // Endpoint to retrieve the annual balance based on specified criteria.
-    @GetMapping( "/annual" )
+//    @GetMapping( "/annual" )
     public Double getAnnualBalance( @RequestParam( name = "year", required = false ) Integer year,
                                     @RequestParam( name = "month", required = false ) Integer month,
                                     @RequestParam( name = "financialTransactionType", required = false ) FinancialTransactionType financialTransactionType,
@@ -61,6 +70,13 @@ public class FinancialTransactionController {
 
         Double totalAmount = financialTransactionService.getAnnualBalance( year, month, financialTransactionType, category );
         return totalAmount;
+    }
+
+    // Endpoint to retrieve the annual balance based on specified criteria.
+    @PostMapping( "/annual" )
+    public Double getAnnualBalance(@RequestBody FilterParameters filterParameters) {
+
+        return financialTransactionService.getAnnualBalance(filterParameters);
     }
 
     // Endpoint to retrieve a list of categories.
@@ -71,6 +87,6 @@ public class FinancialTransactionController {
 
     @GetMapping("/types")
     public List<String> getTransactionTypes() {
-        return financialTransactionService.getTransactionTypes();
+        return financialTransactionService.getTransactionTypes().join();
     }
 }

@@ -2,14 +2,17 @@ package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
+import com.example.finmanagerbackend.dto.FilterParameters;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Service class for managing financial transactions.
@@ -104,38 +107,93 @@ public class FinancialTransactionService {
         return financialTransactionRepository.calculateAnnualBalanceByCriteria( account.getId(), year, month, financialTransactionType, category );
     }
 
+    public Double getAnnualBalance(FilterParameters filter) {
+
+        return getAnnualBalance(filter, accountService.getAccount().getId()).join();
+    }
+
+    @Async
+    public CompletableFuture<Double> getAnnualBalance(FilterParameters filter, Long accountId) {
+
+        System.out.println("!!!!!!!!!!!!!!!getAnnualBalance method in " + Thread.currentThread());
+
+
+        return CompletableFuture.completedFuture(financialTransactionRepository.calculateAnnualBalanceByCriteria(
+                accountId,
+                (isEmpty(filter.getYear())) ? null : Integer.parseInt(filter.getYear()),
+                (isEmpty(filter.getMonth())) ? null : Integer.parseInt(filter.getMonth()),
+                (isEmpty(filter.getFinancialTransactionType())) ? null : FinancialTransactionType.fromString(filter.getFinancialTransactionType()),
+                (isEmpty(filter.getCategory())) ? null : filter.getCategory()
+                ));
+    }
+
     // Method to retrieve financial transactions based on specified criteria.
-    public List<FinancialTransaction> getOperationsByCriteria( Integer year,
+    @Async
+    public CompletableFuture<List<FinancialTransaction>> getOperationsByCriteriaInner( Integer year,
                                                                Integer month,
                                                                FinancialTransactionType financialTransactionType,
-                                                               String category ) {
+                                                               String category,
+                                                               Long accountId) {
+
+        return CompletableFuture.completedFuture(financialTransactionRepository.findOperationsByCriteria(
+                accountId,
+                year,
+                month,
+                financialTransactionType,
+                category ));
+    }
+    // Method to retrieve a list of categories for the current account.
+
+    public List<FinancialTransaction> getOperationsByCriteria(Integer year,
+                                                              Integer month,
+                                                              FinancialTransactionType financialTransactionType,
+                                                              String category) {
 
         Account account = accountService.getAccount();
 
-        // generate table of random transactions for showcase if user is demo and his transactions table is empty
         if ( account.isDemo() && financialTransactionRepository.countByAccountId( account.getId() ) == 0 ) {
             finTransactionGenerator.createRandomExpenses( account );
         }
 
-        List<FinancialTransaction> list = financialTransactionRepository.findOperationsByCriteria(
-                account.getId(),
-                year,
-                month,
-                financialTransactionType,
-                category );
-
-        return list;
+        return getOperationsByCriteriaInner(year, month, financialTransactionType, category, account.getId()).join();
     }
 
-    // Method to retrieve a list of categories for the current account.
+    @Async
+    public CompletableFuture<List<FinancialTransaction>> getOperationsByCriteria(FilterParameters filter, Long accountId) {
+
+        System.out.println("!!!!!!!!!!!!!! getOperationsByCriteria method in " + Thread.currentThread());
+
+
+        return CompletableFuture.completedFuture(financialTransactionRepository.findOperationsByCriteria(
+                accountId,
+                (isEmpty(filter.getYear())) ? null : Integer.parseInt(filter.getYear()),
+                (isEmpty(filter.getMonth())) ? null : Integer.parseInt(filter.getMonth()),
+                (isEmpty(filter.getFinancialTransactionType())) ? null : FinancialTransactionType.fromString(filter.getFinancialTransactionType()),
+                (isEmpty(filter.getCategory())) ? null : filter.getCategory() ));
+
+    }
+
     public List<String> getCategories() {
-        Account account = accountService.getAccount();
-        return financialTransactionRepository.getCategories( account.getId() );
+
+        return getCategories(accountService.getAccount().getId()).join();
     }
 
-    public List<String> getTransactionTypes() {
-        return Arrays.stream( FinancialTransactionType.values() )
+
+    @Async
+    public CompletableFuture<List<String>> getCategories(Long accountId) {
+
+        return CompletableFuture.completedFuture(financialTransactionRepository.getCategories( accountId ));
+    }
+
+    @Async
+    public CompletableFuture<List<String>> getTransactionTypes() {
+
+        return CompletableFuture.completedFuture(Arrays.stream( FinancialTransactionType.values() )
                 .map( Enum::toString )
-                .toList();
+                .toList());
+    }
+
+    private boolean isEmpty(Object obj) {
+        return obj == null || obj == "";
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Controller class for handling requests related to limits.
@@ -38,12 +39,12 @@ public class LimitController {
     // Gets a list of all limits.
     @GetMapping( "/" )
     public List<Limit> getLimits() {
-        return limitService.getLimits();
+        return limitService.getLimits().join();
     }
 
     // Gets a list of available limit types.
     @GetMapping( "/types" )
     public List<String> getLimitTypes() {
-        return limitService.getLimitTypes();
+        return limitService.getLimitTypes().join();
     }
 }

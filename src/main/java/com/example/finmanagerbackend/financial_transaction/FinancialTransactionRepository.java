@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.financial_transaction;
 
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,14 +18,16 @@ import java.util.Optional;
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransaction, Long> {
 
     // Custom query to find financial transactions based on specified criteria.
+    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = "account")
     @Query( """
-            SELECT financialTransaction 
-            FROM FinancialTransaction financialTransaction
-            WHERE  financialTransaction.account.id = :accountId
-            AND ( :yearParam IS NULL OR YEAR( financialTransaction.date ) = :yearParam ) 
-            AND ( :monthParam IS NULL OR MONTH( financialTransaction.date ) = :monthParam ) 
-            AND ( :operationTypeParam IS NULL OR financialTransaction.financialTransactionType = :operationTypeParam) 
-            AND ( :categoryParam IS NULL OR financialTransaction.category = :categoryParam )
+            SELECT f
+            FROM FinancialTransaction f
+            JOIN FETCH f.account
+            WHERE  f.account.id = :accountId
+            AND ( :yearParam IS NULL OR YEAR( f.date ) = :yearParam ) 
+            AND ( :monthParam IS NULL OR MONTH( f.date ) = :monthParam ) 
+            AND ( :operationTypeParam IS NULL OR f.financialTransactionType = :operationTypeParam) 
+            AND ( :categoryParam IS NULL OR f.category = :categoryParam )
             """ )
     List<FinancialTransaction> findOperationsByCriteria( @Param( "accountId" ) Long accountId,
                                                          @Param( "yearParam" ) Integer year,
@@ -33,9 +36,10 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
                                                          @Param( "categoryParam" ) String category );
 
     // Custom query to calculate the annual balance based on specified criteria.
+    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = "account")
     @Query( """
             SELECT SUM( financialTransaction.amount ) 
-            FROM FinancialTransaction financialTransaction 
+            FROM FinancialTransaction financialTransaction
             WHERE  financialTransaction.account.id = :accountId 
             AND ( :yearParam IS NULL OR YEAR( financialTransaction.date ) = :yearParam ) 
             AND ( :monthParam IS NULL OR MONTH( financialTransaction.date ) = :monthParam ) 

@@ -54,29 +54,14 @@ public class FinancialTransactionController {
         return result;
     }
 
-    // Endpoint to retrieve a list of income and expense operations based on specified criteria.
-//    @PostMapping( "/all" )
-//    public List<FinancialTransaction> getOperationsOfPeriod(@RequestBody(required = false) FilterParameters filterParameters) {
-//
-//        return financialTransactionService.getOperationsByCriteria(filterParameters );
-//    }
-
     // Endpoint to retrieve the annual balance based on specified criteria.
-//    @GetMapping( "/annual" )
+    @GetMapping( "/annual" )
     public Double getAnnualBalance( @RequestParam( name = "year", required = false ) Integer year,
                                     @RequestParam( name = "month", required = false ) Integer month,
                                     @RequestParam( name = "financialTransactionType", required = false ) FinancialTransactionType financialTransactionType,
                                     @RequestParam( name = "category", required = false ) String category ) {
 
-        Double totalAmount = financialTransactionService.getAnnualBalance( year, month, financialTransactionType, category );
-        return totalAmount;
-    }
-
-    // Endpoint to retrieve the annual balance based on specified criteria.
-    @PostMapping( "/annual" )
-    public Double getAnnualBalance(@RequestBody FilterParameters filterParameters) {
-
-        return financialTransactionService.getAnnualBalance(filterParameters);
+        return financialTransactionService.getAnnualBalance( year, month, financialTransactionType, category );
     }
 
     // Endpoint to retrieve a list of categories.
@@ -87,6 +72,6 @@ public class FinancialTransactionController {
 
     @GetMapping("/types")
     public List<String> getTransactionTypes() {
-        return financialTransactionService.getTransactionTypes().join();
+        return financialTransactionService.getTransactionTypes();
     }
 }

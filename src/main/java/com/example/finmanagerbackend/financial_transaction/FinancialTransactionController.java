@@ -1,11 +1,9 @@
 package com.example.finmanagerbackend.financial_transaction;
 
-import com.example.finmanagerbackend.dto.FilterParameters;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Api Controller: This class serves as a controller for handling income and expense operations through API endpoints.

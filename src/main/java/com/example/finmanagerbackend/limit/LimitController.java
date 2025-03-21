@@ -39,12 +39,12 @@ public class LimitController {
     // Gets a list of all limits.
     @GetMapping( "/" )
     public List<Limit> getLimits() {
-        return limitService.getLimits().join();
+        return limitService.getLimits();
     }
 
     // Gets a list of available limit types.
     @GetMapping( "/types" )
     public List<String> getLimitTypes() {
-        return limitService.getLimitTypes().join();
+        return limitService.getLimitTypes();
     }
 }

@@ -2,18 +2,17 @@ package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
-import com.example.finmanagerbackend.dto.FilterParameters;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service class for managing financial transactions.

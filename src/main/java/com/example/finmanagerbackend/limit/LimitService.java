@@ -8,14 +8,12 @@ import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityExcept
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Service class for managing Limit entities.
@@ -28,12 +26,13 @@ public class LimitService {
     private final AccountService accountService;
 
     // Deletes a specific limit.
+    // todo no ResponseEntity!
     @Transactional
     public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
 
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
 
-        if ( !optionalLimit.isPresent() ) {
+        if (optionalLimit.isEmpty()) {
             throw new NotFoundException( "This limit does not exist." );
         }
 
@@ -46,18 +45,13 @@ public class LimitService {
         return ResponseEntity.ok(new MessageResponse( "Limit successfully deleted" ) );
     }
 
-    public CompletableFuture<List<Limit>> getLimits() {
-
-        return getLimits(accountService.getAccount().getId());
-    }
-
     // Retrieves all limits associated with the current account except for the ZERO type.
-    @Async
-    public CompletableFuture<List<Limit>> getLimits(Long accountId) {    // +
+    public List<Limit> getLimits() {    // +
 
-        return CompletableFuture.completedFuture(limitRepository.getAllLimitsWithoutZero( accountId ));
+        return limitRepository.getAllLimitsWithoutZero( accountService.getAccount().getId() );
     }
 
+    // todo no ResponseEntity!
     // Adds a new limit.
     public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
 
@@ -76,6 +70,7 @@ public class LimitService {
         return ResponseEntity.ok(new MessageResponse( "Limit successfully added" ));
     }
 
+    // todo no ResponseEntity!
     // Updates an existing limit.
     public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
 
@@ -105,12 +100,11 @@ public class LimitService {
     }
 
     // Retrieves a list of available limit types.
-    @Async
-    public CompletableFuture<List<String>> getLimitTypes() {
+    public List<String> getLimitTypes() {
 
-        return CompletableFuture.completedFuture(Arrays.stream( LimitType.values() )
+        return Arrays.stream( LimitType.values() )
                 .map( Enum::toString )
-                .toList());
+                .toList();
     }
 
     // Creates a new Limit entity based on the given DTO.

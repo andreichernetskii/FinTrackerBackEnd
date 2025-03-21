@@ -8,6 +8,7 @@ import com.example.finmanagerbackend.financial_transaction.FinancialTransactionR
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionService;
 import com.example.finmanagerbackend.limit.Limit;
 import com.example.finmanagerbackend.limit.LimitRepository;
+import com.example.finmanagerbackend.limit.LimitService;
 import com.example.finmanagerbackend.limit.LimitType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,14 @@ import java.util.*;
 @Service
 public class FinAnalyser {
 
-    private final FinancialTransactionRepository financialTransactionRepository;
     private final FinancialTransactionService financialTransactionService;
-    private final LimitRepository limitRepository;
-    private final AccountService accountService;
+    private final LimitService limitService;
     private ActualBalanceCalcStrategy strategy;
 
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
 
-        Account account = accountService.getAccount();
-        List<Limit> limitsList = limitRepository.getAllLimitsWithoutZero( account.getId() );
+        List<Limit> limitsList = limitService.getLimits();
         List<AlertDTO> alerts = new ArrayList<>();
 
         // Iterate through all limits to check if they have been exceeded

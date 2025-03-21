@@ -5,9 +5,11 @@ import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.alert.AlertDTO;
 import com.example.finmanagerbackend.alert.analyser.strategy.*;
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionService;
 import com.example.finmanagerbackend.limit.Limit;
 import com.example.finmanagerbackend.limit.LimitRepository;
 import com.example.finmanagerbackend.limit.LimitType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,19 +18,15 @@ import java.util.*;
 /**
  * Service class responsible for calculating financial statistics and generating alerts.
  */
+@RequiredArgsConstructor
 @Service
 public class FinAnalyser {
 
     private final FinancialTransactionRepository financialTransactionRepository;
+    private final FinancialTransactionService financialTransactionService;
     private final LimitRepository limitRepository;
     private final AccountService accountService;
     private ActualBalanceCalcStrategy strategy;
-
-    public FinAnalyser( FinancialTransactionRepository financialTransactionRepository, LimitRepository limitRepository, AccountService accountService ) {
-        this.financialTransactionRepository = financialTransactionRepository;
-        this.limitRepository = limitRepository;
-        this.accountService = accountService;
-    }
 
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
@@ -71,11 +69,11 @@ public class FinAnalyser {
     private void setStrategy( LimitType limitType ) {
 
         strategy = switch ( limitType ) {
-            case ZERO -> new NegativeActualStatusCalcStrategy( financialTransactionRepository );
-            case YEAR -> new YearActualBalanceCalcStrategy( financialTransactionRepository );
-            case MONTH -> new MonthActualBalanceCalcStrategy( financialTransactionRepository );
-            case WEEK -> new WeekActualBalanceCalcStrategy( financialTransactionRepository );
-            case DAY -> new DayActualBalanceCalcStrategy( financialTransactionRepository );
+            case ZERO -> new NegativeActualStatusCalcStrategy( financialTransactionService );
+            case YEAR -> new YearActualBalanceCalcStrategy( financialTransactionService );
+            case MONTH -> new MonthActualBalanceCalcStrategy( financialTransactionService );
+            case WEEK -> new WeekActualBalanceCalcStrategy( financialTransactionService );
+            case DAY -> new DayActualBalanceCalcStrategy( financialTransactionService );
             default -> throw new IllegalStateException();
         };
     }

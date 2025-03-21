@@ -21,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class FinancialTransactionService {
+
     private final FinancialTransactionRepository financialTransactionRepository;
     private final AccountService accountService;
     private final FinTransactionGenerator finTransactionGenerator;
@@ -140,5 +141,23 @@ public class FinancialTransactionService {
         return Arrays.stream( FinancialTransactionType.values() )
                 .map( Enum::toString )
                 .toList();
+    }
+
+    // todo: for all methods below should be an account check
+    public Double getYearExpenses(LocalDate now) {
+        return financialTransactionRepository.calculateYearExpenses(now);
+    }
+
+    public Double getMonthExpenses(LocalDate now) {
+        return financialTransactionRepository.calculateMonthExpenses(now);
+    }
+
+    public Double getWeekExpenses(LocalDate firstWeekDay, LocalDate lastWeekDay) {
+        return financialTransactionRepository.calculateWeekExpenses(firstWeekDay, lastWeekDay);
+    }
+
+
+    public Double getDayExpenses(LocalDate now) {
+        return financialTransactionRepository.calculateDayExpenses(now);
     }
 }

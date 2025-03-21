@@ -18,6 +18,7 @@ import java.util.*;
  */
 @Service
 public class FinAnalyser {
+
     private final FinancialTransactionRepository financialTransactionRepository;
     private final LimitRepository limitRepository;
     private final AccountService accountService;
@@ -31,6 +32,7 @@ public class FinAnalyser {
 
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
+
         Account account = accountService.getAccount();
         List<Limit> limitsList = limitRepository.getAllLimitsWithoutZero( account.getId() );
         List<AlertDTO> alerts = new ArrayList<>();
@@ -51,20 +53,9 @@ public class FinAnalyser {
         return alerts;
     }
 
-    // Method to set the strategy for calculating actual balance based on the limit type.
-    private void setStrategy( LimitType limitType ) {
-        strategy = switch ( limitType ) {
-            case ZERO -> new NegativeActualStatusCalcStrategy( financialTransactionRepository );
-            case YEAR -> new YearActualBalanceCalcStrategy( financialTransactionRepository );
-            case MONTH -> new MonthActualBalanceCalcStrategy( financialTransactionRepository );
-            case WEEK -> new WeekActualBalanceCalcStrategy( financialTransactionRepository );
-            case DAY -> new DayActualBalanceCalcStrategy( financialTransactionRepository );
-            default -> throw new IllegalStateException();
-        };
-    }
-
     // Method to calculate the discrepancy between the limit and actual balance.
     private BigDecimal calcDiscrepancy( Limit limit ) {
+
         setStrategy( limit.getLimitType() );
 
         Double actualBalanceOfLimitPeriod = calcActualLimitOfLimitPeriod( limit );
@@ -74,6 +65,19 @@ public class FinAnalyser {
                 : new BigDecimal( 0 );
 
         return actualBalance.subtract( limit.getLimitAmount() );
+    }
+
+    // Method to set the strategy for calculating actual balance based on the limit type.
+    private void setStrategy( LimitType limitType ) {
+
+        strategy = switch ( limitType ) {
+            case ZERO -> new NegativeActualStatusCalcStrategy( financialTransactionRepository );
+            case YEAR -> new YearActualBalanceCalcStrategy( financialTransactionRepository );
+            case MONTH -> new MonthActualBalanceCalcStrategy( financialTransactionRepository );
+            case WEEK -> new WeekActualBalanceCalcStrategy( financialTransactionRepository );
+            case DAY -> new DayActualBalanceCalcStrategy( financialTransactionRepository );
+            default -> throw new IllegalStateException();
+        };
     }
 
     // Method to calculate the actual balance of the limit period using the selected strategy.

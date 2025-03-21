@@ -7,6 +7,8 @@ import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,9 @@ public class LimitService {
 
     // Deletes a specific limit.
     // todo no ResponseEntity!
+
     @Transactional
+    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
     public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
 
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
@@ -46,6 +50,7 @@ public class LimitService {
     }
 
     // Retrieves all limits associated with the current account except for the ZERO type.
+    @Cacheable(value = "limits", key = "#accountService.getAccount().getId()")
     public List<Limit> getLimits() {    // +
 
         return limitRepository.getAllLimitsWithoutZero( accountService.getAccount().getId() );
@@ -53,6 +58,7 @@ public class LimitService {
 
     // todo no ResponseEntity!
     // Adds a new limit.
+    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
     public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
 
         Account account = accountService.getAccount();
@@ -72,6 +78,7 @@ public class LimitService {
 
     // todo no ResponseEntity!
     // Updates an existing limit.
+    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
     public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
 
         Account account = accountService.getAccount();

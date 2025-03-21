@@ -145,19 +145,18 @@ public class FinancialTransactionService {
 
     // todo: for all methods below should be an account check
     public Double getYearExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateYearExpenses(now);
+        return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now);
     }
 
     public Double getMonthExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateMonthExpenses(now);
+        return financialTransactionRepository.calculateMonthExpenses(accountService.getAccount().getId(), now);
     }
 
     public Double getWeekExpenses(LocalDate firstWeekDay, LocalDate lastWeekDay) {
-        return financialTransactionRepository.calculateWeekExpenses(firstWeekDay, lastWeekDay);
+        return financialTransactionRepository.calculateWeekExpenses(accountService.getAccount().getId(), firstWeekDay, lastWeekDay);
     }
 
-
     public Double getDayExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateDayExpenses(now);
+        return financialTransactionRepository.calculateDayExpenses(accountService.getAccount().getId(), now);
     }
 }

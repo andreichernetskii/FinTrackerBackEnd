@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Controller class for handling requests related to limits.
@@ -12,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping( "/api/v1/limits" )
 public class LimitController {
+
     private final LimitService limitService;
 
     public LimitController( LimitService limitService ) {

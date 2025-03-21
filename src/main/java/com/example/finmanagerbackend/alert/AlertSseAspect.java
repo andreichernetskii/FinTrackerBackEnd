@@ -15,5 +15,6 @@ public class AlertSseAspect {
     @After("@annotation(com.example.finmanagerbackend.global.annotations.ActivateAlertsSseSending)")
     public void sendSseEvent() {
         alertController.sendAlertsThroughSse();
+        System.out.println("Annotation is caught");
     }
 }

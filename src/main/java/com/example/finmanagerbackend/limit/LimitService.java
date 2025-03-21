@@ -50,7 +50,7 @@ public class LimitService {
     }
 
     // Retrieves all limits associated with the current account except for the ZERO type.
-    @Cacheable(value = "limits", key = "#accountService.getAccount().getId()")
+    @Cacheable(value = "limits", key = "@accountService.getAccount().getId()")
     public List<Limit> getLimits() {    // +
 
         return limitRepository.getAllLimitsWithoutZero( accountService.getAccount().getId() );

@@ -61,6 +61,7 @@ public class AlertController {
         emitters.forEach(emitter -> {
             try {
                 emitter.send(alertService.showAllAlerts());
+                System.out.println("Sended: " + alertService.showAllAlerts().get(0));
             } catch (IOException e) {
                 deadEmitters.add(emitter);
             }

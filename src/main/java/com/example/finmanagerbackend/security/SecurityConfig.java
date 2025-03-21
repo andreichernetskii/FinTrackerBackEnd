@@ -78,9 +78,9 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:5173")); // Указываем фронтенд
+                    config.setAllowedOrigins(List.of("http://localhost:5173")); // setting up the frontend
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    config.setAllowCredentials(true); // Разрешаем куки и авторизацию через сессии
+                    config.setAllowCredentials(true); // allow cookies and authorisation through sessions
                     config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     return config;
                 }))

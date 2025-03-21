@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
+import com.example.finmanagerbackend.global.annotations.ActivateAlertsSseSending;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class FinancialTransactionService {
 
     // Method to add a new financial transaction based on DTO information.
     // todo: service shouldn't send a some response entities
+    @ActivateAlertsSseSending
     public ResponseEntity<?> addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -51,5 +52,20 @@ public class AlertController {
         }
 
         return emitter;
+    }
+
+    public void sendAlertsThroughSse() {
+
+        List<SseEmitter> deadEmitters = new ArrayList<>();
+
+        emitters.forEach(emitter -> {
+            try {
+                emitter.send(alertService.showAllAlerts());
+            } catch (IOException e) {
+                deadEmitters.add(emitter);
+            }
+        });
+
+        emitters.removeAll(deadEmitters);
     }
 }

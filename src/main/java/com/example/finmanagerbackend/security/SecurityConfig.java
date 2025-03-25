@@ -91,9 +91,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth ->
                         auth
 //                                .requestMatchers( mvcMatcherBuilder.pattern( "/console/**" ) ).permitAll()
-//                                .requestMatchers( mvcMatcherBuilder.pattern( "/api/auth/**" ) ).permitAll()
-//                                .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers( mvcMatcherBuilder.pattern( "/api/auth/**" ) ).permitAll()
+                                .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
                 );
 
         return http.build();

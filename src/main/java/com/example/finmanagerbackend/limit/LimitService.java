@@ -31,7 +31,7 @@ public class LimitService {
     // todo no ResponseEntity!
 
     @Transactional
-    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
+    @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
     public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
 
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
@@ -58,7 +58,7 @@ public class LimitService {
 
     // todo no ResponseEntity!
     // Adds a new limit.
-    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
+    @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
     public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
 
         Account account = accountService.getAccount();
@@ -78,7 +78,7 @@ public class LimitService {
 
     // todo no ResponseEntity!
     // Updates an existing limit.
-    @CacheEvict(value = "limits", key = "#accountService.getAccount().getId()")
+    @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
     public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
 
         Account account = accountService.getAccount();

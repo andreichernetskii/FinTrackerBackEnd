@@ -58,7 +58,8 @@ public class JwtUtils {
     // return Cookie with null value (used for clean Cookie)
     public ResponseCookie getCleanJwtCookie() {
         return ResponseCookie.from( jwtCookie, null )
-                .path( "/api" )
+                .path( "/" )
+                .maxAge(0)
                 .build();
     }
 

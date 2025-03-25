@@ -1,6 +1,8 @@
 package com.example.finmanagerbackend.alert;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +30,8 @@ public class AlertController {
         return alertService.showAllAlerts();
     }
 
-    @GetMapping("/stream")
-    public SseEmitter streamAlerts() {
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamAlerts(@CookieValue("token") String token) {
 
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);    // Long-lived connection
 
@@ -46,6 +48,8 @@ public class AlertController {
                     .name("connected")
                     .data("Connected to alerts stream")
             );
+            sendAlertsThroughSse();
+
         } catch (IOException e) {
             emitter.complete();
             emitters.remove(emitter);

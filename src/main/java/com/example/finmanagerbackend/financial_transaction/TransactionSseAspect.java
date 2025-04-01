@@ -25,6 +25,5 @@ public class TransactionSseAspect {
                         .data(transactionService.getAllTransactionsOfAccount())
                         .build()
         );
-        System.out.println("transactions sent");
     }
 }

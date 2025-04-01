@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
+import com.example.finmanagerbackend.global.annotations.SendLimits;
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
@@ -32,6 +33,7 @@ public class LimitService {
 
     @Transactional
     @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
+    @SendLimits
     public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
 
         Optional<Limit> optionalLimit = limitRepository.findById( limitId );
@@ -59,6 +61,7 @@ public class LimitService {
     // todo no ResponseEntity!
     // Adds a new limit.
     @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
+    @SendLimits
     public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
 
         Account account = accountService.getAccount();
@@ -79,6 +82,7 @@ public class LimitService {
     // todo no ResponseEntity!
     // Updates an existing limit.
     @CacheEvict(value = "limits", key = "@accountService.getAccount().getId()")
+    @SendLimits
     public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
 
         Account account = accountService.getAccount();

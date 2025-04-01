@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.alert;
 
 import com.example.finmanagerbackend.sse.SseEvent;
+import com.example.finmanagerbackend.sse.SseEventType;
 import com.example.finmanagerbackend.sse.SseService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.After;
@@ -22,7 +23,7 @@ public class AlertSseAspect {
     public void sendSseEvent() {
         sseService.sendData(
                 SseEvent.<List<AlertDTO>>builder()
-                        .eventType("alerts")
+                        .eventType(SseEventType.ALERTS_ALL)
                         .data(alertService.showAllAlerts())
                         .build()
         );

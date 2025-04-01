@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class SseEvent<T> {
 
-    private String eventType;
+    private SseEventType eventType;
     private T data;
 }

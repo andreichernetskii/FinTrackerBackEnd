@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.sse.SseEvent;
+import com.example.finmanagerbackend.sse.SseEventType;
 import com.example.finmanagerbackend.sse.SseService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.After;
@@ -21,7 +22,7 @@ public class TransactionSseAspect {
     public void sendAllTransactionsOfAccount() {
         sseService.sendData(
                 SseEvent.<List<FinancialTransaction>>builder()
-                        .eventType("transactions")
+                        .eventType(SseEventType.TRANSACTIONS_ALL)
                         .data(transactionService.getAllTransactionsOfAccount())
                         .build()
         );

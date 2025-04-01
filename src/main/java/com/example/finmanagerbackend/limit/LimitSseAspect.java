@@ -1,6 +1,7 @@
 package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.sse.SseEvent;
+import com.example.finmanagerbackend.sse.SseEventType;
 import com.example.finmanagerbackend.sse.SseService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,7 +22,7 @@ public class LimitSseAspect {
     public void sendAllLimitsOfAccount() {
         sseService.sendData(
                 SseEvent.<List<Limit>>builder()
-                        .eventType("limits")
+                        .eventType(SseEventType.LIMITS_ALL)
                         .data(limitService.getLimits())
                         .build()
         );

@@ -45,7 +45,7 @@ public class FinancialTransactionServiceTest {
     }
 
     @Test
-    public void getOperationsTest_SuccessfulShownOperations() {
+    public void getOperationsTest_SuccessfulShownAllTransactionsOfAccount() {
         List<FinancialTransaction> expectedIncomeExpens = new ArrayList<>();
         expectedIncomeExpens.add(
                 new FinancialTransaction(
@@ -55,7 +55,7 @@ public class FinancialTransactionServiceTest {
                     LocalDate.now() ) );
         when( financialTransactionRepository.findAll() ).thenReturn( expectedIncomeExpens );
 
-        List<FinancialTransaction> actualIncomeExpens = financialTransactionService.getOperations();
+        List<FinancialTransaction> actualIncomeExpens = financialTransactionService.getAllTransactionsOfAccount();
 
         verify( financialTransactionRepository ).findAll();
         assertNotNull( actualIncomeExpens );

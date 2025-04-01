@@ -2,7 +2,8 @@ package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
-import com.example.finmanagerbackend.global.annotations.ActivateAlertsSseSending;
+import com.example.finmanagerbackend.global.annotations.SendAlerts;
+import com.example.finmanagerbackend.global.annotations.SendTransactions;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class FinancialTransactionService {
 
     // Method to add a new financial transaction based on DTO information.
     // todo: service shouldn't send a some response entities
-    @ActivateAlertsSseSending
+    @SendTransactions
+    @SendAlerts
     public ResponseEntity<?> addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
@@ -54,13 +56,14 @@ public class FinancialTransactionService {
     }
 
     // Method to retrieve all financial transactions.
-    public List<FinancialTransaction> getOperations() {
+    public List<FinancialTransaction> getAllTransactionsOfAccount() {
 
-        return financialTransactionRepository.findAll();
+        return financialTransactionRepository.findAllTransactionsOfAccount(accountService.getAccount().getId());
     }
 
     // Method to update an existing financial transaction.
     // todo: service shouldn't send a some response entities
+    @SendTransactions
     public ResponseEntity<?> updateFinancialTransaction( FinancialTransaction financialTransaction ) {
 
         Account account = accountService.getAccount();
@@ -80,6 +83,7 @@ public class FinancialTransactionService {
 
     // todo: service shouldn't send a some response entities
     // Method to delete a financial transaction by its ID.
+    @SendTransactions
     public ResponseEntity<?> deleteFinancialTransaction( Long operationId ) {
 
         Account account = accountService.getAccount();

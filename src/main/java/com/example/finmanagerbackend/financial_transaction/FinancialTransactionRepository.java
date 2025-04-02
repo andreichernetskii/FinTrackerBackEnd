@@ -87,14 +87,6 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     Double calculateMonthExpenses( @Param( "accountId" ) Long accountId, @Param( "monthParam" ) LocalDate month );
 
     // Custom query to calculate yearly expenses for a given year.
-//    @Query( """
-//            SELECT SUM( financialTransaction.amount )
-//            FROM FinancialTransaction  financialTransaction
-//            WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-//            AND EXTRACT( YEAR FROM financialTransaction.date ) = EXTRACT( YEAR FROM CAST( :yearParam AS DATE) )
-//            """ )
-//    Double calculateYearExpenses( @Param( "yearParam" ) LocalDate year );
-
     @Query(value = "SELECT SUM( tr.amount ) " +
             "FROM financial_transaction  tr " +
             "WHERE tr.financial_transaction_type = 'EXPENSE' " +
@@ -105,14 +97,6 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
 
     // Custom query to calculate daily expenses for a given day.
-//    @Query( """
-//            SELECT SUM( financialTransaction.amount )
-//            FROM FinancialTransaction financialTransaction
-//            WHERE financialTransaction.financialTransactionType = 'EXPENSE'
-//            AND CAST( financialTransaction.date AS DATE ) = CAST( :dayParam AS DATE )
-//            """ )
-//    Double calculateDayExpenses( @Param( "accountId" ) Long accountId, @Param( "dayParam" ) LocalDate day );
-
     @Query(value = "SELECT SUM( tr.amount ) " +
             "FROM financial_transaction tr " +
             "WHERE tr.financial_transaction_type = 'EXPENSE' " +
@@ -125,9 +109,9 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query( value = "SELECT SUM(tr.amount) " +
             "FROM financial_transaction tr " +
             "WHERE tr.financial_transaction_type = 'EXPENSE' " +
-            "AND ( :firstWeekDayParam IS NULL OR tr.date >= CAST( :firstWeekDayParam AS DATE )) " +
-            "AND ( :lastWeekDayParam IS NULL OR tr.date <= CAST( :lastWeekDayParam AS DATE )) " +
-            "AND tr.account_id = :accountId;",
+            "AND ( tr.date >= CAST( :firstWeekDayParam AS DATE )) " +
+            "AND ( tr.date <= CAST( :lastWeekDayParam AS DATE )) " +
+            "AND tr.account_id = :accountId",
     nativeQuery = true)
     Double calculateWeekExpenses( @Param( "accountId" ) Long accountId,
                                   @Param( "firstWeekDayParam" ) LocalDate firstWeekDay,

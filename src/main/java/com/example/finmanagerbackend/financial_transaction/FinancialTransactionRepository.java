@@ -27,6 +27,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             AND ( :monthParam IS NULL OR MONTH( f.date ) = :monthParam )
             AND ( :operationTypeParam IS NULL OR f.financialTransactionType = :operationTypeParam)
             AND ( :categoryParam IS NULL OR f.category = :categoryParam )
+            ORDER BY f.date DESC
             """ )
     List<FinancialTransaction> findOperationsByCriteria( @Param( "accountId" ) Long accountId,
                                                          @Param( "yearParam" ) Integer year,
@@ -151,7 +152,8 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
     @Query(value = "SELECT * " +
             "FROM financial_transaction " +
-            "WHERE account_id = :accountId",
+            "WHERE account_id = :accountId " +
+            "ORDER BY date DESC",
     nativeQuery = true)
     List<FinancialTransaction> findAllTransactionsOfAccount(@Param( "accountId" ) Long accountId);
 }

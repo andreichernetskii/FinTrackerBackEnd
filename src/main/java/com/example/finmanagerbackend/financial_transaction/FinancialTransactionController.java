@@ -72,4 +72,14 @@ public class FinancialTransactionController {
     public List<String> getTransactionTypes() {
         return financialTransactionService.getTransactionTypes();
     }
+
+    @GetMapping("/years")
+    public List<Integer> getYears() {
+        return financialTransactionService.getYears();
+    }
+
+    @GetMapping("/months")
+    public List<Integer> getMonths() {
+        return financialTransactionService.getMonths();
+    }
 }

@@ -149,7 +149,6 @@ public class FinancialTransactionService {
                 .toList();
     }
 
-    // todo: for all methods below should be an account check
     public Double getYearExpenses(LocalDate now) {
         return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now);
     }
@@ -164,5 +163,13 @@ public class FinancialTransactionService {
 
     public Double getDayExpenses(LocalDate now) {
         return financialTransactionRepository.calculateDayExpenses(accountService.getAccount().getId(), now);
+    }
+
+    public List<Integer> getYears() {
+        return financialTransactionRepository.findDistinctYearsByAccountId(accountService.getAccount().getId());
+    }
+
+    public List<Integer> getMonths() {
+        return financialTransactionRepository.findDistinctMonthsByAccountIdAllTime(accountService.getAccount().getId());
     }
 }

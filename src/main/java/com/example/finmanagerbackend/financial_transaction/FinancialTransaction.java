@@ -14,7 +14,7 @@ public class FinancialTransaction {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( name = "account_id" ) // connection with account entity
     private Account account;
     @Enumerated( EnumType.STRING )

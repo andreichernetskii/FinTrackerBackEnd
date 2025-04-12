@@ -2,17 +2,11 @@ server:
   port: 8080
 
 # for deploy:
-#spring:
-#  datasource:
-#    url: ${SPRING_DATASOURCE_URL}
-#    username: ${SPRING_DATASOURCE_USERNAME}
-#    password: ${SPRING_DATASOURCE_PASSWORD}
-
 spring:
   datasource:
-    url: jdbc:postgresql://23.94.117.251:49537/db2
-    username: finman
-    password: tr21dwe4
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     properties:
       hibernate:

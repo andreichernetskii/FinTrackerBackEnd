@@ -78,8 +78,7 @@ public class SecurityConfig {
                     config.setAllowedOrigins(List.of("https://finman-project.duckdns.org")); // setting up the frontend
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowCredentials(true); // allow cookies and authorisation through sessions
-                    config.setAllowedHeaders(List.of("Content-Type", "Authorization", "Origin", "Accept", "X-Requested-With"));
-                    config.setMaxAge(3600L);
+                    config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     return config;
                 }))
                 .csrf( csrf -> csrf.disable() )

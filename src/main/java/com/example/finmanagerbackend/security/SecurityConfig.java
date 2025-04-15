@@ -40,6 +40,7 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandle;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     // Creates an instance of the AuthTokenFilter bean.
     @Bean
@@ -110,13 +111,13 @@ public class SecurityConfig {
 
     // Configures the security filter chain.
     @Bean
-    public SecurityFilterChain filterChain( HttpSecurity http, CorsConfigurationSource corsConfigurationSource ) throws Exception {
+    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
 
-        RequestMatcher h2ConsoleMatcher = new AntPathRequestMatcher("/h2-console/**");
+        RequestMatcher h2ConsoleMatcher = new AntPathRequestMatcher("/console/**");
         RequestMatcher authApiMatcher = new AntPathRequestMatcher("/api/auth/**");
 
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(this.corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)

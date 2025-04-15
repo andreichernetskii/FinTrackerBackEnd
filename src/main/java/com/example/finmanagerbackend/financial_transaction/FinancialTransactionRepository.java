@@ -102,7 +102,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT SUM( ft.amount )
             FROM FinancialTransaction ft
             WHERE ft.financialTransactionType = 'EXPENSE'
-            AND ft.date = :dayParam  -- Direct comparison assumes date field stores only date part
+            AND CAST( ft.date AS DATE ) = CAST( :dayParam AS DATE )
             AND ft.account.id = :accountId
             """)
     Double calculateDayExpenses(@Param("accountId") Long accountId, @Param("dayParam") LocalDate day);

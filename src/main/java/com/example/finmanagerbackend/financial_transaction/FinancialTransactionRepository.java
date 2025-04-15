@@ -22,7 +22,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT ft
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             AND ( :yearParam IS NULL OR YEAR(ft.date) = :yearParam )
             AND ( :monthParam IS NULL OR MONTH(ft.date) = :monthParam )
             AND ( :operationTypeParam IS NULL OR ft.financialTransactionType = :operationTypeParam )
@@ -41,7 +41,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT SUM( ft.amount )
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             AND ( :yearParam IS NULL OR YEAR(ft.date) = :yearParam )
             AND ( :monthParam IS NULL OR MONTH(ft.date) = :monthParam )
             AND ( :operationTypeParam IS NULL OR ft.financialTransactionType = :operationTypeParam )
@@ -63,7 +63,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT DISTINCT ft.category
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             AND ft.category IS NOT NULL
             ORDER BY ft.category
             """)
@@ -79,7 +79,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             WHERE ft.financialTransactionType = 'EXPENSE'
             AND YEAR(ft.date) = :yearParam
             AND MONTH(ft.date) = :monthParam
-            AND ft.accountId = :accountId
+            AND ft.account.id = :accountId
             """)
     Double calculateMonthExpenses(@Param("accountId") Long accountId, @Param("monthParam") LocalDate month);
 
@@ -91,7 +91,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             FROM FinancialTransaction ft
             WHERE ft.financialTransactionType = 'EXPENSE'
             AND YEAR(ft.date) = :yearParam
-            AND ft.accountId = :accountId
+            AND ft.account.id = :accountId
             """)
     Double calculateYearExpenses(@Param("accountId") Long accountId, @Param("yearParam") LocalDate year);
 
@@ -103,7 +103,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             FROM FinancialTransaction ft
             WHERE ft.financialTransactionType = 'EXPENSE'
             AND ft.date = :dayParam  -- Direct comparison assumes date field stores only date part
-            AND ft.accountId = :accountId
+            AND ft.account.id = :accountId
             """)
     Double calculateDayExpenses(@Param("accountId") Long accountId, @Param("dayParam") LocalDate day);
 
@@ -116,7 +116,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             WHERE ft.financialTransactionType = 'EXPENSE'
             AND ft.date >= :firstWeekDayParam
             AND ft.date <= :lastWeekDayParam
-            AND ft.accountId = :accountId
+            AND ft.account.id = :accountId
             """)
     Double calculateWeekExpenses(@Param("accountId") Long accountId,
                                  @Param("firstWeekDayParam") LocalDate firstWeekDay,
@@ -129,7 +129,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             SELECT ft
             FROM FinancialTransaction ft
             WHERE ft.id = :operationId
-            AND ft.accountId = :accountId
+            AND ft.account.id = :accountId
             """)
     Optional<FinancialTransaction> findByAccountIdPlusOperationId(@Param("operationId") Long operationId,
                                                                   @Param("accountId") Long accountId);
@@ -140,7 +140,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT COUNT(ft)
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             """)
     Long countByAccountId(@Param("accountId") Long accountId); // Changed return type to Long
 
@@ -150,7 +150,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT ft
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             ORDER BY ft.date DESC
             """)
     List<FinancialTransaction> findAllTransactionsOfAccount(@Param("accountId") Long accountId);
@@ -163,7 +163,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT DISTINCT YEAR(ft.date)
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             ORDER BY YEAR(ft.date) DESC
             """)
     List<Integer> findDistinctYearsByAccountId(@Param("accountId") Long accountId);
@@ -175,7 +175,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
     @Query("""
             SELECT DISTINCT MONTH(ft.date)
             FROM FinancialTransaction ft
-            WHERE ft.accountId = :accountId
+            WHERE ft.account.id = :accountId
             ORDER BY MONTH(ft.date) ASC
             """)
     List<Integer> findDistinctMonthsByAccountIdAllTime(@Param("accountId") Long accountId);

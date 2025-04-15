@@ -42,11 +42,11 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
     Double getLimitAmountByLimitType( @Param( "limitType" ) LimitType limitType );
 
     @Query( """
-          SELECT 
-          CASE WHEN COUNT( limitType ) > 0 
+          SELECT
+          CASE WHEN COUNT( limitType ) > 0
           THEN true ELSE false
-          END 
-          FROM Limit 
+          END
+          FROM Limit
           WHERE ( :accountId IS NULL OR account.id = :accountId )
           AND limitType = :limitType
           AND ( :category IS NULL OR category = :category )
@@ -59,8 +59,8 @@ public interface LimitRepository extends JpaRepository<Limit, Long> {
     // Deletes limits of a specific type.
     @Modifying
     @Query( """
-            DELETE 
-            FROM Limit lt 
+            DELETE
+            FROM Limit lt
             WHERE lt.limitType = :limitType
             """ )
     void deleteByLimitType( @Param( "limitType" ) LimitType limitType );

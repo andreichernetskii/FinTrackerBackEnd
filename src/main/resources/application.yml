@@ -1,8 +1,7 @@
   server:
     port: 8080
   
-  # for deploy:
-  spring:
+  spring:edits
     profiles:
       active: {SPRING_PROFILES_ACTIVE}
     jpa:

@@ -6,21 +6,27 @@ import com.example.finmanagerbackend.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -66,35 +72,65 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // --- CORS Configuration using Profiles ---
+
+    @Bean
+    @Profile("local")
+    public CorsConfigurationSource localCorsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+    @Bean
+    @Profile("prod")
+    public CorsConfigurationSource prodCorsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("https://finman-project.duckdns.org"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
     // Configures the security filter chain.
     @Bean
-    public SecurityFilterChain filterChain( HttpSecurity http, HandlerMappingIntrospector introspector ) throws Exception {
+    public SecurityFilterChain filterChain( HttpSecurity http, CorsConfigurationSource corsConfigurationSource ) throws Exception {
 
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder( introspector );
+        RequestMatcher h2ConsoleMatcher = new AntPathRequestMatcher("/h2-console/**");
+        RequestMatcher authApiMatcher = new AntPathRequestMatcher("/api/auth/**");
 
         http
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("https://finman-project.duckdns.org")); // setting up the frontend
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    config.setAllowCredentials(true); // allow cookies and authorisation through sessions
-                    config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-                    return config;
-                }))
-                .csrf( csrf -> csrf.disable() )
-//                .cors( cors -> cors.disable() )
-                .headers( headers -> headers.disable() )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                )
                 .exceptionHandling( exception -> exception.authenticationEntryPoint( unauthorizedHandle ) )
                 .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-                .authenticationProvider( authenticationProvider() )
                 .addFilterBefore( authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class )
                 .authorizeHttpRequests( auth ->
                         auth
-//                                .requestMatchers( mvcMatcherBuilder.pattern( "/console/**" ) ).permitAll()
-                                .requestMatchers( mvcMatcherBuilder.pattern( "/api/auth/**" ) ).permitAll()
+                                .requestMatchers(authApiMatcher).permitAll()
+                                .requestMatchers(h2ConsoleMatcher).permitAll()
                                 .anyRequest().authenticated()
-//                                .anyRequest().permitAll()
-                );
+                )
+                .authenticationProvider( authenticationProvider() );
 
         return http.build();
     }

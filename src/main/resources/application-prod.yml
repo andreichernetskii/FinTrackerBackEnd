@@ -1,0 +1,32 @@
+  spring:
+    config:
+      activate:
+        on-profile: prod
+
+    datasource:
+      url: ${SPRING_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
+      driverClassName: org.postgresql.Driver
+      # Hikari:
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        minimum-idle: 5
+        maximum-pool-size: 20
+        idle-timeout: 300000 # 5 минут
+        max-lifetime: 1800000 # 30 минут
+        connection-timeout: 30000 # 30 секунд
+
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      properties:
+        hibernate:
+          show_sql: false
+          hbm2ddl:
+            auto: validate
+#          c3p0:
+#            min_size: 5
+#            max_size: 20
+#            timeout: 300 # Секунды? Уточните единицы измерения для C3P0
+#            max_statements: 50
+#            idle_test_period: 3000

@@ -3,16 +3,11 @@
   
   # for deploy:
   spring:
-    datasource:
-      url: ${SPRING_DATASOURCE_URL}
-      username: ${SPRING_DATASOURCE_USERNAME}
-      password: ${SPRING_DATASOURCE_PASSWORD}
+    profiles:
+      active: local
     jpa:
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-          show_sql: false
-          hbm2ddl.auto: update
           format_sql: true
           default_batch_fetch_size: 100
           jdbc:
@@ -20,27 +15,13 @@
             fetch_size: 1000
           order_inserts: true
           order_updates: true
-          bath_versioned_data: true
-          c3p0:
-            min_size: 5
-            max_size: 20
-            timeout: 300
-            max_statements: 50
-            idle_test_period: 3000
+          batch_versioned_data: true
     logging:
       level:
         org.hibernate.SQL: OFF
         org.hibernate.type.descriptor.sql: OFF
         org.hibernate.engine.jdbc.batch: OFF
-  
-  # for local tests (don't forget to switch to H2 db in pom file):
-  #spring:
-  #  datasource:
-  #    url: jdbc:h2:file:./bd1
-  #  h2:
-  #    console:
-  #      enabled: true
-  #      path: /console
+  path: /console
   
   # app properties
   app:

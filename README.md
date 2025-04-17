@@ -26,42 +26,7 @@ The main goal of this project was to learn and apply current best practices in b
 *   **Alert Generation:** Creates alerts when spending limits are breached based on the analysis.
 *   **RESTful API:** Provides a clear API for frontend integration or direct interaction.
 
-## Technology Stack
-
-*   **Language:** Java 17
-*   **Framework:** Spring Boot 3.1.2
-    *   **Spring Web:** For building RESTful APIs.
-    *   **Spring Data JPA:** For data persistence with Hibernate as the provider.
-    *   **Spring Security:** For authentication (JWT) and authorization.
-*   **Database:**
-    *   PostgreSQL (Production/Deployment)
-    *   H2 Database (Development/Testing)
-*   **Build Tool:** Apache Maven
-*   **Testing:**
-    *   JUnit 5 (via `spring-boot-starter-test`)
-    *   Mockito (via `spring-boot-starter-test`)
-    *   Spring Test & Spring Security Test
-    *   **JavaFaker:** For generating realistic test data.
-*   **API & Data:**
-    *   **Jackson:** For JSON serialization/deserialization.
-    *   **Lombok:** To reduce boilerplate code (constructors, getters, setters, etc.).
-    *   **Log4j 1.x:** (Note: Consider migrating to SLF4j/Logback provided by default in Spring Boot)
-*   **Authentication:** **JJWT** (Java JWT) library
-*   **Containerization & Deployment:**
-    *   **Docker & Docker Compose**
-    *   Deployed on a VPS (Ubuntu 22.04)
-    *   **Traefik:** As a reverse proxy and for automatic HTTPS/SSL certificate management.
-
-## Deployment Overview
-
-The application is currently deployed using the following setup:
-
-*   **Platform:** Ubuntu 22.04 VPS
-*   **Containerization:** **Docker** and **Docker Compose** are used to manage the backend application container and the PostgreSQL database container.
-*   **Reverse Proxy:** **Traefik** handles incoming traffic, provides SSL termination (HTTPS) using Let's Encrypt certificates, and routes requests to the backend application container.
-*   **Frontend:** This backend serves a separate **Vue.js 3** frontend application (running in its own container).
-
-## Architecture
+   ## Architecture
 
 This application follows a **Layered Monolithic architecture**, primarily organized using a **Package-by-Feature** approach. This means the code is grouped by major functional areas (like `security`, `financial_transaction`, `limit`, `alert`). Within each feature package, a classic layered structure is generally applied.
 
@@ -122,3 +87,40 @@ G --> S
 H --> S
 P --> Q
 ```
+
+## Technology Stack
+
+*   **Language:** Java 17
+*   **Framework:** Spring Boot 3.1.2
+    *   **Spring Web:** For building RESTful APIs.
+    *   **Spring Data JPA:** For data persistence with Hibernate as the provider.
+    *   **Spring Security:** For authentication (JWT) and authorization.
+*   **Database:**
+    *   PostgreSQL (Production/Deployment)
+    *   H2 Database (Development/Testing)
+*   **Build Tool:** Apache Maven
+*   **Testing:**
+    *   JUnit 5 (via `spring-boot-starter-test`)
+    *   Mockito (via `spring-boot-starter-test`)
+    *   Spring Test & Spring Security Test
+    *   **JavaFaker:** For generating realistic test data.
+*   **API & Data:**
+    *   **Jackson:** For JSON serialization/deserialization.
+    *   **Lombok:** To reduce boilerplate code (constructors, getters, setters, etc.).
+    *   **Log4j 1.x:** (Note: Consider migrating to SLF4j/Logback provided by default in Spring Boot)
+*   **Authentication:** **JJWT** (Java JWT) library
+*   **Containerization & Deployment:**
+    *   **Docker & Docker Compose**
+    *   Deployed on a VPS (Ubuntu 22.04)
+    *   **Traefik:** As a reverse proxy and for automatic HTTPS/SSL certificate management.
+
+## Deployment Overview
+
+The application is currently deployed using the following setup:
+
+*   **Platform:** Ubuntu 22.04 VPS
+*   **Containerization:** **Docker** and **Docker Compose** are used to manage the backend application container and the PostgreSQL database container.
+*   **Reverse Proxy:** **Traefik** handles incoming traffic, provides SSL termination (HTTPS) using Let's Encrypt certificates, and routes requests to the backend application container.
+*   **Frontend:** This backend serves a separate **Vue.js 3** frontend application (running in its own container).
+
+

@@ -5,6 +5,18 @@
 [![Build Tool](https://img.shields.io/badge/Build-Maven-red.svg)](https://maven.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) <!-- Choose a license or remove this badge -->
 
+## Table of Contents
+
+*   [Overview](#overview)
+*   [Motivation](#motivation)
+*   [Key Features](#key-features)
+*   [Architecture](#architecture)
+*   [Technology Stack](#technology-stack)
+*   [Running Locally](#running-locally)
+*   [API Documentation](#api-documentation)
+*   [Deployment Overview](#deployment-overview)
+*   [License](#license)
+
 ## Overview
 
 This project is the backend component for a **Financial Tracker Web Application**. It's primarily a **portfolio project** designed to showcase proficiency in **Java**, **Spring Boot**, and modern backend development practices.
@@ -96,8 +108,8 @@ P --> Q
     *   **Spring Data JPA:** For data persistence with Hibernate as the provider.
     *   **Spring Security:** For authentication (JWT) and authorization.
 *   **Database:**
-    *   PostgreSQL (Production/Deployment)
-    *   H2 Database (Development/Testing)
+    *   PostgreSQL (Used by default in the `prod` profile for production)
+    *   H2 Database (Used by default in the `local` profile for development/testing)
 *   **Build Tool:** Apache Maven
 *   **Testing:**
     *   JUnit 5 (via `spring-boot-starter-test`)
@@ -113,6 +125,39 @@ P --> Q
     *   **Docker & Docker Compose**
     *   Deployed on a VPS (Ubuntu 22.04)
     *   **Traefik:** As a reverse proxy and for automatic HTTPS/SSL certificate management.
+ 
+## Running Locally
+
+Follow these steps to get the application running on your local machine.
+
+**Steps:**
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/andreichernetskii/FinTrackerBackEnd
+    ```
+
+2.  **Navigate to the project directory:**
+    Change your current directory to the root of the cloned project:
+    ```bash
+    cd FinTrackerBackEnd
+    ```
+
+3.  **Run the application using the `local` profile:**
+    Execute the following Maven command in your terminal. This command starts the Spring Boot application and explicitly activates the `local` profile. This profile is typically configured (check `src/main/resources/application-local.yml`) to use the **H2 database, storing data directly in local files**, which simplifies local setup as it doesn't require a separate database installation.
+    ```bash
+    mvn spring-boot:run -Dspring-boot.run.profiles=local
+    ```
+
+4.  **Access the application:**
+    Wait for the application to start. You should see log output in your terminal, including the Spring Boot banner and messages indicating the application is running (e.g., "Tomcat started on port(s): 8080").
+    Once started, the backend API should be accessible at `http://localhost:8080`. You can now test the API endpoints using tools like Postman, or curl.
+
+## API Documentation
+
+API documentation is available via Swagger UI once the application is running. You can access it at:
+
+`http://localhost:8080/swagger-ui.html`
 
 ## Deployment Overview
 
@@ -123,4 +168,6 @@ The application is currently deployed using the following setup:
 *   **Reverse Proxy:** **Traefik** handles incoming traffic, provides SSL termination (HTTPS) using Let's Encrypt certificates, and routes requests to the backend application container.
 *   **Frontend:** This backend serves a separate **Vue.js 3** frontend application (running in its own container).
 
+## License
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

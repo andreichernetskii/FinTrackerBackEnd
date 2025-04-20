@@ -13,6 +13,7 @@ import java.util.List;
 public class FinancialTransactionController {
     private final FinancialTransactionService financialTransactionService;
 
+    // todo: one standard for response without entity fin transaction
     // Constructor: Initializes the controller with an instance of IncomeExpenseService.
     public FinancialTransactionController( FinancialTransactionService financialTransactionService ) {
         this.financialTransactionService = financialTransactionService;

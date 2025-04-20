@@ -116,6 +116,11 @@ public class SecurityConfig {
         RequestMatcher h2ConsoleMatcher = new AntPathRequestMatcher("/console/**");
         RequestMatcher authApiMatcher = new AntPathRequestMatcher("/api/auth/**");
 
+        // Swagger matchers
+        RequestMatcher swaggerUiMatcher = new AntPathRequestMatcher("/swagger-ui/**");
+        RequestMatcher swaggerHtmlMatcher = new AntPathRequestMatcher("/swagger-ui.html");
+        RequestMatcher apiDocsMatcher = new AntPathRequestMatcher("/v3/api-docs/**");
+
         http
                 .cors(cors -> cors.configurationSource(this.corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
@@ -129,6 +134,9 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(authApiMatcher).permitAll()
                                 .requestMatchers(h2ConsoleMatcher).permitAll()
+                                .requestMatchers(swaggerUiMatcher).permitAll()
+                                .requestMatchers(swaggerHtmlMatcher).permitAll()
+                                .requestMatchers(apiDocsMatcher).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider( authenticationProvider() );

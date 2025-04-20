@@ -18,6 +18,7 @@ public class LimitController {
         this.limitService = limitService;
     }
 
+    // todo: one standard for response without entity limit
     // Adds a new limit.
     @PostMapping( "/" )
     public ResponseEntity<?> addNewLimit( @RequestBody LimitDTO limitDTO ) {

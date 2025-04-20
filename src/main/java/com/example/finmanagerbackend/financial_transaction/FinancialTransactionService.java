@@ -32,7 +32,7 @@ public class FinancialTransactionService {
     // todo: service shouldn't send a some response entities
     @SendTransactions
     @SendAlerts
-    public ResponseEntity<?> addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
+    public FinancialTransactionDTO addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
         // Adjust the amount based on the operation type (expense or income)
         BigDecimal amount =
@@ -50,9 +50,15 @@ public class FinancialTransactionService {
         Account account = accountService.getAccount();
         financialTransaction.setAccount( account );
 
-        financialTransactionRepository.save( financialTransaction );
+        FinancialTransaction savedTransaction = financialTransactionRepository.save( financialTransaction );
 
-        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully added." ) );
+        return FinancialTransactionDTO.builder()
+                .id(savedTransaction.getId())
+                .amount(savedTransaction.getAmount())
+                .category(savedTransaction.getCategory())
+                .financialTransactionType(savedTransaction.getFinancialTransactionType())
+                .date(savedTransaction.getDate().toString())
+                .build();
     }
 
     // Method to retrieve all financial transactions.

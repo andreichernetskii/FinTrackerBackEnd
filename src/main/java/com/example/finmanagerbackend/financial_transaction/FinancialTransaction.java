@@ -11,6 +11,7 @@ import java.time.LocalDate;
  */
 @Entity
 public class FinancialTransaction {
+
     @Id
     @GeneratedValue
     private Long id;

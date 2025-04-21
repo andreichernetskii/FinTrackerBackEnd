@@ -5,9 +5,7 @@ import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.global.annotations.SendAlerts;
 import com.example.finmanagerbackend.global.annotations.SendTransactions;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
-import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +27,6 @@ public class FinancialTransactionService {
     private final FinTransactionGenerator finTransactionGenerator;
 
     // Method to add a new financial transaction based on DTO information.
-    // todo: service shouldn't send a some response entities
     @SendTransactions
     @SendAlerts
     public FinancialTransactionDTO addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
@@ -68,29 +65,35 @@ public class FinancialTransactionService {
     }
 
     // Method to update an existing financial transaction.
-    // todo: service shouldn't send a some response entities
     @SendTransactions
-    public ResponseEntity<?> updateFinancialTransaction( FinancialTransaction financialTransaction ) {
+    public FinancialTransactionDTO updateFinancialTransaction( Long transactionId, FinancialTransactionDTO dto ) {
 
         Account account = accountService.getAccount();
 
-        Optional<FinancialTransaction> incomeExpenseOptional =
-                financialTransactionRepository.findByAccountIdPlusOperationId( financialTransaction.getId(), account.getId() );
+        FinancialTransaction existingTransaction =
+                financialTransactionRepository
+                        .findByAccountIdPlusOperationId( transactionId, account.getId() )
+                        .orElseThrow(() -> new NotFoundException( "Operation with ID: " + transactionId + " does not exist in the database!" ));
 
-        if (incomeExpenseOptional.isEmpty()) {
-            throw new NotFoundException( "Operation with ID: " + financialTransaction.getId() + " does not exist in the database!" );
-        }
+        existingTransaction.setFinancialTransactionType(dto.getFinancialTransactionType());
+        existingTransaction.setAmount(dto.getAmount());
+        existingTransaction.setDate(LocalDate.parse(dto.getDate()));
+        existingTransaction.setCategory(dto.getCategory());
 
-        financialTransaction.setAccount( account );
-        financialTransactionRepository.save( financialTransaction );
+        FinancialTransaction savedTransaction =  financialTransactionRepository.save( existingTransaction );
 
-        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully updated" ) );
+        return FinancialTransactionDTO.builder()
+                .id(savedTransaction.getId())
+                .amount(savedTransaction.getAmount())
+                .category(savedTransaction.getCategory())
+                .financialTransactionType(savedTransaction.getFinancialTransactionType())
+                .date(savedTransaction.getDate().toString())
+                .build();
     }
 
-    // todo: service shouldn't send a some response entities
     // Method to delete a financial transaction by its ID.
     @SendTransactions
-    public ResponseEntity<?> deleteFinancialTransaction( Long operationId ) {
+    public void deleteFinancialTransaction( Long operationId ) {
 
         Account account = accountService.getAccount();
 
@@ -102,8 +105,6 @@ public class FinancialTransactionService {
         }
 
         financialTransactionRepository.deleteById( operationId );
-
-        return ResponseEntity.ok( new MessageResponse( "Financial transaction successfully deleted" ) );
     }
 
     // Method to get the annual balance based on specified criteria.
@@ -122,7 +123,7 @@ public class FinancialTransactionService {
     }
 
     // Method to retrieve financial transactions based on specified criteria.
-    public List<FinancialTransaction> getOperationsByCriteria( Integer year,
+    public List<FinancialTransactionDTO> getOperationsByCriteria( Integer year,
                                                                Integer month,
                                                                FinancialTransactionType financialTransactionType,
                                                                String category ) {
@@ -134,13 +135,23 @@ public class FinancialTransactionService {
             finTransactionGenerator.createRandomExpenses( account );
         }
 
-        return financialTransactionRepository
+        List<FinancialTransaction> listEntity =  financialTransactionRepository
                 .findOperationsByCriteria(
                         account.getId(),
                         year,
                         month,
                         financialTransactionType,
                         category );
+
+        return listEntity.stream()
+                .map(entity -> FinancialTransactionDTO.builder()
+                        .id(entity.getId())
+                        .amount(entity.getAmount())
+                        .financialTransactionType(entity.getFinancialTransactionType())
+                        .category(entity.getCategory())
+                        .date(entity.getDate().toString())
+                        .build())
+                .toList();
     }
 
     public List<String> getCategories() {

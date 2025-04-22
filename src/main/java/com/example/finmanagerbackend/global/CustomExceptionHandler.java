@@ -18,7 +18,7 @@ import java.util.List;
  * Global exception handler for handling unchecked application exceptions.
  */
 @ControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ApiResponse<?>> handleValidationConflict(MethodArgumentNotValidException exception) {

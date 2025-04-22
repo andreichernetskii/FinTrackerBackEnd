@@ -15,9 +15,11 @@
     import org.springframework.web.bind.annotation.RestController;
 
     import java.util.List;
-    
+
     /**
-     * Api Controller: This class serves as a controller for handling income and expense operations through API endpoints.
+     * API Controller: This class serves as the controller for handling financial transaction operations
+     * (like income and expenses) via API endpoints. It also interacts with the AlertService
+     * to check for triggered financial alerts after data modifications.
      */
     @RestController
     @RequestMapping( path = "api/v1/transactions" )
@@ -25,12 +27,19 @@
 
         private final FinancialTransactionService financialTransactionService;
     
-        // Constructor: Initializes the controller with an instance of IncomeExpenseService.
         public FinancialTransactionController( FinancialTransactionService financialTransactionService ) {
             this.financialTransactionService = financialTransactionService;
         }
-    
-        // Endpoint to add a new income or expense operation.
+
+        /**
+         * Adds a new financial transaction based on the provided data.
+         * Checks for and returns any applicable alerts after the addition.
+         * Corresponds to the POST /api/v1/transactions/ endpoint.
+         *
+         * @param financialTransactionDTO The DTO containing the details of the transaction to be created. Must be valid.
+         * @return A ResponseEntity containing an ApiResponse with the created FinancialTransactionDTO,
+         * a list of triggered AlertResponses, and HTTP status CREATED.
+         */
         @PostMapping( "/" )
         public ResponseEntity<ApiResponse<FinancialTransactionDTO>> addNewFinancialTransaction(
                 @Valid @RequestBody FinancialTransactionDTO financialTransactionDTO ) {
@@ -45,7 +54,16 @@
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         }
 
-        // Endpoint to update an existing income or expense operation.
+        /**
+         * Updates an existing financial transaction identified by its ID.
+         * Checks for and returns any applicable alerts after the update.
+         * Corresponds to the PUT /api/v1/transactions/{transactionId} endpoint.
+         *
+         * @param transactionId The unique identifier of the transaction to update.
+         * @param financialTransactionDto The DTO containing the updated details for the transaction. Must be valid.
+         * @return A ResponseEntity containing an ApiResponse with the updated FinancialTransactionDTO,
+         * a list of triggered AlertResponses, and HTTP status OK.
+         */
         @PutMapping( "/{transactionId}" )
         public ResponseEntity<ApiResponse<FinancialTransactionDTO>> updateFinancialTransaction(
                 @PathVariable Long transactionId,
@@ -60,8 +78,16 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
-        // Endpoint to delete an income or expense operation based on the operationId.
+
+        /**
+         * Deletes a financial transaction identified by its ID.
+         * Checks for and returns any applicable alerts after the deletion.
+         * Corresponds to the DELETE /api/v1/transactions/{operationId} endpoint.
+         *
+         * @param operationId The unique identifier of the transaction to be deleted.
+         * @return A ResponseEntity containing an ApiResponse indicating success (no data),
+         * a list of triggered AlertResponses, and HTTP status OK.
+         */
         @DeleteMapping( "/{operationId}" )
         public ResponseEntity<ApiResponse<Void>> deleteFinancialTransaction( @PathVariable( "operationId" ) Long operationId ) {
 
@@ -73,8 +99,19 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
-        // Endpoint to retrieve a list of income and expense operations based on specified criteria.
+
+        /**
+         * Retrieves a list of financial transactions based on optional filter criteria.
+         * Corresponds to the GET /api/v1/transactions/ endpoint.
+         * Allows filtering by year, month, transaction type, and category.
+         * If no criteria are provided, it potentially returns all transactions (depends on service logic).
+         *
+         * @param year Optional filter criterion for the transaction year.
+         * @param month Optional filter criterion for the transaction month (1-12).
+         * @param financialTransactionType Optional filter criterion for the transaction type (e.g., INCOME, EXPENSE).
+         * @param category Optional filter criterion for the transaction category.
+         * @return A ResponseEntity containing an ApiResponse with a list of FinancialTransactionDTOs matching the criteria, and HTTP status OK.
+         */
         @GetMapping( "/" )
         public ResponseEntity<ApiResponse<List<FinancialTransactionDTO>>> getOperationsOfPeriod(
                 @RequestParam( name = "year", required = false ) Integer year,
@@ -95,8 +132,18 @@
     
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
-        // Endpoint to retrieve the annual balance based on specified criteria.
+
+        /**
+         * Calculates and returns the total balance for transactions matching optional filter criteria.
+         * Corresponds to the GET /api/v1/transactions/annual endpoint.
+         * Allows filtering by year, month, transaction type, and category to define the scope of the balance calculation.
+         *
+         * @param year Optional filter criterion for the transaction year.
+         * @param month Optional filter criterion for the transaction month (1-12).
+         * @param financialTransactionType Optional filter criterion for the transaction type (e.g., INCOME, EXPENSE).
+         * @param category Optional filter criterion for the transaction category.
+         * @return A ResponseEntity containing an ApiResponse with the calculated balance (Double) and HTTP status OK.
+         */
         @GetMapping( "/annual" )
         public ResponseEntity<ApiResponse<Double>> getAnnualBalance(
                 @RequestParam( name = "year", required = false ) Integer year,
@@ -113,8 +160,13 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
-        // Endpoint to retrieve a list of categories.
+
+        /**
+         * Retrieves a list of all unique transaction categories available for the account.
+         * Corresponds to the GET /api/v1/transactions/categories endpoint.
+         *
+         * @return A ResponseEntity containing an ApiResponse with a list of category names (String) and HTTP status OK.
+         */
         @GetMapping( "/categories" )
         public ResponseEntity<ApiResponse<List<String>>> getCategories() {
 
@@ -127,7 +179,13 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
+
+        /**
+         * Retrieves a list of all available financial transaction types (e.g., INCOME, EXPENSE).
+         * Corresponds to the GET /api/v1/transactions/types endpoint.
+         *
+         * @return A ResponseEntity containing an ApiResponse with a list of transaction type names (String) and HTTP status OK.
+         */
         @GetMapping("/types")
         public ResponseEntity<ApiResponse<List<String>>> getTransactionTypes() {
 
@@ -140,7 +198,13 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
+
+        /**
+         * Retrieves a list of years for which financial transaction records exist.
+         * Corresponds to the GET /api/v1/transactions/years endpoint.
+         *
+         * @return A ResponseEntity containing an ApiResponse with a list of years (Integer) and HTTP status OK.
+         */
         @GetMapping("/years")
         public ResponseEntity<ApiResponse<List<Integer>>> getYears() {
 
@@ -153,7 +217,13 @@
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
-    
+
+        /**
+         * Retrieves a list of months (typically 1-12) for which financial transaction records exist.
+         * Corresponds to the GET /api/v1/transactions/months endpoint.
+         *
+         * @return A ResponseEntity containing an ApiResponse with a list of relevant months (Integer) and HTTP status OK.
+         */
         @GetMapping("/months")
         public ResponseEntity<ApiResponse<List<Integer>>> getMonths() {
 

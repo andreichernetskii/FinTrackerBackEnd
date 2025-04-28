@@ -4,9 +4,9 @@ import com.example.finmanagerbackend.security.application_user.UserDetailsServic
 import com.example.finmanagerbackend.security.jwt.AuthEntryPointJwt;
 import com.example.finmanagerbackend.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,10 +24,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Security configuration class that defines security-related beans and settings.
@@ -41,6 +40,17 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandle;
     private final CorsConfigurationSource corsConfigurationSource;
+
+    @Value("${app.cors.allowed.origin}")
+    private String allowedOrigin;
+
+    @Value("${app.cors.allowed.methods}")
+    private String allowedMethods;
+
+    @Value("${app.cors.allowed.headers}")
+    private String allowedHeaders;
+
+
 
     // Creates an instance of the AuthTokenFilter bean.
     @Bean
@@ -73,42 +83,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // --- CORS Configuration using Profiles ---
-
-    @Bean
-    @Profile("local")
-    public CorsConfigurationSource localCorsConfigurationSource() {
-
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
-
-    @Bean
-    @Profile("prod")
-    public CorsConfigurationSource prodCorsConfigurationSource() {
-
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("https://finman-project.duckdns.org"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
-
     // Configures the security filter chain.
     @Bean
     public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
@@ -122,7 +96,17 @@ public class SecurityConfig {
         RequestMatcher apiDocsMatcher = new AntPathRequestMatcher("/v3/api-docs/**");
 
         http
-                .cors(cors -> cors.configurationSource(this.corsConfigurationSource))
+                .cors(cors -> cors.configurationSource( request -> {
+
+                    CorsConfiguration config = new CorsConfiguration();
+
+                    config.setAllowedOrigins(Collections.singletonList(allowedOrigin));
+                    config.setAllowedMethods(Arrays.asList(allowedMethods.split(",")));
+                    config.setAllowedHeaders(Arrays.asList(allowedHeaders.split(",")));
+                    config.setAllowCredentials(true);
+
+                    return config;
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)

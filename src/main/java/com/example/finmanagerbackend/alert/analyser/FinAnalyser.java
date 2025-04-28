@@ -1,20 +1,22 @@
 package com.example.finmanagerbackend.alert.analyser;
 
-import com.example.finmanagerbackend.account.Account;
-import com.example.finmanagerbackend.account.AccountService;
 import com.example.finmanagerbackend.alert.AlertDTO;
-import com.example.finmanagerbackend.alert.analyser.strategy.*;
-import com.example.finmanagerbackend.financial_transaction.FinancialTransactionRepository;
+import com.example.finmanagerbackend.alert.analyser.strategy.ActualBalanceCalcStrategy;
+import com.example.finmanagerbackend.alert.analyser.strategy.DayActualBalanceCalcStrategy;
+import com.example.finmanagerbackend.alert.analyser.strategy.MonthActualBalanceCalcStrategy;
+import com.example.finmanagerbackend.alert.analyser.strategy.NegativeActualStatusCalcStrategy;
+import com.example.finmanagerbackend.alert.analyser.strategy.WeekActualBalanceCalcStrategy;
+import com.example.finmanagerbackend.alert.analyser.strategy.YearActualBalanceCalcStrategy;
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionService;
-import com.example.finmanagerbackend.limit.Limit;
-import com.example.finmanagerbackend.limit.LimitRepository;
+import com.example.finmanagerbackend.limit.LimitDTO;
 import com.example.finmanagerbackend.limit.LimitService;
 import com.example.finmanagerbackend.limit.LimitType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class responsible for calculating financial statistics and generating alerts.
@@ -30,11 +32,11 @@ public class FinAnalyser {
     // Method to create alerts based on limits and financial statistics.
     public List<AlertDTO> createAlerts() {
 
-        List<Limit> limitsList = limitService.getLimits();
+        List<LimitDTO> limitsList = limitService.getLimits();
         List<AlertDTO> alerts = new ArrayList<>();
 
         // Iterate through all limits to check if they have been exceeded
-        for ( Limit limit : limitsList ) {
+        for ( LimitDTO limit : limitsList ) {
             if ( limit.getLimitAmount() == null ) continue;
 
             // Calculate the discrepancy between the limit and actual balance
@@ -50,7 +52,7 @@ public class FinAnalyser {
     }
 
     // Method to calculate the discrepancy between the limit and actual balance.
-    private BigDecimal calcDiscrepancy( Limit limit ) {
+    private BigDecimal calcDiscrepancy( LimitDTO limit ) {
 
         setStrategy( limit.getLimitType() );
 
@@ -77,12 +79,12 @@ public class FinAnalyser {
     }
 
     // Method to calculate the actual balance of the limit period using the selected strategy.
-    private Double calcActualLimitOfLimitPeriod( Limit limit ) {
+    private Double calcActualLimitOfLimitPeriod( LimitDTO limit ) {
         return strategy.calcActualBalanceOfPeriod( limit );
     }
 
     // Method to generate an alert message based on the limit and discrepancy.
-    public String generateAlertMessage( Limit limit, BigDecimal discrepancy ) {
+    public String generateAlertMessage( LimitDTO limit, BigDecimal discrepancy ) {
         return "!!! " + limit.getLimitType().getAlert()
                 + " Limit of " + limit.getLimitAmount()
                 + " has been exceeded by " + discrepancy.toPlainString();

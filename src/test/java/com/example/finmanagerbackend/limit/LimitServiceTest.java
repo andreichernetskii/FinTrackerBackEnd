@@ -42,12 +42,12 @@ public class LimitServiceTest {
         when( limit.getId() ).thenReturn( limitId );
         when( limitRepository.findById( limitId ) ).thenReturn( Optional.of( limit ) );
 
-        ResponseEntity<?> responseEntity = limitService.deleteLimit( limitId );
+        limitService.deleteLimit( limitId );
 
         // assert
         verify( limitRepository, times( 1 ) ).deleteById( limitId );
-        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
-        assertEquals( "Limit successfully deleted", ( ( MessageResponse ) responseEntity.getBody() ).getMessage() );
+//        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+//        assertEquals( "Limit successfully deleted", ( ( MessageResponse ) responseEntity.getBody() ).getMessage() );
     }
 
     @Test
@@ -61,7 +61,6 @@ public class LimitServiceTest {
     }
     //endregion
     //region get limit tests section
-    //todo: adapt tests to async
 //    @Test
 //    public void getLimitsTest_SuccessfulReturning() {
 //        Long accountId = 1L;
@@ -90,13 +89,14 @@ public class LimitServiceTest {
         when( accountService.getAccount() ).thenReturn( account );
 
         LimitDTO limitDTO = new LimitDTO(
+                1l,
                 LimitType.DAY,
                 new BigDecimal( 100 ),
                 "Category",
                 LocalDate.now()
         );
 
-        ResponseEntity<?> responseEntity = limitService.addLimit( limitDTO );
+        LimitDTO responseEntity = limitService.addLimit( limitDTO );
 
         ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass( Limit.class );
         // capturing saved object
@@ -110,7 +110,7 @@ public class LimitServiceTest {
         assertEquals( limitDTO.getCategory(), capturedLimit.getCategory() );
         assertEquals( limitDTO.getCreationDate(), capturedLimit.getCreationDate() );
 
-        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+//        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
 
         verify( accountService, times( 1 ) ).getAccount();
         verify( limitRepository, times( 1 ) ).save( any( Limit.class ) );
@@ -130,6 +130,7 @@ public class LimitServiceTest {
         );
 
         LimitDTO limitDto = new LimitDTO(
+                1l,
                 LimitType.DAY,
                 new BigDecimal( 100 ),
                 "Category",

@@ -31,7 +31,6 @@ public class FinancialTransactionService {
     @SendAlerts
     public FinancialTransactionDTO addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
-        // Adjust the amount based on the operation type (expense or income)
         BigDecimal amount =
                 ( financialTransactionDTO.getFinancialTransactionType() == FinancialTransactionType.EXPENSE )
                         ? financialTransactionDTO.getAmount().negate()

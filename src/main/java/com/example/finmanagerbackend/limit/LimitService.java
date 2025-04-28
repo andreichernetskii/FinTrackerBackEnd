@@ -2,6 +2,7 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
+import com.example.finmanagerbackend.financial_transaction.FinancialTransactionDTO;
 import com.example.finmanagerbackend.global.annotations.SendLimits;
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
@@ -26,88 +27,97 @@ public class LimitService {
     private final LimitRepository limitRepository;
     private final AccountService accountService;
 
-    // Deletes a specific limit.
-    // todo no ResponseEntity!
-
     @Transactional
     @SendLimits
-    public ResponseEntity<?> deleteLimit( Long limitId ) {  // +
+    public void deleteLimit( Long limitId ) {
 
-        Optional<Limit> optionalLimit = limitRepository.findById( limitId );
+        Limit existingLimit = limitRepository
+                .findById( limitId )
+                .orElseThrow(
+                        () -> new NotFoundException( "Limit with ID: " + limitId + " does not exist in the database!" )
+                );
 
-        if (optionalLimit.isEmpty()) {
-            throw new NotFoundException( "This limit does not exist." );
-        }
-
-        if ( optionalLimit.get().getLimitType() == LimitType.ZERO ) {
+        if ( existingLimit.getLimitType() == LimitType.ZERO ) {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
 
         limitRepository.deleteById( limitId );
-
-        return ResponseEntity.ok(new MessageResponse( "Limit successfully deleted" ) );
     }
 
-    // Retrieves all limits associated with the current account except for the ZERO type.
-    public List<Limit> getLimits() {    // +
+    public List<LimitDTO> getLimits() {
 
-        return limitRepository.getAllLimitsWithoutZero( accountService.getAccount().getId() );
+        List<Limit> listEntity =  limitRepository.getAllLimitsWithoutZero( accountService.getAccount().getId() );
+
+        return listEntity.stream()
+                .map(entity -> LimitDTO.builder()
+                        .id(entity.getId())
+                        .creationDate(entity.getCreationDate())
+                        .limitType(entity.getLimitType())
+                        .limitAmount(entity.getLimitAmount())
+                        .build())
+                .toList();
     }
 
-    // todo no ResponseEntity!
-    // Adds a new limit.
     @SendLimits
-    public ResponseEntity<?> addLimit( LimitDTO limitDTO ) {    // +
+    public LimitDTO addLimit( LimitDTO limitDTO ) {
 
         Account account = accountService.getAccount();
 
         Limit limit = createLimit( limitDTO );
         limit.setAccount( account );
 
-        // if limit exists (amount or amount with category) will be thrown the exception
         if ( isLimitExists( account, limit ) ) {
             throw new UnprocessableEntityException( "Limit already exist!" );
         }
 
-        limitRepository.save( limit );
+        Limit savedLimit = limitRepository.save( limit );
 
-        return ResponseEntity.ok(new MessageResponse( "Limit successfully added" ));
+        return LimitDTO.builder()
+                .id(savedLimit.getId())
+                .limitAmount(savedLimit.getLimitAmount())
+                .category(savedLimit.getCategory())
+                .limitType(savedLimit.getLimitType())
+                .creationDate(savedLimit.getCreationDate())
+                .build();
     }
 
-    // todo no ResponseEntity!
-    // Updates an existing limit.
     @SendLimits
-    public ResponseEntity<?> updateLimit( Long limitId, Limit limit ) {
+    public LimitDTO updateLimit( Long limitId, LimitDTO limitDTO ) {
 
         Account account = accountService.getAccount();
-        Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
+        Limit existingLimit = limitRepository
+                .findLimit( limitId, account.getId() )
+                .orElseThrow(
+                        () -> new NotFoundException( "Limit with ID: " + limitId + " does not exist in the database!" )
+                );
 
-        //todo: use orElseThrow
-        if ( !optimalLimit.isPresent() ) {
-            throw new NotFoundException( "Limit with ID " + limitId + " not exist!" );
+        if ( existingLimit.getLimitType() == LimitType.ZERO ) {
+            throw new ForbiddenException( "Cannot update the default limit." );
         }
 
-        if ( optimalLimit.get().getLimitType() == LimitType.ZERO ) {
-            throw new ForbiddenException( "Cannot delete the default limit." );
-        }
+        existingLimit.setLimitAmount(limitDTO.getLimitAmount());
+        existingLimit.setLimitType(limitDTO.getLimitType());
+        existingLimit.setCategory(limitDTO.getCategory());
+        existingLimit.setCreationDate(limitDTO.getCreationDate());
 
-        // todo: work with existingLimit
+        Limit savedLimit = limitRepository.save( existingLimit );
 
-        limit.setAccount( account );
-        limitRepository.save( limit );
-
-        return ResponseEntity.ok(new MessageResponse( "Limit successfully updated" ));
+        return LimitDTO.builder()
+                .id(savedLimit.getId())
+                .limitAmount(savedLimit.getLimitAmount())
+                .category(savedLimit.getCategory())
+                .limitType(savedLimit.getLimitType())
+                .creationDate(savedLimit.getCreationDate())
+                .build();
     }
 
     // not DB using functions
 
-    // Checks if a limit of a specific type exists for a given account.
     private boolean isLimitExists( Account account, Limit limitToCheck ) {
 
         return limitRepository.existsBy( account.getId(), limitToCheck.getLimitType(), limitToCheck.getCategory() );
     }
 
-    // Retrieves a list of available limit types.
     public List<String> getLimitTypes() {
 
         return Arrays.stream( LimitType.values() )
@@ -115,7 +125,6 @@ public class LimitService {
                 .toList();
     }
 
-    // Creates a new Limit entity based on the given DTO.
     private Limit createLimit( LimitDTO limitDTO ) {
 
         return new Limit(

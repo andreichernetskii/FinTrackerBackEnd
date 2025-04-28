@@ -23,6 +23,7 @@ public class DataBaseInitializer implements ApplicationRunner {
     // Creates a zero limit with the current date.
     private LimitDTO createZeroLimit() {
         return new LimitDTO(
+                1l,
                 LimitType.ZERO,
                 new BigDecimal( 0 ),
                 null,

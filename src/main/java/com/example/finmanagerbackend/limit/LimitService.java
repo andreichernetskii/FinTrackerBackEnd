@@ -82,6 +82,7 @@ public class LimitService {
         Account account = accountService.getAccount();
         Optional<Limit> optimalLimit = limitRepository.findLimit( limitId, account.getId() );
 
+        //todo: use orElseThrow
         if ( !optimalLimit.isPresent() ) {
             throw new NotFoundException( "Limit with ID " + limitId + " not exist!" );
         }
@@ -89,6 +90,8 @@ public class LimitService {
         if ( optimalLimit.get().getLimitType() == LimitType.ZERO ) {
             throw new ForbiddenException( "Cannot delete the default limit." );
         }
+
+        // todo: work with existingLimit
 
         limit.setAccount( account );
         limitRepository.save( limit );

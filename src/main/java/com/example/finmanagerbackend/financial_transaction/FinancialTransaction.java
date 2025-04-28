@@ -1,7 +1,14 @@
 package com.example.finmanagerbackend.financial_transaction;
 
 import com.example.finmanagerbackend.account.Account;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +18,7 @@ import java.time.LocalDate;
  */
 @Entity
 public class FinancialTransaction {
+
     @Id
     @GeneratedValue
     private Long id;

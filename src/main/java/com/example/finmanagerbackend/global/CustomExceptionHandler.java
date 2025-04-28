@@ -1,17 +1,38 @@
 package com.example.finmanagerbackend.global;
 
+import com.example.finmanagerbackend.dto.ApiResponse;
+import com.example.finmanagerbackend.dto.ErrorDto;
 import com.example.finmanagerbackend.global.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Global exception handler for handling unchecked application exceptions.
  */
 @ControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ApiResponse<?>> handleValidationConflict(MethodArgumentNotValidException exception) {
+
+        ApiResponse<?> serviceResponse = new ApiResponse<>();
+        List<ErrorDto> errors = new ArrayList<>();
+        exception.getBindingResult().getFieldErrors()
+                .forEach(error -> {
+                    ErrorDto errorDTO = new ErrorDto(error.getField(), error.getDefaultMessage());
+                    errors.add(errorDTO);
+                });
+        serviceResponse.setStatus("FAILED");
+        serviceResponse.setErrors(errors);
+
+        return new ResponseEntity<>(serviceResponse, HttpStatus.BAD_REQUEST);
+    }
 
     // Handles ForbiddenException, returns a response with HTTP status FORBIDDEN and the exception message.
     @ExceptionHandler( ForbiddenException.class )

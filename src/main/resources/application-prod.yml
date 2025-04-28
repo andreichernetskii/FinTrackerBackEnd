@@ -30,3 +30,10 @@
 #            timeout: 300 # Секунды? Уточните единицы измерения для C3P0
 #            max_statements: 50
 #            idle_test_period: 3000
+
+  app:
+    cors:
+      allowed:
+        origin: https://finman-project.duckdns.org
+        methods: GET,POST,PUT,DELETE,OPTIONS
+        headers: Authorization,Content-Type

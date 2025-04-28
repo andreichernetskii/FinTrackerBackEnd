@@ -2,26 +2,21 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
-import com.example.finmanagerbackend.alert.analyser.FinAnalyser;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
-import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class ) // Mockito for simulate objects job

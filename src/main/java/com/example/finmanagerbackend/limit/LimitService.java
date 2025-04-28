@@ -2,20 +2,16 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
-import com.example.finmanagerbackend.financial_transaction.FinancialTransactionDTO;
 import com.example.finmanagerbackend.global.annotations.SendLimits;
 import com.example.finmanagerbackend.global.exceptions.ForbiddenException;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
-import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service class for managing Limit entities.

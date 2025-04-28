@@ -28,7 +28,7 @@ public class LimitControllerTest {
     public void addNewLimitTest() throws Exception {
         // some data for test
         LimitDTO limitDTO = new LimitDTO(
-                1l,
+                1L,
                 LimitType.DAY,
                 new BigDecimal( 100 ),
                 null,

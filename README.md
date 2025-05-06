@@ -115,11 +115,10 @@ P --> Q
     *   JUnit 5 (via `spring-boot-starter-test`)
     *   Mockito (via `spring-boot-starter-test`)
     *   Spring Test & Spring Security Test
-    *   **JavaFaker:** For generating realistic test data.
+    *   JavaFaker: For generating realistic test data.
 *   **API & Data:**
     *   **Jackson:** For JSON serialization/deserialization.
     *   **Lombok:** To reduce boilerplate code (constructors, getters, setters, etc.).
-    *   **Log4j 1.x:** (Note: Consider migrating to SLF4j/Logback provided by default in Spring Boot)
 *   **Authentication:** **JJWT** (Java JWT) library
 *   **Containerization & Deployment:**
     *   **Docker & Docker Compose**

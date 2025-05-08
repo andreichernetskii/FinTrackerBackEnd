@@ -38,6 +38,32 @@ The main goal of this project was to learn and apply current best practices in b
 *   **Alert Generation:** Creates alerts when spending limits are breached based on the analysis.
 *   **RESTful API:** Provides a clear API for frontend integration or direct interaction.
 
+  ## Technology Stack
+
+*   **Language:** Java 17
+*   **Framework:** Spring Boot 3.1.2
+    *   **Spring Web:** For building RESTful APIs.
+    *   **Spring Data JPA:** For data persistence with Hibernate as the provider.
+    *   **Spring Security:** For authentication (JWT) and authorization.
+    *   **Spring AOP:** Used for managing cross-cutting concerns like real-time SSE notifications.
+*   **Database:**
+    *   PostgreSQL (Used by default in the `prod` profile for production)
+    *   H2 Database (Used by default in the `local` profile for development/testing)
+*   **Build Tool:** Apache Maven
+*   **Testing:**
+    *   JUnit 5 (via `spring-boot-starter-test`)
+    *   Mockito (via `spring-boot-starter-test`)
+    *   Spring Test & Spring Security Test
+    *   JavaFaker: For generating realistic test data.
+*   **API & Data:**
+    *   **Jackson:** For JSON serialization/deserialization.
+    *   **Lombok:** To reduce boilerplate code (constructors, getters, setters, etc.).
+*   **Authentication:** **JJWT** (Java JWT) library
+*   **Containerization & Deployment:**
+    *   **Docker & Docker Compose**
+    *   Deployed on a VPS (Ubuntu 22.04)
+    *   **Traefik:** As a reverse proxy and for automatic HTTPS/SSL certificate management.
+
    ## Architecture
 
 This application follows a **Layered Monolithic architecture**, primarily organized using a **Package-by-Feature** approach. This means the code is grouped by major functional areas (like `security`, `financial_transaction`, `limit`, `alert`). Within each feature package, a classic layered structure is generally applied.
@@ -100,30 +126,20 @@ H --> S
 P --> Q
 ```
 
-## Technology Stack
+The project actively utilizes **Spring AOP** to address cross-cutting concerns. The primary objective of employing AOP is to minimize code duplication and prevent the entanglement of core business logic with auxiliary service logic, such as sending notifications. This approach helps maintain service layer methods that are clean, focused, and dedicated to their primary responsibilities.
 
-*   **Language:** Java 17
-*   **Framework:** Spring Boot 3.1.2
-    *   **Spring Web:** For building RESTful APIs.
-    *   **Spring Data JPA:** For data persistence with Hibernate as the provider.
-    *   **Spring Security:** For authentication (JWT) and authorization.
-*   **Database:**
-    *   PostgreSQL (Used by default in the `prod` profile for production)
-    *   H2 Database (Used by default in the `local` profile for development/testing)
-*   **Build Tool:** Apache Maven
-*   **Testing:**
-    *   JUnit 5 (via `spring-boot-starter-test`)
-    *   Mockito (via `spring-boot-starter-test`)
-    *   Spring Test & Spring Security Test
-    *   JavaFaker: For generating realistic test data.
-*   **API & Data:**
-    *   **Jackson:** For JSON serialization/deserialization.
-    *   **Lombok:** To reduce boilerplate code (constructors, getters, setters, etc.).
-*   **Authentication:** **JJWT** (Java JWT) library
-*   **Containerization & Deployment:**
-    *   **Docker & Docker Compose**
-    *   Deployed on a VPS (Ubuntu 22.04)
-    *   **Traefik:** As a reverse proxy and for automatic HTTPS/SSL certificate management.
+A key illustration of AOP in this project is the implementation of real-time updates to the frontend via Server-Sent Events (SSE) whenever data changes occur:
+
+*   Service methods responsible for modifying the state of transactions (e.g., `FinancialTransactionService.addFinancialTransaction(...)`), limits, or triggering alert recalculations are annotated with custom markers like `@SendTransactions` or `@SendAlerts`.
+*   Corresponding aspects (e.g., `TransactionSseAspect` for transactions) intercept the execution of these annotated methods. Following the successful completion of the primary method (using an "after advice"), the aspect triggers the `SseService` to dispatch an updated list of relevant entities (such as all transactions for the user) to the frontend.
+*   A similar mechanism is employed for limits. In the case of alerts, any change to limits or transactions prompts the system to automatically re-evaluate their status and, if necessary, transmit the updated information.
+
+This AOP-driven strategy offers several advantages:
+*   **Cleaner Code:** Business logic within services remains uncluttered by SSE message-sending code.
+*   **Centralized Logic:** Notification-related functionalities are consolidated into dedicated aspect classes (e.g., `com.example.finmanagerbackend.financial_transaction.TransactionSseAspect`).
+*   **Enhanced Flexibility:** Modifying or extending notification behaviors can be done with minimal impact on the core service logic.
+
+Custom annotations used by the aspects are located in the `com.example.finmanagerbackend.global.annotations` package.
  
 ## Running Locally
 

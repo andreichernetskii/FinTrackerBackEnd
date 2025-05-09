@@ -23,6 +23,16 @@ This project is the backend component for a **Financial Tracker Web Application*
 
 The application allows users to record financial transactions (both income and expenses), set spending limits for various categories, and receive alerts if those limits are exceeded.
 
+Frontend side - https://github.com/andreichernetskii/frontend_vue_js_test
+
+### For tests:
+
+Webpage - https://finman-project.duckdns.org/
+```
+login - demo@demo
+password - demo
+```
+
 ## Motivation
 
 The main goal of this project was to learn and apply current best practices in backend development using the Spring Boot ecosystem. It serves as a practical demonstration of skills in building RESTful APIs, managing data persistence, implementing security, and structuring a backend application effectively. While not solving a unique real-world problem, it focuses on the technical implementation and architectural patterns relevant in today's software development landscape.

@@ -2,26 +2,21 @@ package com.example.finmanagerbackend.limit;
 
 import com.example.finmanagerbackend.account.Account;
 import com.example.finmanagerbackend.account.AccountService;
-import com.example.finmanagerbackend.alert.analyser.FinAnalyser;
 import com.example.finmanagerbackend.global.exceptions.NotFoundException;
 import com.example.finmanagerbackend.global.exceptions.UnprocessableEntityException;
-import com.example.finmanagerbackend.security.application_user.response.MessageResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class ) // Mockito for simulate objects job
@@ -42,12 +37,12 @@ public class LimitServiceTest {
         when( limit.getId() ).thenReturn( limitId );
         when( limitRepository.findById( limitId ) ).thenReturn( Optional.of( limit ) );
 
-        ResponseEntity<?> responseEntity = limitService.deleteLimit( limitId );
+        limitService.deleteLimit( limitId );
 
         // assert
         verify( limitRepository, times( 1 ) ).deleteById( limitId );
-        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
-        assertEquals( "Limit successfully deleted", ( ( MessageResponse ) responseEntity.getBody() ).getMessage() );
+//        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+//        assertEquals( "Limit successfully deleted", ( ( MessageResponse ) responseEntity.getBody() ).getMessage() );
     }
 
     @Test
@@ -61,7 +56,6 @@ public class LimitServiceTest {
     }
     //endregion
     //region get limit tests section
-    //todo: adapt tests to async
 //    @Test
 //    public void getLimitsTest_SuccessfulReturning() {
 //        Long accountId = 1L;
@@ -90,13 +84,14 @@ public class LimitServiceTest {
         when( accountService.getAccount() ).thenReturn( account );
 
         LimitDTO limitDTO = new LimitDTO(
+                1l,
                 LimitType.DAY,
                 new BigDecimal( 100 ),
                 "Category",
                 LocalDate.now()
         );
 
-        ResponseEntity<?> responseEntity = limitService.addLimit( limitDTO );
+        LimitDTO responseEntity = limitService.addLimit( limitDTO );
 
         ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass( Limit.class );
         // capturing saved object
@@ -110,7 +105,7 @@ public class LimitServiceTest {
         assertEquals( limitDTO.getCategory(), capturedLimit.getCategory() );
         assertEquals( limitDTO.getCreationDate(), capturedLimit.getCreationDate() );
 
-        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
+//        assertEquals( HttpStatus.OK, responseEntity.getStatusCode() );
 
         verify( accountService, times( 1 ) ).getAccount();
         verify( limitRepository, times( 1 ) ).save( any( Limit.class ) );
@@ -130,6 +125,7 @@ public class LimitServiceTest {
         );
 
         LimitDTO limitDto = new LimitDTO(
+                1l,
                 LimitType.DAY,
                 new BigDecimal( 100 ),
                 "Category",

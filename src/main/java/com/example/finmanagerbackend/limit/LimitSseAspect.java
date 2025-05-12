@@ -21,7 +21,7 @@ public class LimitSseAspect {
     @After("@annotation(com.example.finmanagerbackend.global.annotations.SendLimits)")
     public void sendAllLimitsOfAccount() {
         sseService.sendData(
-                SseEvent.<List<Limit>>builder()
+                SseEvent.<List<LimitDTO>>builder()
                         .eventType(SseEventType.LIMITS_ALL)
                         .data(limitService.getLimits())
                         .build()

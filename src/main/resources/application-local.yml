@@ -30,6 +30,9 @@ spring:
         trace: false
         web-allow-others: false
 
+logging:
+  level:
+    org.springframework.security: DEBUG
 
 app:
   cors:

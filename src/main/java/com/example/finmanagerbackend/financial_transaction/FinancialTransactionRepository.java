@@ -81,7 +81,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             AND MONTH(ft.date) = :monthParam
             AND ft.account.id = :accountId
             """)
-    Double calculateMonthExpenses(@Param("accountId") Long accountId, @Param("monthParam") LocalDate month);
+    Double calculateMonthExpenses(@Param("accountId") Long accountId, @Param("monthParam") Integer month, @Param("yearParam") Integer year);
 
     /**
      * Calculates yearly expenses for a given year and account.
@@ -93,7 +93,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
             AND YEAR(ft.date) = :yearParam
             AND ft.account.id = :accountId
             """)
-    Double calculateYearExpenses(@Param("accountId") Long accountId, @Param("yearParam") LocalDate year);
+    Double calculateYearExpenses(@Param("accountId") Long accountId, @Param("yearParam") Integer year);
 
     /**
      * Calculates daily expenses for a given day and account.

@@ -25,7 +25,7 @@ public class FinancialTransactionServiceTest {
     @Test
     public void addTransactionTest_SuccessfulAddedTransaction() {
         FinancialTransactionDTO transactionDTO = new FinancialTransactionDTO(
-                1l,
+                1L,
                 FinancialTransactionType.INCOME,
                 new BigDecimal( 100 ),
                 new String( "Shoes" ),

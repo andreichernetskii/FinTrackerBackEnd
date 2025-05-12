@@ -1,7 +1,7 @@
 package com.example.finmanagerbackend.alert.analyser.strategy;
 
 import com.example.finmanagerbackend.financial_transaction.FinancialTransactionService;
-import com.example.finmanagerbackend.limit.Limit;
+import com.example.finmanagerbackend.limit.LimitDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ public class DayActualBalanceCalcStrategy implements ActualBalanceCalcStrategy {
 
     // Method to calculate the actual balance of the day based on the provided limit.
     @Override
-    public Double calcActualBalanceOfPeriod( Limit limit ) {
+    public Double calcActualBalanceOfPeriod( LimitDTO limit ) {
         return financialTransactionService.getDayExpenses(LocalDate.now());
     }
 }

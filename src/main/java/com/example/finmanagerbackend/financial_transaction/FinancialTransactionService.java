@@ -31,7 +31,6 @@ public class FinancialTransactionService {
     @SendAlerts
     public FinancialTransactionDTO addFinancialTransaction( FinancialTransactionDTO financialTransactionDTO ) {
 
-        // Adjust the amount based on the operation type (expense or income)
         BigDecimal amount =
                 ( financialTransactionDTO.getFinancialTransactionType() == FinancialTransactionType.EXPENSE )
                         ? financialTransactionDTO.getAmount().negate()
@@ -167,11 +166,11 @@ public class FinancialTransactionService {
     }
 
     public Double getYearExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now);
+        return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now.getYear());
     }
 
     public Double getMonthExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateMonthExpenses(accountService.getAccount().getId(), now);
+        return financialTransactionRepository.calculateMonthExpenses(accountService.getAccount().getId(), now.getMonthValue(), now.getYear());
     }
 
     public Double getWeekExpenses(LocalDate firstWeekDay, LocalDate lastWeekDay) {

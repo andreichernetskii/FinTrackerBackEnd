@@ -166,11 +166,11 @@ public class FinancialTransactionService {
     }
 
     public Double getYearExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now);
+        return financialTransactionRepository.calculateYearExpenses(accountService.getAccount().getId(), now.getYear());
     }
 
     public Double getMonthExpenses(LocalDate now) {
-        return financialTransactionRepository.calculateMonthExpenses(accountService.getAccount().getId(), now);
+        return financialTransactionRepository.calculateMonthExpenses(accountService.getAccount().getId(), now.getMonthValue(), now.getYear());
     }
 
     public Double getWeekExpenses(LocalDate firstWeekDay, LocalDate lastWeekDay) {

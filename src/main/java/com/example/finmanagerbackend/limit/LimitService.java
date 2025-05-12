@@ -48,7 +48,8 @@ public class LimitService {
                 .map(entity -> LimitDTO.builder()
                         .id(entity.getId())
                         .creationDate(entity.getCreationDate())
-                        .limitType(entity.getLimitType())
+                        .category(entity.getCategory())
+                        .limitType(entity.getLimitType())       
                         .limitAmount(entity.getLimitAmount())
                         .build())
                 .toList();

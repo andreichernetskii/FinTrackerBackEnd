@@ -39,7 +39,6 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandle;
-    private final CorsConfigurationSource corsConfigurationSource;
 
     @Value("${app.cors.allowed.origin}")
     private String allowedOrigin;

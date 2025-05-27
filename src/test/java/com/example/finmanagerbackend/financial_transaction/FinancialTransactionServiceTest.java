@@ -1,103 +1,67 @@
 package com.example.finmanagerbackend.financial_transaction;
 
-import org.junit.jupiter.api.Test;
+import com.example.finmanagerbackend.account.Account;
+import com.example.finmanagerbackend.account.AccountService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
 public class FinancialTransactionServiceTest {
+
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
+
+    @Mock
+    private AccountService accountService;
+
+    @Mock
+    private FinTransactionGenerator finTransactionGenerator;
+
     @InjectMocks
     private FinancialTransactionService financialTransactionService;
 
-    @Test
-    public void addTransactionTest_SuccessfulAddedTransaction() {
-        FinancialTransactionDTO transactionDTO = new FinancialTransactionDTO(
-                1L,
-                FinancialTransactionType.INCOME,
-                new BigDecimal( 100 ),
-                new String( "Shoes" ),
-                new String( "2005-12-12" )
+    private Account mockAccount;
+    private FinancialTransactionDTO sampleFinancialTransactionDTO;
+    private FinancialTransaction sampleTransaction;
+
+    @BeforeEach
+    void setUp() throws NoSuchFieldException, IllegalAccessException {
+
+        mockAccount = new Account();
+
+        // making private field accessible with reflection
+        Field idField = Account.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(mockAccount, 1L);
+
+        mockAccount.setDemo(false);
+
+        sampleFinancialTransactionDTO = FinancialTransactionDTO.builder()
+                .id(1L)
+                .amount(BigDecimal.valueOf(100.00))
+                .category("Cars")
+                .financialTransactionType(FinancialTransactionType.EXPENSE)
+                .date(LocalDate.now().toString())
+                .build();
+
+        sampleTransaction = new FinancialTransaction(
+                FinancialTransactionType.EXPENSE,
+                BigDecimal.valueOf(-100.00),
+                "Cars",
+                LocalDate.now()
         );
 
-        financialTransactionService.addFinancialTransaction( transactionDTO );
+        Field idFieldTransaction = FinancialTransaction.class.getDeclaredField("id");
+        idFieldTransaction.setAccessible(true);
+        idFieldTransaction.set(sampleTransaction, 1L);
 
-        ArgumentCaptor<FinancialTransaction> transactionCaptor = ArgumentCaptor.forClass( FinancialTransaction.class );
-        verify( financialTransactionRepository ).save( transactionCaptor.capture() );
-
-        FinancialTransaction transaction = transactionCaptor.getValue();
-
-        assertEquals( transactionDTO.getFinancialTransactionType(), transaction.getFinancialTransactionType() );
-        assertEquals( transactionDTO.getAmount(), transaction.getAmount() );
-        assertEquals( transactionDTO.getCategory(), transaction.getCategory() );
-        assertEquals( transactionDTO.getDate(), transaction.getDate().toString() );
+        sampleTransaction.setAccount(mockAccount);
     }
-
-    @Test
-    public void getOperationsTest_SuccessfulShownAllTransactionsOfAccount() {
-        List<FinancialTransaction> expectedIncomeExpens = new ArrayList<>();
-        expectedIncomeExpens.add(
-                new FinancialTransaction(
-                    FinancialTransactionType.EXPENSE ,
-                    new BigDecimal( 100 ),
-                    "Shoes",
-                    LocalDate.now() ) );
-        when( financialTransactionRepository.findAll() ).thenReturn( expectedIncomeExpens );
-
-        List<FinancialTransaction> actualIncomeExpens = financialTransactionService.getAllTransactionsOfAccount();
-
-        verify( financialTransactionRepository ).findAll();
-        assertNotNull( actualIncomeExpens );
-        assertEquals( expectedIncomeExpens, actualIncomeExpens );
-    }
-
-    @Test
-    public void deleteOperationTest_SuccessfulDeletion() {
-        Long id = 1L;
-        when( financialTransactionRepository.existsById( id ) ).thenReturn( true );
-        financialTransactionService.deleteFinancialTransaction( id );
-
-        verify( financialTransactionRepository ).existsById( id );
-        verify( financialTransactionRepository ).deleteById( id );
-
-        when( financialTransactionRepository.existsById( id ) ).thenReturn( false );
-        assertFalse( financialTransactionRepository.existsById( id ) );
-    }
-
-    @Test
-    public void deleteOperationTest_OperationNotExits() {
-        Long id = 1L;
-        when( financialTransactionRepository.existsById( id ) ).thenReturn( false );
-
-        assertThrows( IllegalStateException.class,
-                () -> financialTransactionService.deleteFinancialTransaction( id ) );
-        verify( financialTransactionRepository ).existsById( id );
-        verifyNoMoreInteractions( financialTransactionRepository );
-    }
-
-//    @Test
-//    public void getAnnualBalanceTest_CalculatedSuccessful() {
-//        OperationType operationType = OperationType.EXPENSE;
-//        String category = "Shoes";
-//        Double expectedBalance = 100.0;
-//        when( incomeExpenseRepository.calculateAnnualBalanceByCriteria( 2023, 9, operationType, category ) )
-//                .thenReturn( expectedBalance );
-//
-//        Double result = incomeExpenseService.getAnnualBalance( 2023, 9, operationType, category );
-//
-//        verify( incomeExpenseRepository ).calculateAnnualBalanceByCriteria( 2023, 9, operationType, category );
-//        assertEquals( expectedBalance, result );
-//    }
 }

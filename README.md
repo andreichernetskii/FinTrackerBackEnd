@@ -25,6 +25,8 @@ The application allows users to record financial transactions (both income and e
 
 Frontend side - https://github.com/andreichernetskii/frontend_vue_js_test
 
+Work in progress with microservices architecture: https://github.com/andreichernetskii/Financial_Tracker_Microsercvices
+
 ### For tests:
 
 Webpage - https://finman-project.duckdns.org/

@@ -60,8 +60,7 @@ public class LimitService {
 
         Account account = accountService.getAccount();
 
-        Limit limit = createLimit( limitDTO );
-        limit.setAccount( account );
+        Limit limit = createLimit( limitDTO, account );
 
         if ( isLimitExists( account, limit ) ) {
             throw new UnprocessableEntityException( "Limit already exist!" );
@@ -122,13 +121,14 @@ public class LimitService {
                 .toList();
     }
 
-    private Limit createLimit( LimitDTO limitDTO ) {
+    private Limit createLimit( LimitDTO limitDTO, Account account ) {
 
-        return new Limit(
-                limitDTO.getLimitType(),
-                limitDTO.getLimitAmount(),
-                limitDTO.getCategory(),
-                limitDTO.getCreationDate()
-        );
+        return Limit.builder()
+                        .account(account)
+                        .limitType(limitDTO.getLimitType())
+                        .category(limitDTO.getCategory())
+                        .creationDate(limitDTO.getCreationDate())
+                        .limitAmount(limitDTO.getLimitAmount())
+                        .build();
     }
 }

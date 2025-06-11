@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -23,7 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith( MockitoExtension.class ) // Mockito for simulate objects job
+@ExtendWith( MockitoExtension.class )
 public class LimitServiceTest {
 
     @InjectMocks
@@ -40,13 +39,10 @@ public class LimitServiceTest {
     private LimitDTO sampleLimitDTO;
 
     @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
+    void setUp() {
 
         mockAccount = new Account();
-
-        Field idField = Account.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockAccount, 1L);
+        mockAccount.setId(1L);
 
         sampleLimit = new Limit(LimitType.MONTH, BigDecimal.valueOf(1000), "Groceries", LocalDate.now());
         sampleLimit.setId(1L);

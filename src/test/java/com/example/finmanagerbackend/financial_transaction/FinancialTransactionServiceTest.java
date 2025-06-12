@@ -244,9 +244,7 @@ public class FinancialTransactionServiceTest {
         when(financialTransactionRepository.findByAccountIdPlusOperationId(nonExistentTransactionId, mockAccount.getId()))
                 .thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            financialTransactionService.updateFinancialTransaction(nonExistentTransactionId, updateDto);
-        });
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> financialTransactionService.updateFinancialTransaction(nonExistentTransactionId, updateDto));
 
         assertEquals("Operation with ID: " + nonExistentTransactionId + " does not exist in the database!", exception.getMessage());
 
@@ -282,9 +280,7 @@ public class FinancialTransactionServiceTest {
         when(financialTransactionRepository.findByAccountIdPlusOperationId(nonExistentTransactionId, mockAccount.getId()))
                 .thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            financialTransactionService.deleteFinancialTransaction(nonExistentTransactionId);
-        });
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> financialTransactionService.deleteFinancialTransaction(nonExistentTransactionId));
 
         assertEquals("Operation with ID " + nonExistentTransactionId + " does not exist in the database!", exception.getMessage());
 

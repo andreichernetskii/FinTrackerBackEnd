@@ -41,12 +41,19 @@ public class LimitServiceTest {
     @BeforeEach
     void setUp() {
 
-        mockAccount = new Account();
-        mockAccount.setId(1L);
+        mockAccount = Account.builder()
+                .id(1L)
+                .isDemo(false)
+                .build();
 
-        sampleLimit = new Limit(LimitType.MONTH, BigDecimal.valueOf(1000), "Groceries", LocalDate.now());
-        sampleLimit.setId(1L);
-        sampleLimit.setAccount(mockAccount);
+        sampleLimit = Limit.builder()
+                .id(1L)
+                .limitType(LimitType.MONTH)
+                .limitAmount(BigDecimal.valueOf(1000))
+                .category("Groceries")
+                .creationDate(LocalDate.now())
+                .account(mockAccount)
+                .build();
 
         sampleLimitDTO = LimitDTO.builder()
                 .id(1L)
@@ -60,12 +67,12 @@ public class LimitServiceTest {
     @Test
     void deleteLimit_whenLimitExistsAndNotZeroType_shouldDeleteLimit() {
 
-        when(limitRepository.findById(1L)).thenReturn(Optional.of(sampleLimit));
+        when(limitRepository.findById(sampleLimit.getId())).thenReturn(Optional.of(sampleLimit));
 
-        assertDoesNotThrow(() -> limitService.deleteLimit(1L));
+        assertDoesNotThrow(() -> limitService.deleteLimit(sampleLimit.getId()));
 
-        verify(limitRepository, times(1)).findById(1L);
-        verify(limitRepository, times(1)).deleteById(1L);
+        verify(limitRepository, times(1)).findById(sampleLimit.getId());
+        verify(limitRepository, times(1)).deleteById(sampleLimit.getId());
     }
 
     @Test
@@ -83,13 +90,21 @@ public class LimitServiceTest {
     @Test
     void deleteLimit_whenLimitTypeIsZero_shouldThrowForbiddenException() {
 
-        sampleLimit.setLimitType(LimitType.ZERO);
-        when(limitRepository.findById(1L)).thenReturn(Optional.of(sampleLimit));
+        Limit zeroTypeLimit = Limit.builder()
+                .id(2L)
+                .account(mockAccount)
+                .limitType(LimitType.ZERO)
+                .limitAmount(BigDecimal.valueOf(500))
+                .category("Default")
+                .creationDate(LocalDate.now())
+                .build();
 
-        ForbiddenException exception = assertThrows(ForbiddenException.class, () -> limitService.deleteLimit(1L));
+        when(limitRepository.findById(zeroTypeLimit.getId())).thenReturn(Optional.of(zeroTypeLimit));
+
+        ForbiddenException exception = assertThrows(ForbiddenException.class, () -> limitService.deleteLimit(zeroTypeLimit.getId()));
         assertEquals("Cannot delete the default limit.", exception.getMessage());
 
-        verify(limitRepository, times(1)).findById(1L);
+        verify(limitRepository, times(1)).findById(zeroTypeLimit.getId());
         verify(limitRepository, never()).deleteById(anyLong());
     }
 
@@ -97,9 +112,14 @@ public class LimitServiceTest {
     @Test
     void getLimits_whenLimitsExist_shouldReturnListOfLimitDTOs() {
 
-        Limit limit2 = new Limit(LimitType.WEEK, BigDecimal.valueOf(200), "Transport", LocalDate.now().minusDays(1));
-        limit2.setId(2L);
-        limit2.setAccount(mockAccount);
+        Limit limit2 = Limit.builder()
+                .id(2L)
+                .account(mockAccount)
+                .limitType(LimitType.WEEK)
+                .limitAmount(BigDecimal.valueOf(200))
+                .category("Transport")
+                .creationDate(LocalDate.now().minusDays(1))
+                .build();
 
         when(accountService.getAccount()).thenReturn(mockAccount);
         when(limitRepository.getAllLimitsWithoutZero(mockAccount.getId())).thenReturn(Arrays.asList(sampleLimit, limit2));
@@ -108,6 +128,7 @@ public class LimitServiceTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
+
         assertEquals(sampleLimit.getId(), result.get(0).getId());
         assertEquals(sampleLimit.getCategory(), result.get(0).getCategory());
         assertEquals(limit2.getId(), result.get(1).getId());
@@ -143,38 +164,44 @@ public class LimitServiceTest {
                 .creationDate(LocalDate.now())
                 .build();
 
-        Limit newLimitEntity = new Limit(newLimitDTO.getLimitType(), newLimitDTO.getLimitAmount(), newLimitDTO.getCategory(), newLimitDTO.getCreationDate());
-        newLimitEntity.setAccount(mockAccount); // Account will be set by service
-
-        Limit savedLimitEntity = new Limit(newLimitDTO.getLimitType(), newLimitDTO.getLimitAmount(), newLimitDTO.getCategory(), newLimitDTO.getCreationDate());
-        savedLimitEntity.setId(2L); // Assume DB generates ID
-        savedLimitEntity.setAccount(mockAccount);
-
-
         when(accountService.getAccount()).thenReturn(mockAccount);
         when(limitRepository.existsBy(mockAccount.getId(), newLimitDTO.getLimitType(), newLimitDTO.getCategory())).thenReturn(false);
-        // Use ArgumentCaptor or any(Limit.class) and thenReturn to simulate save
+
+        long generatedId = 3L;
         when(limitRepository.save(any(Limit.class))).thenAnswer(invocation -> {
+
             Limit limitToSave = invocation.getArgument(0);
-            // Simulate saving by assigning an ID if not present, and return a new instance
-            // to mimic what JPA might do. Here, we'll just return a copy with an ID.
-            Limit saved = new Limit(limitToSave.getLimitType(), limitToSave.getLimitAmount(), limitToSave.getCategory(), limitToSave.getCreationDate());
-            saved.setId(2L); // Simulate ID generation
-            saved.setAccount(limitToSave.getAccount());
-            return saved;
+
+            return Limit.builder()
+                    .id(generatedId)
+                    .account(limitToSave.getAccount())
+                    .limitType(limitToSave.getLimitType())
+                    .limitAmount(limitToSave.getLimitAmount())
+                    .category(limitToSave.getCategory())
+                    .creationDate(limitToSave.getCreationDate())
+                    .build();
         });
 
 
         LimitDTO result = limitService.addLimit(newLimitDTO);
 
         assertNotNull(result);
-        assertEquals(2L, result.getId()); // Check the generated ID
+        assertEquals(generatedId, result.getId());
         assertEquals(newLimitDTO.getLimitType(), result.getLimitType());
         assertEquals(newLimitDTO.getLimitAmount(), result.getLimitAmount());
         assertEquals(newLimitDTO.getCategory(), result.getCategory());
+        assertEquals(newLimitDTO.getCreationDate(), result.getCreationDate());
 
         verify(accountService, times(1)).getAccount();
         verify(limitRepository, times(1)).existsBy(mockAccount.getId(), newLimitDTO.getLimitType(), newLimitDTO.getCategory());
+        verify(limitRepository, times(1)).save(argThat(limit ->
+            limit.getId() == null &&    // before saving ID must be null
+                    limit.getAccount().equals(mockAccount) &&
+                    limit.getLimitType().equals(newLimitDTO.getLimitType()) &&
+                    limit.getLimitAmount().compareTo(newLimitDTO.getLimitAmount()) == 0 &&
+                    limit.getCategory().equals(newLimitDTO.getCategory()) &&
+                    limit.getCreationDate().equals(newLimitDTO.getCreationDate())
+        ));
         verify(limitRepository, times(1)).save(any(Limit.class));
     }
 
@@ -204,9 +231,14 @@ public class LimitServiceTest {
                 .build();
 
         // Mock the existing limit found in DB
-        Limit existingLimitInDb = new Limit(sampleLimit.getLimitType(), sampleLimit.getLimitAmount(), sampleLimit.getCategory(), sampleLimit.getCreationDate());
-        existingLimitInDb.setId(sampleLimit.getId());
-        existingLimitInDb.setAccount(mockAccount);
+        Limit existingLimitInDb = Limit.builder()
+                .id(sampleLimit.getId())
+                .account(sampleLimit.getAccount())
+                .limitType(sampleLimit.getLimitType())
+                .limitAmount(sampleLimit.getLimitAmount())
+                .category(sampleLimit.getCategory())
+                .creationDate(sampleLimit.getCreationDate())
+                .build();
 
 
         when(accountService.getAccount()).thenReturn(mockAccount);
@@ -251,9 +283,17 @@ public class LimitServiceTest {
     @Test
     void updateLimit_whenLimitTypeIsZero_shouldThrowForbiddenException() {
 
-        sampleLimit.setLimitType(LimitType.ZERO); // This is the existing limit in DB
+        Limit zeroTypeLimitInDb = Limit.builder()
+                .id(2L)
+                .account(mockAccount)
+                .limitType(LimitType.ZERO) // Ключевой момент
+                .limitAmount(BigDecimal.valueOf(100))
+                .category("Default Zero")
+                .creationDate(LocalDate.now())
+                .build();
+
         when(accountService.getAccount()).thenReturn(mockAccount);
-        when(limitRepository.findLimit(sampleLimit.getId(), mockAccount.getId())).thenReturn(Optional.of(sampleLimit));
+        when(limitRepository.findLimit(zeroTypeLimitInDb.getId(), mockAccount.getId())).thenReturn(Optional.of(zeroTypeLimitInDb));
 
         LimitDTO updateAttemptDTO = LimitDTO.builder() // DTO with changes
                 .limitType(LimitType.MONTH)
@@ -262,11 +302,11 @@ public class LimitServiceTest {
                 .creationDate(LocalDate.now())
                 .build();
 
-        ForbiddenException exception = assertThrows(ForbiddenException.class, () -> limitService.updateLimit(sampleLimit.getId(), updateAttemptDTO));
+        ForbiddenException exception = assertThrows(ForbiddenException.class, () -> limitService.updateLimit(zeroTypeLimitInDb.getId(), updateAttemptDTO));
         assertEquals("Cannot update the default limit.", exception.getMessage());
 
         verify(accountService, times(1)).getAccount();
-        verify(limitRepository, times(1)).findLimit(sampleLimit.getId(), mockAccount.getId());
+        verify(limitRepository, times(1)).findLimit(zeroTypeLimitInDb.getId(), mockAccount.getId());
         verify(limitRepository, never()).save(any(Limit.class));
     }
 

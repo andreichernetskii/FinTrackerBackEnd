@@ -91,10 +91,7 @@ public class LimitService {
             throw new ForbiddenException( "Cannot update the default limit." );
         }
 
-        existingLimit.setLimitAmount(limitDTO.getLimitAmount());
-        existingLimit.setLimitType(limitDTO.getLimitType());
-        existingLimit.setCategory(limitDTO.getCategory());
-        existingLimit.setCreationDate(limitDTO.getCreationDate());
+        existingLimit.updateFromDTO(limitDTO);
 
         Limit savedLimit = limitRepository.save( existingLimit );
 

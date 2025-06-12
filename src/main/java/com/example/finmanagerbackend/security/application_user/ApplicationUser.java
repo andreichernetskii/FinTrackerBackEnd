@@ -19,13 +19,17 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationUser  {
+
     @Id
     private String email;
     private String password;
+
     @ElementCollection
     @Enumerated( EnumType.STRING )
     private Set<Role> roles = new HashSet<>();
+
     private boolean active;
+
     @OneToOne
     @Cascade( CascadeType.ALL )
     private Account account;
@@ -35,7 +39,7 @@ public class ApplicationUser  {
         this.email = email;
         this.password = password;
         this.demo = isDemo;
-        this.account = new Account();
+        this.account = Account.builder().build();
         this.account.setDemo( isDemo );
     }
 }

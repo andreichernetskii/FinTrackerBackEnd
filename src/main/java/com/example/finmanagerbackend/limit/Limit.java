@@ -74,6 +74,14 @@ public class Limit {
                 ", creationDate=" + creationDate +
                 '}';
     }
+
+    public void updateFromDTO(LimitDTO dto) {
+
+        this.limitAmount = dto.getLimitAmount();
+        this.limitType = dto.getLimitType();
+        this.category = dto.getCategory();
+        this.creationDate = dto.getCreationDate();
+    }
 }
 
 

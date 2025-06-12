@@ -44,14 +44,10 @@ public class FinancialTransactionServiceTest {
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
 
-        mockAccount = new Account();
-
-        // making private field accessible with reflection
-        Field idField = Account.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(mockAccount, 1L);
-
-        mockAccount.setDemo(false);
+        mockAccount = Account.builder()
+                .id(1L)
+                .isDemo(false)
+                .build();
 
         sampleFinancialTransactionDTO = FinancialTransactionDTO.builder()
                 .id(1L)
